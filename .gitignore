@@ -135,7 +135,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### Gradle ###
+### Gradlse ###
 .gradle
 /build/
 
@@ -144,6 +144,9 @@ gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
+
+# Avoid ignoring Jama jar file (.jar files are usually ignored)
+!Jama-1.0.3.jar
 
 # Cache of project
 .gradletasknamecache
