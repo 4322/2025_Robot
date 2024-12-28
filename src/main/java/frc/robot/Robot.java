@@ -1,18 +1,18 @@
-// Copyright 2021-2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot;
 
+import com.ctre.phoenix.led.CANdle;
+import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.constants.Constants;
+import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -20,16 +20,18 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends LoggedRobot {
-  public Robot() {
-    // Record metadata
-    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+  private Command m_autonomousCommand;
+
+  private RobotContainer m_robotContainer;
+  public static Alliance alliance = DriverStation.Alliance.Red;
+
+  // private CANdle leds = new CANdle(31, "Clockwork");
+
+  @Override
+  public void robotInit() {
+    m_robotContainer = new RobotContainer();
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
     Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
@@ -46,73 +48,90 @@ public class Robot extends LoggedRobot {
         break;
     }
 
-    // Set up data receivers & replay source
-    switch (Constants.currentMode) {
-      case REAL:
-        // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
-        Logger.addDataReceiver(new NT4Publisher());
-        break;
-
-      case SIM:
-        // Running a physics simulator, log to NT
-        Logger.addDataReceiver(new NT4Publisher());
-        break;
-
-      case REPLAY:
-        // Replaying a log, set up replay source
-        setUseTiming(false); // Run as fast as possible
-        String logPath = LogFileUtil.findReplayLog();
-        Logger.setReplaySource(new WPILOGReader(logPath));
-        Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
-        break;
+    if (isReal()) {
+      Logger.addDataReceiver(
+          new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick is ("/U/logs")
+      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+      new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+    } else {
+      setUseTiming(false); // Run as fast as possible
+      String logPath =
+          LogFileUtil
+              .findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
+      Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
+      Logger.addDataReceiver(
+          new WPILOGWriter(
+              LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      RobotController.setBrownoutVoltage(7.5);
     }
 
-    // Start AdvantageKit logger
     Logger.start();
+    Logger.disableConsoleCapture();
+    m_robotContainer.configureAutonomousSelector();
   }
 
-  /** This function is called periodically during all modes. */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
 
-  /** This function is called once when the robot is disabled. */
+    Optional<Alliance> allianceOptional = DriverStation.getAlliance();
+    if (allianceOptional.isPresent()) {
+      alliance = allianceOptional.get();
+    }
+  }
+
   @Override
   public void disabledInit() {}
 
-  /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    RobotContainer.swerve.clearHeadingLock(); // don't rotate when re-enabling
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
-  public void autonomousInit() {}
+  public void disabledExit() {}
 
-  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+    RobotContainer.swerve
+        .clearHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
+    // RobotController.setBrownoutVoltage(5.75); // roboRIO 2 only
+  }
+
   @Override
   public void autonomousPeriodic() {}
 
-  /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void autonomousExit() {}
 
-  /** This function is called periodically during operator control. */
+  @Override
+  public void teleopInit() {
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
+    }
+    RobotContainer.swerve
+        .clearHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
+    // RobotController.setBrownoutVoltage(5.75);
+  }
+
   @Override
   public void teleopPeriodic() {}
 
-  /** This function is called once when test mode is enabled. */
   @Override
-  public void testInit() {}
+  public void teleopExit() {}
 
-  /** This function is called periodically during test mode. */
+  @Override
+  public void testInit() {
+    CommandScheduler.getInstance().cancelAll();
+  }
+
   @Override
   public void testPeriodic() {}
 
-  /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
-
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {}
+  public void testExit() {}
 }
