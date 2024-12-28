@@ -19,11 +19,12 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PhotonAprilTagVision extends SubsystemBase {
-  private BreadPhotonCamera[] cameras;
+  private PhotonCamera[] cameras;
   private static final double fieldBorderMargin = 0.5;
   private BiConsumer<List<TimestampedVisionUpdate>, List<TimestampedVisionUpdate>> visionConsumer =
       (x, y) -> {};
@@ -97,7 +98,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
                 Units.degreesToRadians(-165.0))),
       };
 
-  public PhotonAprilTagVision(BreadPhotonCamera... cameras) {
+  public PhotonAprilTagVision(PhotonCamera... cameras) {
     this.cameras = cameras;
   }
 
@@ -121,23 +122,23 @@ public class PhotonAprilTagVision extends SubsystemBase {
       Pose3d cameraPose;
       Pose2d robotPose;
       List<Pose3d> tagPose3ds = new ArrayList<>();
-      PhotonPipelineResult unprocessedResult = cameras[instanceIndex].getLatestResult();
+      List<PhotonPipelineResult> unprocessedResults = cameras[instanceIndex].getAllUnreadResults();
+      PhotonPipelineResult unprocessedResult = new PhotonPipelineResult();
 
       double singleTagAdjustment = 1.0;
 
-      // if (unprocessedResults.size() > 2) {
-      //   unprocessedResults =
-      //       unprocessedResults.subList(unprocessedResults.size() - 2, unprocessedResults.size());
-      // }
+      // Continue if camera hasn't processed a new frame since last check
+      if (unprocessedResults.isEmpty()) {
+        continue;
+      }
 
-      // Logger.recordOutput(
-      //     "Photon/Camera " + instanceIndex + "ResultsLength", unprocessedResults.size());
+      // Fetch last result in list which is the latest
+      unprocessedResult = unprocessedResults.get(unprocessedResults.size() - 1);
 
-      // for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
       Logger.recordOutput(
           "Photon/Camera " + instanceIndex + " Has Targets", unprocessedResult.hasTargets());
       Logger.recordOutput(
-          "Photon/Camera " + instanceIndex + "LatencyMS", unprocessedResult.getLatencyMillis());
+          "Photon/Camera " + instanceIndex + "LatencyMS", unprocessedResult.metadata.getLatencyMillis());
 
       Logger.recordOutput(
           "Photon/Raw Camera Data " + instanceIndex,
@@ -153,12 +154,12 @@ public class PhotonAprilTagVision extends SubsystemBase {
       double timestamp = unprocessedResult.getTimestampSeconds();
       Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
 
-      boolean shouldUseMultiTag = unprocessedResult.getMultiTagResult().estimatedPose.isPresent;
+      boolean shouldUseMultiTag = unprocessedResult.getMultiTagResult().isPresent();
 
       if (shouldUseMultiTag) {
         // If multitag, use directly
         cameraPose =
-            GeomUtil.transform3dToPose3d(unprocessedResult.getMultiTagResult().estimatedPose.best);
+            GeomUtil.transform3dToPose3d(unprocessedResult.getMultiTagResult().get().estimatedPose.best);
 
         robotPose =
             cameraPose
@@ -166,7 +167,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
                 .toPose2d();
 
         // Populate array of tag poses with tags used
-        for (int id : unprocessedResult.getMultiTagResult().fiducialIDsUsed) {
+        for (int id : unprocessedResult.getMultiTagResult().get().fiducialIDsUsed) {
           tagPose3ds.add(aprilTags.getTagPose(id).get());
         }
 
