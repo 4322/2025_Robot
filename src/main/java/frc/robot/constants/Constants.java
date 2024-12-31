@@ -8,7 +8,7 @@ public class Constants {
   public static final boolean driveEnabled = true;
   public static final boolean pseudoAutoRotateEnabled = true;
   public static final boolean tuningMode = false;
-  public static final boolean visionEnabled = true;
+  public static final boolean visionEnabled = false;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
