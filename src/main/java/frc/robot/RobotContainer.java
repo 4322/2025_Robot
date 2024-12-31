@@ -10,9 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
@@ -63,10 +61,10 @@ public class RobotContainer {
               double x = -driver.getLeftY();
               double y = -driver.getLeftX();
               double omega =
-                  BreadUtil.cartesianDeadband(-driver.getRightX(), Constants.Swerve.rotDeadband);
+                  Util.cartesianDeadband(-driver.getRightX(), Constants.Swerve.rotDeadband);
 
               // Apply polar deadband
-              double[] polarDriveCoord = BreadUtil.polarDeadband(x, y);
+              double[] polarDriveCoord = Util.polarDeadband(x, y, Constants.Swerve.driveDeadband);
               double driveMag = polarDriveCoord[0];
               double driveTheta = polarDriveCoord[1];
 
