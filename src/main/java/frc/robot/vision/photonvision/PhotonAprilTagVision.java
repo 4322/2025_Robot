@@ -123,169 +123,171 @@ public class PhotonAprilTagVision extends SubsystemBase {
       Pose2d robotPose;
       List<Pose3d> tagPose3ds = new ArrayList<>();
       List<PhotonPipelineResult> unprocessedResults = cameras[instanceIndex].getAllUnreadResults();
-      PhotonPipelineResult unprocessedResult = new PhotonPipelineResult();
 
       double singleTagAdjustment = 1.0;
 
+      Logger.recordOutput(
+           "Photon/Camera " + instanceIndex + "ResultsLength", unprocessedResults.size());
+      
       // Continue if camera hasn't processed a new frame since last check
       if (unprocessedResults.isEmpty()) {
         continue;
       }
 
-      // Fetch last result in list which is the latest
-      unprocessedResult = unprocessedResults.get(unprocessedResults.size() - 1);
+      // Filter through each unread pipeline result and add to pose estimator with corresponding timestamp
+      for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
+        Logger.recordOutput(
+            "Photon/Camera " + instanceIndex + " Has Targets", unprocessedResult.hasTargets());
+        Logger.recordOutput(
+            "Photon/Camera " + instanceIndex + "LatencyMS", unprocessedResult.metadata.getLatencyMillis());
 
-      Logger.recordOutput(
-          "Photon/Camera " + instanceIndex + " Has Targets", unprocessedResult.hasTargets());
-      Logger.recordOutput(
-          "Photon/Camera " + instanceIndex + "LatencyMS", unprocessedResult.metadata.getLatencyMillis());
+        Logger.recordOutput(
+            "Photon/Raw Camera Data " + instanceIndex,
+            SmartDashboard.getRaw(
+                "photonvision/" + cameras[instanceIndex].getName() + "/rawBytes", new byte[] {}));
 
-      Logger.recordOutput(
-          "Photon/Raw Camera Data " + instanceIndex,
-          SmartDashboard.getRaw(
-              "photonvision/" + cameras[instanceIndex].getName() + "/rawBytes", new byte[] {}));
-
-      // Continue if the camera doesn't have any targets
-      if (!unprocessedResult.hasTargets()) {
-        Logger.recordOutput("Photon/Tags Used " + instanceIndex, 0);
-        continue;
-      }
-
-      double timestamp = unprocessedResult.getTimestampSeconds();
-      Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
-
-      boolean shouldUseMultiTag = unprocessedResult.getMultiTagResult().isPresent();
-
-      if (shouldUseMultiTag) {
-        // If multitag, use directly
-        cameraPose =
-            GeomUtil.transform3dToPose3d(unprocessedResult.getMultiTagResult().get().estimatedPose.best);
-
-        robotPose =
-            cameraPose
-                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-                .toPose2d();
-
-        // Populate array of tag poses with tags used
-        for (int id : unprocessedResult.getMultiTagResult().get().fiducialIDsUsed) {
-          tagPose3ds.add(aprilTags.getTagPose(id).get());
-        }
-
-        Logger.recordOutput("Photon/Camera Pose (Multi tag) " + instanceIndex, cameraPose);
-      } else {
-        // If not using multitag, disambiugate and then use
-        PhotonTrackedTarget target = unprocessedResult.targets.get(0);
-
-        // if (!(target.getFiducialId() == 3
-        //     || target.getFiducialId() == 4
-        //     || target.getFiducialId() == 7
-        //     || target.getFiducialId() == 8)) {
-        //   continue;
-        // }
-
-        if (aprilTags.getTagPose(target.getFiducialId()).isEmpty()) {
+        // Continue if the camera doesn't have any targets
+        if (!unprocessedResult.hasTargets()) {
+          Logger.recordOutput("Photon/Tags Used " + instanceIndex, 0);
           continue;
         }
 
-        Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
+        double timestamp = unprocessedResult.getTimestampSeconds();
+        Logger.recordOutput("Photon/Camera " + instanceIndex + " Timestamp", timestamp);
 
-        Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
-        Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());
-        Pose2d robotPose0 =
-            cameraPose0
-                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-                .toPose2d();
-        Pose2d robotPose1 =
-            cameraPose1
-                .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
-                .toPose2d();
+        boolean shouldUseMultiTag = unprocessedResult.getMultiTagResult().isPresent();
 
-        double projectionError = target.getPoseAmbiguity();
+        if (shouldUseMultiTag) {
+          // If multitag, use directly
+          cameraPose =
+              GeomUtil.transform3dToPose3d(unprocessedResult.getMultiTagResult().get().estimatedPose.best);
 
-        // Select a pose using projection error and current rotation
-        if (projectionError < 0.15) {
-          cameraPose = cameraPose0;
-          robotPose = robotPose0;
-        } else if (Math.abs(robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
-            < Math.abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
-          cameraPose = cameraPose0;
-          robotPose = robotPose0;
+          robotPose =
+              cameraPose
+                  .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                  .toPose2d();
+
+          // Populate array of tag poses with tags used
+          for (int id : unprocessedResult.getMultiTagResult().get().fiducialIDsUsed) {
+            tagPose3ds.add(aprilTags.getTagPose(id).get());
+          }
+
+          Logger.recordOutput("Photon/Camera Pose (Multi tag) " + instanceIndex, cameraPose);
         } else {
-          cameraPose = cameraPose1;
-          robotPose = robotPose1;
+          // If not using multitag, disambiugate and then use
+          PhotonTrackedTarget target = unprocessedResult.targets.get(0);
+
+          // if (!(target.getFiducialId() == 3
+          //     || target.getFiducialId() == 4
+          //     || target.getFiducialId() == 7
+          //     || target.getFiducialId() == 8)) {
+          //   continue;
+          // }
+
+          if (aprilTags.getTagPose(target.getFiducialId()).isEmpty()) {
+            continue;
+          }
+
+          Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
+
+          Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
+          Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());
+          Pose2d robotPose0 =
+              cameraPose0
+                  .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                  .toPose2d();
+          Pose2d robotPose1 =
+              cameraPose1
+                  .transformBy(GeomUtil.pose3dToTransform3d(cameraPoses[instanceIndex]).inverse())
+                  .toPose2d();
+
+          double projectionError = target.getPoseAmbiguity();
+
+          // Select a pose using projection error and current rotation
+          if (projectionError < 0.15) {
+            cameraPose = cameraPose0;
+            robotPose = robotPose0;
+          } else if (Math.abs(robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
+              < Math.abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
+            cameraPose = cameraPose0;
+            robotPose = robotPose0;
+          } else {
+            cameraPose = cameraPose1;
+            robotPose = robotPose1;
+          }
+
+          tagPose3ds.add(tagPos);
+          singleTagAdjustment = SingleTagAdjusters.getAdjustmentForTag(target.getFiducialId());
+          Logger.recordOutput("Photon/Camera Pose (Single Tag) " + instanceIndex, cameraPose);
         }
 
-        tagPose3ds.add(tagPos);
-        singleTagAdjustment = SingleTagAdjusters.getAdjustmentForTag(target.getFiducialId());
-        Logger.recordOutput("Photon/Camera Pose (Single Tag) " + instanceIndex, cameraPose);
-      }
+        if (cameraPose == null || robotPose == null) {
+          continue;
+        }
 
-      if (cameraPose == null || robotPose == null) {
-        continue;
-      }
+        // Move on to next camera if robot pose is off the field
+        if (robotPose.getX() < -fieldBorderMargin
+            || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
+            || robotPose.getY() < -fieldBorderMargin
+            || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin) {
+          continue;
+        }
 
-      // Move on to next camera if robot pose is off the field
-      if (robotPose.getX() < -fieldBorderMargin
-          || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
-          || robotPose.getY() < -fieldBorderMargin
-          || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin) {
-        continue;
-      }
+        // Calculate average distance to tag
+        double totalDistance = 0.0;
+        for (Pose3d tagPose : tagPose3ds) {
+          totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+        }
+        double avgDistance = totalDistance / tagPose3ds.size();
+        double xyStdDev = 0.0;
+        double thetaStdDev = 0.0;
 
-      // Calculate average distance to tag
-      double totalDistance = 0.0;
-      for (Pose3d tagPose : tagPose3ds) {
-        totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
-      }
-      double avgDistance = totalDistance / tagPose3ds.size();
-      double xyStdDev = 0.0;
-      double thetaStdDev = 0.0;
+        if (shouldUseMultiTag) {
+          xyStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+          thetaStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
+        } else {
+          xyStdDev = xyStdDevModel.predict(avgDistance);
+          thetaStdDev = thetaStdDevModel.predict(avgDistance);
+        }
 
-      if (shouldUseMultiTag) {
-        xyStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
-        thetaStdDev = Math.pow(avgDistance, 2.0) / tagPose3ds.size();
-      } else {
-        xyStdDev = xyStdDevModel.predict(avgDistance);
-        thetaStdDev = thetaStdDevModel.predict(avgDistance);
-      }
+        if (shouldUseMultiTag) {
+          visionUpdates.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
+                      stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
+                      stdDevScalarShooting * thetaStdDevCoefficientShooting * thetaStdDev)));
+          visionUpdatesAuto.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
+                      stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
+                      stdDevScalarAuto * thetaStdDevCoefficientAuto * thetaStdDev)));
+        } else {
+          visionUpdates.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      singleTagAdjustment * xyStdDev * stdDevScalarShooting,
+                      singleTagAdjustment * xyStdDev * stdDevScalarShooting,
+                      singleTagAdjustment * thetaStdDev * stdDevScalarShooting)));
+          visionUpdatesAuto.add(
+              new TimestampedVisionUpdate(
+                  robotPose,
+                  timestamp,
+                  VecBuilder.fill(
+                      singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
+                      singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
+                      singleTagAdjustment * singleTagStdDevScalar * thetaStdDev * stdDevScalarAuto)));
 
-      if (shouldUseMultiTag) {
-        visionUpdates.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
-                    stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
-                    stdDevScalarShooting * thetaStdDevCoefficientShooting * thetaStdDev)));
-        visionUpdatesAuto.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
-                    stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
-                    stdDevScalarAuto * thetaStdDevCoefficientAuto * thetaStdDev)));
-      } else {
-        visionUpdates.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    singleTagAdjustment * xyStdDev * stdDevScalarShooting,
-                    singleTagAdjustment * xyStdDev * stdDevScalarShooting,
-                    singleTagAdjustment * thetaStdDev * stdDevScalarShooting)));
-        visionUpdatesAuto.add(
-            new TimestampedVisionUpdate(
-                robotPose,
-                timestamp,
-                VecBuilder.fill(
-                    singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                    singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                    singleTagAdjustment * singleTagStdDevScalar * thetaStdDev * stdDevScalarAuto)));
-
-        Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
-        Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
+          Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
+          Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
+        }
       }
     }
 
