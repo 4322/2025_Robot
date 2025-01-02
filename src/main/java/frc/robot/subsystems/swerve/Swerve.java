@@ -2,9 +2,15 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModuleConstants;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
+import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,17 +22,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.swerve.BreadSwerveModule.DriveRequestType;
-import frc.robot.subsystems.swerve.BreadSwerveRequest.FieldCentric;
-import frc.robot.subsystems.swerve.BreadSwerveRequest.FieldCentricFacingAngle;
-import frc.robot.subsystems.swerve.BreadSwerveRequest.RobotCentric;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class Swerve extends SubsystemBase {
 
   /* Stores the swerve drivetrain object */
-  private final BreadSwerveDrivetrain drivetrain;
+  private final SwerveDrivetrain drivetrain;
 
   /* Stores requests and parameters */
   private ChassisSpeeds desired = new ChassisSpeeds();
@@ -43,9 +45,9 @@ public class Swerve extends SubsystemBase {
   private SwerveState systemState = SwerveState.PERCENT;
 
   public Swerve(
-      LegacySwerveDrivetrainConstants drivetrainConstants, LegacySwerveModuleConstants... moduleConstants) {
+      SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
     this.drivetrain =
-        new BreadSwerveDrivetrain(
+        new SwerveDrivetrain(
             drivetrainConstants,
             250,
             VecBuilder.fill(0.1, 0.1, 0.1),
@@ -67,16 +69,13 @@ public class Swerve extends SubsystemBase {
   /* Telemetry function */
   private void handleTelemetry() {
     Pose2d pose = getPose();
-    Pose2d autoPose = getAutoPose();
     SwerveModuleState[] targets = drivetrain.getState().ModuleTargets;
     SwerveModuleState[] states = drivetrain.getState().ModuleStates;
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
-    Logger.recordOutput("Odometry/PoseEstimatorEstimateAuto", autoPose);
     Logger.recordOutput("Swerve/Targets", targets);
     Logger.recordOutput("Swerve/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
-    Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.m_yawGetter.getValueAsDouble());
-    drivetrain.logCurrents();
+    Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
   }
 
   /* Handles statemachine logic */
@@ -98,7 +97,7 @@ public class Swerve extends SubsystemBase {
               && pseudoAutoRotateAngle == null
               && Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond)
                   < Constants.Swerve.inhibitPseudoAutoRotateRadPerSec) {
-            pseudoAutoRotateAngle = Rotation2d.fromDegrees(drivetrain.m_yawGetter.getValueAsDouble());
+            pseudoAutoRotateAngle = Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
             Logger.recordOutput(
                 "Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
             Logger.recordOutput("Swerve/PseudoAutoRotate/Enabled", true);
@@ -213,34 +212,25 @@ public class Swerve extends SubsystemBase {
       List<TimestampedVisionUpdate> shotVisionUpdates,
       List<TimestampedVisionUpdate> autoVisionUpdates) {
     for (TimestampedVisionUpdate shotUpdate : shotVisionUpdates) {
-      drivetrain.addShotVisionMeasurement(
+      drivetrain.addVisionMeasurement(
           shotUpdate.pose(), shotUpdate.timestamp(), shotUpdate.stdDevs());
-    }
-    for (TimestampedVisionUpdate autoUpdate : autoVisionUpdates) {
-      drivetrain.addAutoVisionMeasurement(
-          autoUpdate.pose(), autoUpdate.timestamp(), autoUpdate.stdDevs());
     }
   }
 
   /* Resets the pose estimate of the robot */
   public void resetPose(Pose2d newPose) {
     pseudoAutoRotateAngle = null;
-    drivetrain.seedFieldRelative(newPose);
+    drivetrain.resetPose(newPose);
   }
 
-  /* Returns the current pose estimate of the robot for path following */
+  /* Returns the current pose estimate of the robot */
   public Pose2d getPose() {
-    return drivetrain.getState().ShotPose;
-  }
-
-  /* Returns the current pose estimate of the robot for shooting */
-  public Pose2d getAutoPose() {
-    return drivetrain.getState().AutoPose;
+    return drivetrain.getState().Pose;
   }
 
   /* Returns the robot relative speeds of the robot */
   public ChassisSpeeds getRobotRelativeSpeeds() {
-    return drivetrain.getState().speeds;
+    return drivetrain.getState().Speeds;
   }
 
   /* Returns the field relative speeds of the robot */
