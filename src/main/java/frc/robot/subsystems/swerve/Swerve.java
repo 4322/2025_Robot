@@ -10,7 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -97,7 +96,8 @@ public class Swerve extends SubsystemBase {
               && pseudoAutoRotateAngle == null
               && Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond)
                   < Constants.Swerve.inhibitPseudoAutoRotateRadPerSec) {
-            pseudoAutoRotateAngle = Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
+            pseudoAutoRotateAngle =
+                Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
             Logger.recordOutput(
                 "Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
             Logger.recordOutput("Swerve/PseudoAutoRotate/Enabled", true);

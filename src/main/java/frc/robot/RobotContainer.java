@@ -1,7 +1,5 @@
 package frc.robot;
 
-import org.photonvision.PhotonCamera;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,6 +15,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
+import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
 
@@ -45,8 +44,11 @@ public class RobotContainer {
       frontRightCamera = new PhotonCamera("front-right");
       backLeftCamera = new PhotonCamera("back-left");
       backRightCamera = new PhotonCamera("back-right");
-      // Order of cameras being passed into constructor must reflect order of camera pose definitions in PhotonAprilTagVision
-      aprilTagVision = new PhotonAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
+      // Order of cameras being passed into constructor must reflect order of camera pose
+      // definitions in PhotonAprilTagVision
+      aprilTagVision =
+          new PhotonAprilTagVision(
+              frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
       configureAprilTagVision();
     }
 
