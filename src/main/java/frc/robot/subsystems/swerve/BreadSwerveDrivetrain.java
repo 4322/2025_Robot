@@ -215,7 +215,8 @@ public class BreadSwerveDrivetrain {
             m_moduleStates[i] = Modules[i].getCurrentState();
           }
           double yawDegrees =
-              BaseStatusSignal.getLatencyCompensatedValue(m_yawGetter, m_angularVelocity).baseUnitMagnitude();
+              BaseStatusSignal.getLatencyCompensatedValue(m_yawGetter, m_angularVelocity)
+                  .baseUnitMagnitude();
 
           /* Keep track of previous and current pose to account for the carpet vector */
           m_ShotOdometry.update(Rotation2d.fromDegrees(yawDegrees), m_modulePositions);

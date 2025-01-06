@@ -43,7 +43,8 @@ public class Swerve extends SubsystemBase {
   private SwerveState systemState = SwerveState.PERCENT;
 
   public Swerve(
-      LegacySwerveDrivetrainConstants drivetrainConstants, LegacySwerveModuleConstants... moduleConstants) {
+      LegacySwerveDrivetrainConstants drivetrainConstants,
+      LegacySwerveModuleConstants... moduleConstants) {
     this.drivetrain =
         new BreadSwerveDrivetrain(
             drivetrainConstants,
@@ -98,7 +99,8 @@ public class Swerve extends SubsystemBase {
               && pseudoAutoRotateAngle == null
               && Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond)
                   < Constants.Swerve.inhibitPseudoAutoRotateRadPerSec) {
-            pseudoAutoRotateAngle = Rotation2d.fromDegrees(drivetrain.m_yawGetter.getValueAsDouble());
+            pseudoAutoRotateAngle =
+                Rotation2d.fromDegrees(drivetrain.m_yawGetter.getValueAsDouble());
             Logger.recordOutput(
                 "Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
             Logger.recordOutput("Swerve/PseudoAutoRotate/Enabled", true);

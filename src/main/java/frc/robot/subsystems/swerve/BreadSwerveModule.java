@@ -261,10 +261,12 @@ public class BreadSwerveModule {
 
     /* Now latency-compensate our signals */
     double drive_rot =
-        BaseStatusSignal.getLatencyCompensatedValue(m_drivePosition, m_driveVelocity).baseUnitMagnitude();
+        BaseStatusSignal.getLatencyCompensatedValue(m_drivePosition, m_driveVelocity)
+            .baseUnitMagnitude();
 
     double angle_rot =
-        BaseStatusSignal.getLatencyCompensatedValue(m_steerPosition, m_steerVelocity).baseUnitMagnitude();
+        BaseStatusSignal.getLatencyCompensatedValue(m_steerPosition, m_steerVelocity)
+            .baseUnitMagnitude();
 
     /*
      * Back out the drive rotations based on angle rotations due to coupling between

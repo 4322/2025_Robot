@@ -127,19 +127,21 @@ public class PhotonAprilTagVision extends SubsystemBase {
       double singleTagAdjustment = 1.0;
 
       Logger.recordOutput(
-           "Photon/Camera " + instanceIndex + "ResultsLength", unprocessedResults.size());
-      
+          "Photon/Camera " + instanceIndex + "ResultsLength", unprocessedResults.size());
+
       // Continue if camera hasn't processed a new frame since last check
       if (unprocessedResults.isEmpty()) {
         continue;
       }
 
-      // Filter through each unread pipeline result and add to pose estimator with corresponding timestamp
+      // Filter through each unread pipeline result and add to pose estimator with corresponding
+      // timestamp
       for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
         Logger.recordOutput(
             "Photon/Camera " + instanceIndex + " Has Targets", unprocessedResult.hasTargets());
         Logger.recordOutput(
-            "Photon/Camera " + instanceIndex + "LatencyMS", unprocessedResult.metadata.getLatencyMillis());
+            "Photon/Camera " + instanceIndex + "LatencyMS",
+            unprocessedResult.metadata.getLatencyMillis());
 
         Logger.recordOutput(
             "Photon/Raw Camera Data " + instanceIndex,
@@ -160,7 +162,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
         if (shouldUseMultiTag) {
           // If multitag, use directly
           cameraPose =
-              GeomUtil.transform3dToPose3d(unprocessedResult.getMultiTagResult().get().estimatedPose.best);
+              GeomUtil.transform3dToPose3d(
+                  unprocessedResult.getMultiTagResult().get().estimatedPose.best);
 
           robotPose =
               cameraPose
@@ -207,7 +210,8 @@ public class PhotonAprilTagVision extends SubsystemBase {
           if (projectionError < 0.15) {
             cameraPose = cameraPose0;
             robotPose = robotPose0;
-          } else if (Math.abs(robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
+          } else if (Math.abs(
+                  robotPose0.getRotation().minus(currentPose.getRotation()).getRadians())
               < Math.abs(robotPose1.getRotation().minus(currentPose.getRotation()).getRadians())) {
             cameraPose = cameraPose0;
             robotPose = robotPose0;
@@ -283,7 +287,10 @@ public class PhotonAprilTagVision extends SubsystemBase {
                   VecBuilder.fill(
                       singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
                       singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                      singleTagAdjustment * singleTagStdDevScalar * thetaStdDev * stdDevScalarAuto)));
+                      singleTagAdjustment
+                          * singleTagStdDevScalar
+                          * thetaStdDev
+                          * stdDevScalarAuto)));
 
           Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
           Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
