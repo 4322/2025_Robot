@@ -7,6 +7,7 @@ public class Constants {
 
   public static final boolean driveEnabled = true;
   public static final boolean pseudoAutoRotateEnabled = true;
+  public static final boolean setpointGeneratorEnabled = false;
   public static final boolean tuningMode = false;
   public static final boolean visionEnabled = false;
 
@@ -16,6 +17,11 @@ public class Constants {
 
   /* Constants pertaining to the swerve drive */
   public static class Swerve {
+
+    public static final double maxRobotDriveVel = 4.5; // m per sec
+    public static final double maxRobotDriveAccel = 8.51; // m per sec^2
+    public static final double maxRobotRotVel = 12.2718; // rad per sec
+
 
     public static final double SWERVE_COAST_TRESHOLD_MPS = 0.05;
     public static final double SWERVE_COAST_TRESHOLD_SEC = 5.0;

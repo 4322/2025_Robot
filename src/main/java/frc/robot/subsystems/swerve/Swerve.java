@@ -21,6 +21,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commons.Swerve.ModuleLimits;
+import frc.robot.commons.Swerve.SwerveSetpoint;
+import frc.robot.commons.Swerve.SwerveSetpointGenerator;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.Constants;
 import java.util.List;
@@ -47,6 +50,18 @@ public class Swerve extends SubsystemBase {
           Constants.Swerve.pseudoAutoRotatekP,
           Constants.Swerve.pseudoAutoRotatekI,
           Constants.Swerve.pseudoAutoRotatekD);
+  
+  private ModuleLimits moduleLimits = new ModuleLimits(Constants.Swerve.maxRobotDriveVel, Constants.Swerve.maxRobotDriveAccel, Constants.Swerve.maxRobotRotVel);
+  private SwerveSetpointGenerator setpointGenerator;
+  private SwerveSetpoint currentSetpoint =
+      new SwerveSetpoint(
+          new ChassisSpeeds(),
+          new SwerveModuleState[] {
+            new SwerveModuleState(),
+            new SwerveModuleState(),
+            new SwerveModuleState(),
+            new SwerveModuleState()
+          });
 
   public Swerve(
       SwerveDrivetrainConstants drivetrainConstants,
@@ -61,8 +76,13 @@ public class Swerve extends SubsystemBase {
             VecBuilder.fill(0.1, 0.1, 0.1),
             VecBuilder.fill(0.9, 0.9, 0.9),
             moduleConstants);
-
     drivetrain.configNeutralMode(NeutralModeValue.Brake);
+
+    setpointGenerator =
+        SwerveSetpointGenerator.builder()
+            .kinematics(drivetrain.getKinematics())
+            .moduleLocations(drivetrain.getModuleLocations())
+            .build();
 
     lastMovementTimer.start();
     gyroInitWaitTimer.start();
@@ -80,8 +100,9 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] targets = drivetrain.getState().ModuleTargets;
     SwerveModuleState[] states = drivetrain.getState().ModuleStates;
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
-    Logger.recordOutput("Swerve/Targets", targets);
-    Logger.recordOutput("Swerve/Achieved", states);
+    Logger.recordOutput("Swerve/State/Targets", targets);
+    Logger.recordOutput("Swerve/State/Generated Setpoint", currentSetpoint.moduleStates());
+    Logger.recordOutput("Swerve/State/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
     Logger.recordOutput("Swerve/SwerveState", systemState.toString());
@@ -109,12 +130,15 @@ public class Swerve extends SubsystemBase {
           if (Constants.pseudoAutoRotateEnabled) {
             desired.omegaRadiansPerSecond = calcPseudoAutoRotateAdjustment();
           }
+          if (Constants.setpointGeneratorEnabled) {
+            currentSetpoint = setpointGenerator.generateSetpoint(moduleLimits, currentSetpoint, desired, 0.02);
+          }
           drivetrain.setControl(
               new FieldCentric()
-                  .withVelocityX(desired.vxMetersPerSecond)
-                  .withVelocityY(desired.vyMetersPerSecond)
+                  .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vxMetersPerSecond : desired.vxMetersPerSecond)
+                  .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vyMetersPerSecond : desired.vyMetersPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                  .withRotationalRate(desired.omegaRadiansPerSecond));
+                  .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().omegaRadiansPerSecond : desired.omegaRadiansPerSecond));
         } else {
           drivetrain.setControl(
               new RobotCentric()
