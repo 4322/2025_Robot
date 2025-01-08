@@ -100,9 +100,10 @@ public class Swerve extends SubsystemBase {
     SwerveModuleState[] targets = drivetrain.getState().ModuleTargets;
     SwerveModuleState[] states = drivetrain.getState().ModuleStates;
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
-    Logger.recordOutput("Swerve/State/Targets", targets);
-    Logger.recordOutput("Swerve/State/Generated Setpoint", currentSetpoint.moduleStates());
-    Logger.recordOutput("Swerve/State/Achieved", states);
+    Logger.recordOutput("Swerve/Targets", targets);
+    Logger.recordOutput("Swerve/Setpoint/Driver Setpoint", desired);
+    Logger.recordOutput("Swerve/Setpoint/Generated Setpoint", currentSetpoint.chassisSpeeds());
+    Logger.recordOutput("Swerve/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
     Logger.recordOutput("Swerve/SwerveState", systemState.toString());
