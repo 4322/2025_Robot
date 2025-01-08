@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -27,7 +29,7 @@ import org.littletonrobotics.junction.Logger;
 public class Swerve extends SubsystemBase {
 
   /* Stores the swerve drivetrain object */
-  private final SwerveDrivetrain drivetrain;
+  private final SwerveDrivetrain<?, ?, ?> drivetrain;
 
   /* Stores requests and parameters */
   private ChassisSpeeds desired = new ChassisSpeeds();
@@ -41,15 +43,19 @@ public class Swerve extends SubsystemBase {
 
   private SwerveState systemState = SwerveState.PERCENT;
   private PIDController HeadingController =
-        new PIDController(
-            Constants.Swerve.pseudoAutoRotatekP,
-            Constants.Swerve.pseudoAutoRotatekI,
-            Constants.Swerve.pseudoAutoRotatekD);
+      new PIDController(
+          Constants.Swerve.pseudoAutoRotatekP,
+          Constants.Swerve.pseudoAutoRotatekI,
+          Constants.Swerve.pseudoAutoRotatekD);
 
   public Swerve(
-      SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
+      SwerveDrivetrainConstants drivetrainConstants,
+      SwerveModuleConstants<?, ?, ?>... moduleConstants) {
     this.drivetrain =
-        new SwerveDrivetrain(
+        new SwerveDrivetrain<>(
+            TalonFX::new,
+            TalonFX::new,
+            CANcoder::new,
             drivetrainConstants,
             250,
             VecBuilder.fill(0.1, 0.1, 0.1),
@@ -80,10 +86,18 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
     Logger.recordOutput("Swerve/SwerveState", systemState.toString());
     for (int i = 0; i < 4; i++) {
-      Logger.recordOutput("Swerve/Drive Motor/Supply Current/" + i, drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
-      Logger.recordOutput("Swerve/Drive Motor/Stator Current/" + i, drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
-      Logger.recordOutput("Swerve/Steer Motor/Supply Current/" + i, drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
-      Logger.recordOutput("Swerve/Steer Motor/Stator Current/" + i, drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput(
+          "Swerve/Drive Motor/Supply Current/" + i,
+          drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput(
+          "Swerve/Drive Motor/Stator Current/" + i,
+          drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput(
+          "Swerve/Steer Motor/Supply Current/" + i,
+          drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput(
+          "Swerve/Steer Motor/Stator Current/" + i,
+          drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
     }
   }
 
@@ -101,14 +115,13 @@ public class Swerve extends SubsystemBase {
                   .withVelocityY(desired.vyMetersPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
                   .withRotationalRate(desired.omegaRadiansPerSecond));
-        }
-        else {
+        } else {
           drivetrain.setControl(
-            new RobotCentric()
-                .withVelocityX(desired.vxMetersPerSecond)
-                .withVelocityY(desired.vyMetersPerSecond)
-                .withRotationalRate(desired.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+              new RobotCentric()
+                  .withVelocityX(desired.vxMetersPerSecond)
+                  .withVelocityY(desired.vyMetersPerSecond)
+                  .withRotationalRate(desired.omegaRadiansPerSecond)
+                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
         }
         break;
       case VELOCITY:
@@ -173,8 +186,7 @@ public class Swerve extends SubsystemBase {
   }
 
   /* Adds vision data to the pose estimator built into the drivetrain class */
-  public void addVisionData(
-      List<TimestampedVisionUpdate> visionUpdates) {
+  public void addVisionData(List<TimestampedVisionUpdate> visionUpdates) {
     for (TimestampedVisionUpdate visionUpdate : visionUpdates) {
       drivetrain.addVisionMeasurement(
           visionUpdate.pose(), visionUpdate.timestamp(), visionUpdate.stdDevs());
@@ -239,23 +251,23 @@ public class Swerve extends SubsystemBase {
         && pseudoAutoRotateAngle == null
         && Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond)
             < Constants.Swerve.inhibitPseudoAutoRotateRadPerSec) {
-      pseudoAutoRotateAngle =
-          Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
-      Logger.recordOutput(
-          "Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
+      pseudoAutoRotateAngle = Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
+      Logger.recordOutput("Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
       Logger.recordOutput("Swerve/PseudoAutoRotate/HeadingLocked", true);
-    } 
+    }
     // allow driver to take back rotation control of robot
     else if (desired.omegaRadiansPerSecond != 0) {
       pseudoAutoRotateAngle = null;
       Logger.recordOutput("Swerve/PseudoAutoRotate/HeadingLocked", false);
     }
 
-    // Only apply pseudo auto rotate when moving fast enough to avoid robot jittering violently while moving slow
+    // Only apply pseudo auto rotate when moving fast enough to avoid robot jittering violently
+    // while moving slow
     if (pseudoAutoRotateAngle != null
         && (desired.vxMetersPerSecond >= Constants.Swerve.pseudoAutoRotateMinMetersPerSec
             || desired.vyMetersPerSecond >= Constants.Swerve.pseudoAutoRotateMinMetersPerSec)) {
-              return HeadingController.calculate(drivetrain.getState().RawHeading.getRadians(), pseudoAutoRotateAngle.getRadians());
+      return HeadingController.calculate(
+          drivetrain.getState().RawHeading.getRadians(), pseudoAutoRotateAngle.getRadians());
     }
 
     return desired.omegaRadiansPerSecond;
