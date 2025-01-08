@@ -75,6 +75,12 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Swerve/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
+    for (int i = 0; i < 4; i++) {
+      Logger.recordOutput("Swerve/Drive Motor/Supply Current/" + i, drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput("Swerve/Drive Motor/Stator Current/" + i, drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput("Swerve/Steer Motor/Supply Current/" + i, drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+      Logger.recordOutput("Swerve/Steer Motor/Stator Current/" + i, drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+    }
   }
 
   /* Handles statemachine logic */
