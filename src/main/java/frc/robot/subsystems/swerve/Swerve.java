@@ -174,11 +174,10 @@ public class Swerve extends SubsystemBase {
 
   /* Adds vision data to the pose estimator built into the drivetrain class */
   public void addVisionData(
-      List<TimestampedVisionUpdate> shotVisionUpdates,
-      List<TimestampedVisionUpdate> autoVisionUpdates) {
-    for (TimestampedVisionUpdate shotUpdate : shotVisionUpdates) {
+      List<TimestampedVisionUpdate> visionUpdates) {
+    for (TimestampedVisionUpdate visionUpdate : visionUpdates) {
       drivetrain.addVisionMeasurement(
-          shotUpdate.pose(), shotUpdate.timestamp(), shotUpdate.stdDevs());
+          visionUpdate.pose(), visionUpdate.timestamp(), visionUpdate.stdDevs());
     }
   }
 

@@ -16,7 +16,7 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.SingleTagAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
@@ -26,20 +26,13 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class PhotonAprilTagVision extends SubsystemBase {
   private PhotonCamera[] cameras;
   private static final double fieldBorderMargin = 0.5;
-  private BiConsumer<List<TimestampedVisionUpdate>, List<TimestampedVisionUpdate>> visionConsumer =
-      (x, y) -> {};
+  private Consumer<List<TimestampedVisionUpdate>> visionConsumer =
+      (x) -> {};
   private List<TimestampedVisionUpdate> visionUpdates;
-  private List<TimestampedVisionUpdate> visionUpdatesAuto;
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
 
-  /* For shooting vs. path following in auto */
-  private double singleTagStdDevScalar = 100.0;
-
-  private double stdDevScalarAuto = 0.5940;
-  private double thetaStdDevCoefficientAuto = 0.1;
-
-  private double stdDevScalarShooting = 0.2;
-  private double thetaStdDevCoefficientShooting = 0.075;
+  private double stdDevScalar = 0.2;
+  private double thetaStdDevCoefficient = 0.075;
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -104,7 +97,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
   public void setDataInterfaces(
       Supplier<Pose2d> poseSupplier,
-      BiConsumer<List<TimestampedVisionUpdate>, List<TimestampedVisionUpdate>> visionConsumer) {
+      Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
     this.poseSupplier = poseSupplier;
     this.visionConsumer = visionConsumer;
   }
@@ -113,7 +106,6 @@ public class PhotonAprilTagVision extends SubsystemBase {
   public void periodic() {
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
-    visionUpdatesAuto = new ArrayList<>();
 
     // Loop through all the cameras
     for (int instanceIndex = 0; instanceIndex < cameras.length; instanceIndex++) {
@@ -260,37 +252,18 @@ public class PhotonAprilTagVision extends SubsystemBase {
                   robotPose,
                   timestamp,
                   VecBuilder.fill(
-                      stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
-                      stdDevScalarShooting * thetaStdDevCoefficientShooting * xyStdDev,
-                      stdDevScalarShooting * thetaStdDevCoefficientShooting * thetaStdDev)));
-          visionUpdatesAuto.add(
-              new TimestampedVisionUpdate(
-                  robotPose,
-                  timestamp,
-                  VecBuilder.fill(
-                      stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
-                      stdDevScalarAuto * thetaStdDevCoefficientAuto * xyStdDev,
-                      stdDevScalarAuto * thetaStdDevCoefficientAuto * thetaStdDev)));
+                      stdDevScalar * thetaStdDevCoefficient * xyStdDev,
+                      stdDevScalar * thetaStdDevCoefficient * xyStdDev,
+                      stdDevScalar * thetaStdDevCoefficient * thetaStdDev)));
         } else {
           visionUpdates.add(
               new TimestampedVisionUpdate(
                   robotPose,
                   timestamp,
                   VecBuilder.fill(
-                      singleTagAdjustment * xyStdDev * stdDevScalarShooting,
-                      singleTagAdjustment * xyStdDev * stdDevScalarShooting,
-                      singleTagAdjustment * thetaStdDev * stdDevScalarShooting)));
-          visionUpdatesAuto.add(
-              new TimestampedVisionUpdate(
-                  robotPose,
-                  timestamp,
-                  VecBuilder.fill(
-                      singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                      singleTagAdjustment * singleTagStdDevScalar * xyStdDev * stdDevScalarAuto,
-                      singleTagAdjustment
-                          * singleTagStdDevScalar
-                          * thetaStdDev
-                          * stdDevScalarAuto)));
+                      singleTagAdjustment * xyStdDev * stdDevScalar,
+                      singleTagAdjustment * xyStdDev * stdDevScalar,
+                      singleTagAdjustment * thetaStdDev * stdDevScalar)));
 
           Logger.recordOutput("VisionData/" + instanceIndex, robotPose);
           Logger.recordOutput("Photon/Tags Used " + instanceIndex, tagPose3ds.size());
@@ -299,6 +272,6 @@ public class PhotonAprilTagVision extends SubsystemBase {
     }
 
     // Apply all vision updates to pose estimator
-    visionConsumer.accept(visionUpdates, visionUpdatesAuto);
+    visionConsumer.accept(visionUpdates);
   }
 }
