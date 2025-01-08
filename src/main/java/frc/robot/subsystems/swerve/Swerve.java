@@ -136,7 +136,7 @@ public class Swerve extends SubsystemBase {
           drivetrain.setControl(
               new FieldCentric()
                   .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vxMetersPerSecond : desired.vxMetersPerSecond)
-                  .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vyMetersPerSecond : desired.vyMetersPerSecond)
+                  .withVelocityY(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vyMetersPerSecond : desired.vyMetersPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
                   .withRotationalRate(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().omegaRadiansPerSecond : desired.omegaRadiansPerSecond));
         } else {
