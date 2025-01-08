@@ -80,7 +80,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    RobotContainer.swerve.clearHeadingLock(); // don't rotate when re-enabling
+    RobotContainer.swerve.clearPseudoAutoRotateHeadingLock(); // don't rotate when re-enabling
   }
 
   @Override
@@ -93,7 +93,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     RobotContainer.swerve
-        .clearHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
+        .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
     // RobotController.setBrownoutVoltage(5.75); // roboRIO 2 only
   }
 
@@ -109,7 +109,7 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     RobotContainer.swerve
-        .clearHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
+        .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
     // RobotController.setBrownoutVoltage(5.75);
   }
 

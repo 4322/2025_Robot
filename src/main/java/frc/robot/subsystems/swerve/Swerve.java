@@ -8,9 +8,9 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
-import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,8 +33,6 @@ public class Swerve extends SubsystemBase {
   private ChassisSpeeds desired = new ChassisSpeeds();
   private boolean fieldRelative = false;
 
-  private boolean requestVelocity = false;
-  private boolean requestPercent = false;
   private boolean isBrakeMode = true;
   private Timer lastMovementTimer = new Timer();
   private Timer gyroInitWaitTimer = new Timer();
@@ -42,6 +40,11 @@ public class Swerve extends SubsystemBase {
   private Rotation2d pseudoAutoRotateAngle;
 
   private SwerveState systemState = SwerveState.PERCENT;
+  private PIDController HeadingController =
+        new PIDController(
+            Constants.Swerve.pseudoAutoRotatekP,
+            Constants.Swerve.pseudoAutoRotatekI,
+            Constants.Swerve.pseudoAutoRotatekD);
 
   public Swerve(
       SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... moduleConstants) {
@@ -75,6 +78,7 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Swerve/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
+    Logger.recordOutput("Swerve/SwerveState", systemState.toString());
     for (int i = 0; i < 4; i++) {
       Logger.recordOutput("Swerve/Drive Motor/Supply Current/" + i, drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
       Logger.recordOutput("Swerve/Drive Motor/Stator Current/" + i, drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
@@ -85,45 +89,12 @@ public class Swerve extends SubsystemBase {
 
   /* Handles statemachine logic */
   private void handleStatemachineLogic() {
-    SwerveState nextSystemState = systemState;
-    if (systemState == SwerveState.PERCENT) {
-      /* State outputs */
-      if (fieldRelative) {
-        if (Constants.pseudoAutoRotateEnabled) {
-          // Wait timer prevents race condition where angle heading lock is fetched
-          // before getting correct gyro readings, causing robot to spin out of control
-          if (gyroInitWaitTimer.hasElapsed(4)) {
-            gyroInitialized = true;
-            gyroInitWaitTimer.stop();
+    switch (systemState) {
+      case PERCENT:
+        if (fieldRelative) {
+          if (Constants.pseudoAutoRotateEnabled) {
+            desired.omegaRadiansPerSecond = calcPseudoAutoRotateAdjustment();
           }
-
-          if (gyroInitialized
-              && desired.omegaRadiansPerSecond == 0
-              && pseudoAutoRotateAngle == null
-              && Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond)
-                  < Constants.Swerve.inhibitPseudoAutoRotateRadPerSec) {
-            pseudoAutoRotateAngle =
-                Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
-            Logger.recordOutput(
-                "Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
-            Logger.recordOutput("Swerve/PseudoAutoRotate/Enabled", true);
-          } else if (desired.omegaRadiansPerSecond != 0) {
-            pseudoAutoRotateAngle = null;
-            Logger.recordOutput("Swerve/PseudoAutoRotate/Enabled", false);
-          }
-        }
-
-        if (pseudoAutoRotateAngle != null
-            && Constants.pseudoAutoRotateEnabled
-            && (desired.vxMetersPerSecond >= Constants.Swerve.pseudoAutoRotateMinMetersPerSec
-                || desired.vyMetersPerSecond >= Constants.Swerve.pseudoAutoRotateMinMetersPerSec)) {
-          drivetrain.setControl(
-              new FieldCentricFacingAngle()
-                  .withVelocityX(desired.vxMetersPerSecond)
-                  .withVelocityY(desired.vyMetersPerSecond)
-                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                  .withTargetDirection(pseudoAutoRotateAngle));
-        } else {
           drivetrain.setControl(
               new FieldCentric()
                   .withVelocityX(desired.vxMetersPerSecond)
@@ -131,43 +102,33 @@ public class Swerve extends SubsystemBase {
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
                   .withRotationalRate(desired.omegaRadiansPerSecond));
         }
-      } else {
-        drivetrain.setControl(
+        else {
+          drivetrain.setControl(
             new RobotCentric()
                 .withVelocityX(desired.vxMetersPerSecond)
                 .withVelocityY(desired.vyMetersPerSecond)
                 .withRotationalRate(desired.omegaRadiansPerSecond)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
-      }
-
-      /* State transitions */
-      if (requestVelocity) {
-        nextSystemState = SwerveState.VELOCITY;
-      }
-    } else if (systemState == SwerveState.VELOCITY) {
-      /* State outputs */
-      if (fieldRelative) {
-        drivetrain.setControl(
-            new FieldCentric()
-                .withVelocityX(desired.vxMetersPerSecond)
-                .withVelocityY(desired.vyMetersPerSecond)
-                .withRotationalRate(desired.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.Velocity));
-      } else {
-        drivetrain.setControl(
-            new RobotCentric()
-                .withVelocityX(desired.vxMetersPerSecond)
-                .withVelocityY(desired.vyMetersPerSecond)
-                .withRotationalRate(desired.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.Velocity));
-      }
-
-      /* State transitions */
-      if (requestPercent) {
-        nextSystemState = SwerveState.PERCENT;
-      }
+        }
+        break;
+      case VELOCITY:
+        if (fieldRelative) {
+          drivetrain.setControl(
+              new FieldCentric()
+                  .withVelocityX(desired.vxMetersPerSecond)
+                  .withVelocityY(desired.vyMetersPerSecond)
+                  .withRotationalRate(desired.omegaRadiansPerSecond)
+                  .withDriveRequestType(DriveRequestType.Velocity));
+        } else {
+          drivetrain.setControl(
+              new RobotCentric()
+                  .withVelocityX(desired.vxMetersPerSecond)
+                  .withVelocityY(desired.vyMetersPerSecond)
+                  .withRotationalRate(desired.omegaRadiansPerSecond)
+                  .withDriveRequestType(DriveRequestType.Velocity));
+        }
+        break;
     }
-    systemState = nextSystemState;
 
     /* If the driver station is enabled, set the modules to break. Otherwise set them to coast */
     boolean stillMoving = false;
@@ -195,8 +156,7 @@ public class Swerve extends SubsystemBase {
    * "speeds" should be in meters per second
    */
   public void requestVelocity(ChassisSpeeds speeds, boolean fieldRelative) {
-    requestVelocity = true;
-    requestPercent = false;
+    systemState = SwerveState.VELOCITY;
 
     this.desired = speeds;
     this.fieldRelative = fieldRelative;
@@ -206,8 +166,7 @@ public class Swerve extends SubsystemBase {
    * "speeds" should be in meters per second
    */
   public void requestPercent(ChassisSpeeds speeds, boolean fieldRelative) {
-    requestVelocity = false;
-    requestPercent = true;
+    systemState = SwerveState.PERCENT;
 
     this.desired = speeds;
     this.fieldRelative = fieldRelative;
@@ -263,8 +222,44 @@ public class Swerve extends SubsystemBase {
         < SWERVE_ANGULAR_ERROR_TOLERANCE_RAD_P_S;
   }
 
-  public void clearHeadingLock() {
+  public void clearPseudoAutoRotateHeadingLock() {
     pseudoAutoRotateAngle = null;
+  }
+
+  private double calcPseudoAutoRotateAdjustment() {
+    // Wait timer prevents race condition where angle heading lock is fetched
+    // before getting correct gyro readings, causing robot to spin out of control
+    if (!gyroInitialized && gyroInitWaitTimer.hasElapsed(4)) {
+      gyroInitialized = true;
+      gyroInitWaitTimer.stop();
+    }
+
+    // lock pseudo auto rotate angle to current heading
+    if (gyroInitialized
+        && desired.omegaRadiansPerSecond == 0
+        && pseudoAutoRotateAngle == null
+        && Math.abs(getRobotRelativeSpeeds().omegaRadiansPerSecond)
+            < Constants.Swerve.inhibitPseudoAutoRotateRadPerSec) {
+      pseudoAutoRotateAngle =
+          Rotation2d.fromDegrees(drivetrain.getState().RawHeading.getDegrees());
+      Logger.recordOutput(
+          "Swerve/PseudoAutoRotate/Heading", pseudoAutoRotateAngle.getDegrees());
+      Logger.recordOutput("Swerve/PseudoAutoRotate/HeadingLocked", true);
+    } 
+    // allow driver to take back rotation control of robot
+    else if (desired.omegaRadiansPerSecond != 0) {
+      pseudoAutoRotateAngle = null;
+      Logger.recordOutput("Swerve/PseudoAutoRotate/HeadingLocked", false);
+    }
+
+    // Only apply pseudo auto rotate when moving fast enough to avoid robot jittering violently while moving slow
+    if (pseudoAutoRotateAngle != null
+        && (desired.vxMetersPerSecond >= Constants.Swerve.pseudoAutoRotateMinMetersPerSec
+            || desired.vyMetersPerSecond >= Constants.Swerve.pseudoAutoRotateMinMetersPerSec)) {
+              return HeadingController.calculate(drivetrain.getState().RawHeading.getRadians(), pseudoAutoRotateAngle.getRadians());
+    }
+
+    return desired.omegaRadiansPerSecond;
   }
 
   /* Swerve State */
