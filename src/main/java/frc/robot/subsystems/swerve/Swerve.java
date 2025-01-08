@@ -138,7 +138,7 @@ public class Swerve extends SubsystemBase {
                   .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vxMetersPerSecond : desired.vxMetersPerSecond)
                   .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().vyMetersPerSecond : desired.vyMetersPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
-                  .withVelocityX(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().omegaRadiansPerSecond : desired.omegaRadiansPerSecond));
+                  .withRotationalRate(Constants.setpointGeneratorEnabled ? currentSetpoint.chassisSpeeds().omegaRadiansPerSecond : desired.omegaRadiansPerSecond));
         } else {
           drivetrain.setControl(
               new RobotCentric()
