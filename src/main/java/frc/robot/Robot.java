@@ -93,7 +93,8 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.schedule();
     }
     RobotContainer.swerve
-        .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
+        .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning
+    // wildly in place
     // RobotController.setBrownoutVoltage(5.75); // roboRIO 2 only
   }
 
@@ -109,7 +110,8 @@ public class Robot extends LoggedRobot {
       m_autonomousCommand.cancel();
     }
     RobotContainer.swerve
-        .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning wildly in place
+        .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning
+    // wildly in place
     // RobotController.setBrownoutVoltage(5.75);
   }
 

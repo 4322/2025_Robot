@@ -26,8 +26,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class PhotonAprilTagVision extends SubsystemBase {
   private PhotonCamera[] cameras;
   private static final double fieldBorderMargin = 0.5;
-  private Consumer<List<TimestampedVisionUpdate>> visionConsumer =
-      (x) -> {};
+  private Consumer<List<TimestampedVisionUpdate>> visionConsumer = (x) -> {};
   private List<TimestampedVisionUpdate> visionUpdates;
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
 
@@ -96,8 +95,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
   }
 
   public void setDataInterfaces(
-      Supplier<Pose2d> poseSupplier,
-      Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
+      Supplier<Pose2d> poseSupplier, Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
     this.poseSupplier = poseSupplier;
     this.visionConsumer = visionConsumer;
   }
