@@ -9,12 +9,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
+
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
@@ -101,6 +104,13 @@ public class RobotContainer {
               }
             },
             swerve));
+      
+      if (Constants.swerveSysIdEnabled) {
+        new JoystickButton(driver, XboxController.Button.kA.value).whileTrue(swerve.sysIdQuasistatic(Direction.kReverse));
+        new JoystickButton(driver, XboxController.Button.kB.value).whileTrue(swerve.sysIdQuasistatic(Direction.kForward));
+        new JoystickButton(driver, XboxController.Button.kX.value).whileTrue(swerve.sysIdDynamic(Direction.kReverse));
+        new JoystickButton(driver, XboxController.Button.kY.value).whileTrue(swerve.sysIdDynamic(Direction.kForward));
+      }
   }
 
   private void configureAprilTagVision() {

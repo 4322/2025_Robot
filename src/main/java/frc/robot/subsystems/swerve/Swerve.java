@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -9,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import edu.wpi.first.math.VecBuilder;
@@ -18,9 +20,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.Constants;
 import java.util.List;
@@ -47,6 +52,13 @@ public class Swerve extends SubsystemBase {
           Constants.Swerve.pseudoAutoRotatekP,
           Constants.Swerve.pseudoAutoRotatekI,
           Constants.Swerve.pseudoAutoRotatekD);
+  
+  // SysID Characterization
+  private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+  private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+  private final SysIdRoutine m_sysIdRoutineTranslation;
+  private final SysIdRoutine m_sysIdRoutineSteer;
+  private SysIdRoutine m_sysIdRoutineToApply;
 
   public Swerve(
       SwerveDrivetrainConstants drivetrainConstants,
@@ -66,6 +78,40 @@ public class Swerve extends SubsystemBase {
 
     lastMovementTimer.start();
     gyroInitWaitTimer.start();
+
+    /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
+    m_sysIdRoutineTranslation = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,        // Use default ramp rate (1 V/s)
+            Units.Volts.of(4), // Reduce dynamic step voltage to 4 V to prevent brownout
+            null,        // Use default timeout (10 s)
+            // Log state with SignalLogger class
+            state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+            output -> drivetrain.setControl(m_translationCharacterization.withVolts(output)),
+            null,
+            this
+        )
+    );
+
+    /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
+    m_sysIdRoutineSteer = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,        // Use default ramp rate (1 V/s)
+            Units.Volts.of(7), // Use dynamic voltage of 7 V
+            null,        // Use default timeout (10 s)
+            // Log state with SignalLogger class
+            state -> SignalLogger.writeString("SysIdSteer_State", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+            volts -> drivetrain.setControl(m_steerCharacterization.withVolts(volts)),
+            null,
+            this
+        )
+    );
+
+    m_sysIdRoutineToApply = m_sysIdRoutineTranslation; // TODO: Make this value configurable on Elastic for easier use
   }
 
   @Override
@@ -271,6 +317,14 @@ public class Swerve extends SubsystemBase {
     }
 
     return desired.omegaRadiansPerSecond;
+  }
+
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutineToApply.quasistatic(direction);
+  }
+
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutineToApply.dynamic(direction);
   }
 
   /* Swerve State */
