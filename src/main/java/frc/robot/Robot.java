@@ -7,6 +7,11 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.Constants;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -44,8 +49,43 @@ public class Robot extends LoggedRobot {
     }
 
     if (isReal()) {
+      var directory = new File(Constants.logPath);
+      if (!directory.exists()) {
+        directory.mkdir();
+      }
+      // ensure that there is enough space on the roboRIO to log data
+      if (directory.getFreeSpace() < Constants.minFreeSpace) {
+        var files = directory.listFiles();
+        if (files != null) {
+          // Sorting the files by name will ensure that the oldest files are deleted first
+          files = Arrays.stream(files).sorted().toArray(File[]::new);
+
+          long bytesToDelete = Constants.minFreeSpace - directory.getFreeSpace();
+
+          for (File file : files) {
+            if (file.getName().endsWith(".wpilog")) {
+              try {
+                bytesToDelete -= Files.size(file.toPath());
+              } catch (IOException e) {
+                DriverStation.reportError("Failed to get size of file " + file.getName(), false);
+                continue;
+              }
+              if (file.delete()) {
+                DriverStation.reportWarning(
+                    "Deleted " + file.getName() + " to free up space", false);
+              } else {
+                DriverStation.reportError("Failed to delete " + file.getName(), false);
+              }
+              if (bytesToDelete <= 0) {
+                break;
+              }
+            }
+          }
+        }
+      }
+
       Logger.addDataReceiver(
-          new WPILOGWriter("/home/lvuser/logs")); // Log to a USB stick is ("/U/logs")
+          new WPILOGWriter(Constants.logPath)); // Log to a USB stick is ("/U/logs")
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else {
