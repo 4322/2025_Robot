@@ -177,7 +177,11 @@ public class Swerve extends SubsystemBase {
   /* Request the drivetrain to drive at the specified velocity
    * "speeds" should be in meters per second
    */
-  public void requestVelocity(ChassisSpeeds speeds, double[] desiredWheelForceFFX, double[] desiredWheelForceFFY, boolean fieldRelative) {
+  public void requestVelocity(
+      ChassisSpeeds speeds,
+      double[] desiredWheelForceFFX,
+      double[] desiredWheelForceFFY,
+      boolean fieldRelative) {
     systemState = SwerveState.VELOCITY;
 
     this.desired = speeds;
