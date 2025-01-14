@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
@@ -29,7 +30,7 @@ import org.littletonrobotics.junction.Logger;
 public class Swerve extends SubsystemBase {
 
   /* Stores the swerve drivetrain object */
-  private final SwerveDrivetrain<?, ?, ?> drivetrain;
+  private final SwerveDrivetrain<TalonFX, TalonFX, CANcoder> drivetrain;
 
   /* Stores requests and parameters */
   private ChassisSpeeds desired = new ChassisSpeeds();
@@ -52,7 +53,7 @@ public class Swerve extends SubsystemBase {
       SwerveDrivetrainConstants drivetrainConstants,
       SwerveModuleConstants<?, ?, ?>... moduleConstants) {
     this.drivetrain =
-        new SwerveDrivetrain<>(
+        new SwerveDrivetrain<TalonFX, TalonFX, CANcoder>(
             TalonFX::new,
             TalonFX::new,
             CANcoder::new,
@@ -114,6 +115,7 @@ public class Swerve extends SubsystemBase {
                   .withVelocityX(desired.vxMetersPerSecond)
                   .withVelocityY(desired.vyMetersPerSecond)
                   .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+                  .withSteerRequestType(SteerRequestType.MotionMagicExpo)
                   .withRotationalRate(desired.omegaRadiansPerSecond));
         } else {
           drivetrain.setControl(
@@ -121,7 +123,8 @@ public class Swerve extends SubsystemBase {
                   .withVelocityX(desired.vxMetersPerSecond)
                   .withVelocityY(desired.vyMetersPerSecond)
                   .withRotationalRate(desired.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+                  .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+                  .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         }
         break;
       case VELOCITY:
@@ -131,14 +134,16 @@ public class Swerve extends SubsystemBase {
                   .withVelocityX(desired.vxMetersPerSecond)
                   .withVelocityY(desired.vyMetersPerSecond)
                   .withRotationalRate(desired.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.Velocity));
+                  .withDriveRequestType(DriveRequestType.Velocity)
+                  .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         } else {
           drivetrain.setControl(
               new RobotCentric()
                   .withVelocityX(desired.vxMetersPerSecond)
                   .withVelocityY(desired.vyMetersPerSecond)
                   .withRotationalRate(desired.omegaRadiansPerSecond)
-                  .withDriveRequestType(DriveRequestType.Velocity));
+                  .withDriveRequestType(DriveRequestType.Velocity)
+                  .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         }
         break;
     }
