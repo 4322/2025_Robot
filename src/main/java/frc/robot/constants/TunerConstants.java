@@ -21,11 +21,15 @@ public class TunerConstants {
     // TODO: Potentially add SupplyLowerCurrentLimit thresholds and ramp rate configs
     driveInitialConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     driveInitialConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
+    driveInitialConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
+    driveInitialConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     steerInitialConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     steerInitialConfigs.CurrentLimits.SupplyCurrentLimit = 20.0;
     steerInitialConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     steerInitialConfigs.CurrentLimits.StatorCurrentLimit = 60.0;
+    steerInitialConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
+    steerInitialConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
   }
   // AKA stator current limit
   private static final double kSlipCurrentA = 100.0;
@@ -43,7 +47,7 @@ public class TunerConstants {
   public static final double kSpeedAt12VoltsMps = 5.395;
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
-  private static final double kCoupleRatio = 3.573;
+  private static final double kCoupleRatio = 0.173;
 
   private static final double kDriveGearRatio = 5.90;
   private static final double kSteerGearRatio = 150.0 / 7.0;
