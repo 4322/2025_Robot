@@ -35,7 +35,7 @@ public class TunerConstants {
   private static final double kSlipCurrentA = 100.0;
 
   private static final Slot0Configs steerGains =
-      new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+      new Slot0Configs().withKP(65).withKI(0).withKD(0.2).withKS(0).withKV(0).withKA(0);
   private static final Slot0Configs driveGains =
       new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
 
@@ -47,7 +47,7 @@ public class TunerConstants {
   public static final double kSpeedAt12VoltsMps = 5.395;
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
-  private static final double kCoupleRatio = 0.173;
+  private static final double kCoupleRatio = -0.173;
 
   private static final double kDriveGearRatio = 5.90;
   private static final double kSteerGearRatio = 150.0 / 7.0;
@@ -56,7 +56,7 @@ public class TunerConstants {
   private static final boolean kSteerMotorReversed = true;
   private static final boolean kCANcoderReversed = false;
   private static final boolean kInvertLeftSide = false;
-  private static final boolean kInvertRightSide = false;
+  private static final boolean kInvertRightSide = true;
 
   private static final String kCANbusName = "Clockwork";
   private static final int kPigeonId = 10;
