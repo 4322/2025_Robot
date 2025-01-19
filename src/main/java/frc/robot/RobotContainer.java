@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
+import frc.robot.commands.AutoScoreReef;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
@@ -117,6 +119,10 @@ public class RobotContainer {
               }
             },
             swerve));
+    new JoystickButton(driver, XboxController.Button.kX.value)
+        .whileTrue(new AutoScoreReef(swerve, 0, 18, true));
+    new JoystickButton(driver, XboxController.Button.kB.value)
+        .whileTrue(new AutoScoreReef(swerve, 0, 18, false));
   }
 
   private void configureAprilTagVision() {
