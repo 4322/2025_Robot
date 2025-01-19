@@ -14,6 +14,7 @@ import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.swerve.Swerve;
+import frc.robot.vision.photonvision.AutoAlignTagDetection;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
 import org.photonvision.PhotonCamera;
 
@@ -30,7 +31,7 @@ public class RobotContainer {
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
 
-  // April tag cameras
+  // 3D April tag cameras
   public static PhotonCamera frontLeftCamera;
   public static PhotonCamera frontRightCamera;
   public static PhotonCamera backLeftCamera;
@@ -38,8 +39,15 @@ public class RobotContainer {
   public static PhotonAprilTagVision aprilTagVision;
   public static AutonomousSelector autonomousSelector;
 
+  // 2D April tag cameras
+  public static PhotonCamera leftCamera;
+  public static PhotonCamera rightCamera;
+  public static AutoAlignTagDetection autoAlignLeftCam;
+  public static AutoAlignTagDetection autoAlignRightCam;
+
+
   public RobotContainer() {
-    if (Constants.visionEnabled) {
+    if (Constants.posevisionEnabled) {
       frontLeftCamera = new PhotonCamera("front-left");
       frontRightCamera = new PhotonCamera("front-right");
       backLeftCamera = new PhotonCamera("back-left");
@@ -50,6 +58,14 @@ public class RobotContainer {
           new PhotonAprilTagVision(
               frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
       configureAprilTagVision();
+    }
+
+    if (Constants.autoAlignVisionEnabled) {
+      leftCamera = new PhotonCamera("left");
+      rightCamera = new PhotonCamera("right");
+
+      autoAlignLeftCam = new AutoAlignTagDetection(leftCamera, Constants.Vision.leftAutAlignCamPose);
+      autoAlignRightCam = new AutoAlignTagDetection(rightCamera, Constants.Vision.rightAutAlignCamPose);
     }
 
     configureBindings();
