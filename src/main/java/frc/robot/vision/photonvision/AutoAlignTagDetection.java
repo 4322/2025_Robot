@@ -1,13 +1,14 @@
 package frc.robot.vision.photonvision;
 
+import static frc.robot.constants.FieldConstants.aprilTags;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import static frc.robot.constants.FieldConstants.aprilTags;
-
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -26,14 +27,32 @@ public class AutoAlignTagDetection extends SubsystemBase {
   @Override
   public void periodic() {
     List<PhotonPipelineResult> unprocessedResults = camera.getAllUnreadResults();
-    latestResult = unprocessedResults.get(unprocessedResults.size() - 1);
+    if (!unprocessedResults.isEmpty()) {
+      latestResult = unprocessedResults.get(unprocessedResults.size() - 1);
+    }
+
+    if (latestResult.hasTargets()) {
+      Logger.recordOutput("DriveToPose/tagDist", getRobotFrontDistanceToTag(18));
+    }
   }
 
   public double getRobotFrontDistanceToTag(int targetID) {
-    double camDistanceToTag = PhotonUtils.calculateDistanceToTargetMeters(cameraPose.getZ(), aprilTags.getTagPose(targetID).get().getZ(), cameraPose.getRotation().getY(), getTag(targetID).pitch);
-    Translation2d cameraToTag = new Translation2d(camDistanceToTag, new Rotation2d(Math.toRadians(getTag(targetID).yaw)));
+    double camPitchDistanceToTag =
+        PhotonUtils.calculateDistanceToTargetMeters(
+            cameraPose.getZ(),
+            aprilTags.getTagPose(targetID).get().getZ(),
+            cameraPose.getRotation().getY(),
+            Math.toRadians(getTag(targetID).pitch));
+
+    double camDistanceToTag =
+        camPitchDistanceToTag / Math.cos(Math.toRadians(getTag(targetID).yaw));
+    Logger.recordOutput("DriveToPose/camDistToTag", camDistanceToTag);
+    Translation2d cameraToTag =
+        new Translation2d(camDistanceToTag, new Rotation2d(Math.toRadians(getTag(targetID).yaw)));
     // (drivebase length / 2 - camera X pos) + bumper offset gives offset front of robot
-    Translation2d cameraToRobotFront = new Translation2d((13-cameraPose.getX()) + 3.5,0);
+    Translation2d cameraToRobotFront =
+        new Translation2d(
+            (Units.inchesToMeters(13) - cameraPose.getX()) + Units.inchesToMeters(3.5), 0);
     return cameraToRobotFront.getDistance(cameraToTag);
   }
 

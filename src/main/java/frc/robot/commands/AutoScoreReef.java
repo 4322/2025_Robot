@@ -16,7 +16,6 @@ import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.swerve.Swerve;
-
 import org.littletonrobotics.junction.Logger;
 
 public class AutoScoreReef extends Command {
@@ -26,9 +25,8 @@ public class AutoScoreReef extends Command {
   private boolean useLeftCam;
 
   private final ProfiledPIDController driveController =
-      new ProfiledPIDController(
-          0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(0.0, 0.0), 0.02);
-  private final PIDController thetaController = new PIDController(0, 0, 0);
+      new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(0.0, 0.0), 0.02);
+  private final PIDController thetaController = new PIDController(6, 0, 0);
   private double driveErrorAbs;
 
   private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("DriveToPose/DriveKp");
@@ -60,8 +58,8 @@ public class AutoScoreReef extends Command {
     driveMaxAcceleration.initDefault(Units.inchesToMeters(95.0));
     driveTolerance.initDefault(0.01);
     driveToleranceSlow.initDefault(0.06);
-    ffMinRadius.initDefault(0.2);
-    ffMaxRadius.initDefault(0.8);
+    ffMinRadius.initDefault(0);
+    ffMaxRadius.initDefault(0);
   }
 
   public AutoScoreReef(Swerve swerve, double desiredHeading, int desiredTagID, boolean useLeftCam) {
@@ -77,7 +75,10 @@ public class AutoScoreReef extends Command {
   public void initialize() {
     driveController.reset(
         0,
-        new Translation2d(swerve.getRobotRelativeSpeeds().vxMetersPerSecond, swerve.getRobotRelativeSpeeds().vyMetersPerSecond).getNorm());
+        new Translation2d(
+                swerve.getRobotRelativeSpeeds().vxMetersPerSecond,
+                swerve.getRobotRelativeSpeeds().vyMetersPerSecond)
+            .getNorm());
   }
 
   @Override
@@ -95,9 +96,7 @@ public class AutoScoreReef extends Command {
       driveController.setP(driveKp.get());
       driveController.setD(driveKd.get());
       driveController.setConstraints(
-          new TrapezoidProfile.Constraints(
-              driveMaxVelocity.get(),
-              driveMaxAcceleration.get()));
+          new TrapezoidProfile.Constraints(driveMaxVelocity.get(), driveMaxAcceleration.get()));
       driveController.setTolerance(driveTolerance.get());
       thetaController.setP(thetaKp.get());
       thetaController.setD(thetaKd.get());
@@ -107,81 +106,79 @@ public class AutoScoreReef extends Command {
     double dy;
 
     if (useLeftCam) {
-        hasTarget = RobotContainer.autoAlignLeftCam.hasTargetID(desiredTagID);
-    }
-    else {
-        hasTarget = RobotContainer.autoAlignRightCam.hasTargetID(desiredTagID);
+      hasTarget = RobotContainer.autoAlignLeftCam.hasTargetID(desiredTagID);
+    } else {
+      hasTarget = RobotContainer.autoAlignRightCam.hasTargetID(desiredTagID);
     }
 
     // Calculate theta speed
     double thetaVelocity =
-    thetaController.calculate(swerve.getPose().getRotation().getRadians(), desiredHeading);
+        thetaController.calculate(swerve.getPose().getRotation().getRadians(), desiredHeading);
 
     if (!hasTarget) {
-        // Raw inputs
-        double x = -RobotContainer.driver.getLeftY();
-        double y = -RobotContainer.driver.getLeftX();
+      // Raw inputs
+      double x = -RobotContainer.driver.getLeftY();
+      double y = -RobotContainer.driver.getLeftX();
 
-        // Apply polar deadband
-        double[] polarDriveCoord = Util.polarDeadband(x, y, Constants.Swerve.driveDeadband);
-        double driveMag = polarDriveCoord[0];
-        double driveTheta = polarDriveCoord[1];
+      // Apply polar deadband
+      double[] polarDriveCoord = Util.polarDeadband(x, y, Constants.Swerve.driveDeadband);
+      double driveMag = polarDriveCoord[0];
+      double driveTheta = polarDriveCoord[1];
 
-        // Quadratic scaling of drive inputs
-        driveMag = driveMag * driveMag;
+      // Quadratic scaling of drive inputs
+      driveMag = driveMag * driveMag;
 
-        // Normalize vector magnitude so as not to give an invalid input
-        if (driveMag > 1) {
+      // Normalize vector magnitude so as not to give an invalid input
+      if (driveMag > 1) {
         driveMag = 1;
-        }
+      }
 
-        dx = driveMag * Math.cos(driveTheta);
-        dy = driveMag * Math.sin(driveTheta);
+      dx = driveMag * Math.cos(driveTheta);
+      dy = driveMag * Math.sin(driveTheta);
 
-        if (Robot.alliance == DriverStation.Alliance.Blue) {
+      if (Robot.alliance == DriverStation.Alliance.Blue) {
         dx *= 6.0;
         dy *= 6.0;
 
-        } else {
+      } else {
         dx *= -6.0;
         dy *= -6.0;
-        }
+      }
 
-        swerve.requestPercent(new ChassisSpeeds(dx, dy, thetaVelocity), true);
-    }
-    else {
-        double currentDistance;
-        double yawDeg;
+      swerve.requestPercent(new ChassisSpeeds(dx, dy, thetaVelocity), true);
+    } else {
+      double currentDistance;
+      double yawDeg;
 
-        if (useLeftCam) {
-            currentDistance = RobotContainer.autoAlignLeftCam.getRobotFrontDistanceToTag(desiredTagID);
-            yawDeg = RobotContainer.autoAlignLeftCam.getTag(desiredTagID).getYaw();
-        }
-        else {
-            currentDistance = RobotContainer.autoAlignRightCam.getRobotFrontDistanceToTag(desiredTagID);
-            yawDeg = RobotContainer.autoAlignRightCam.getTag(desiredTagID).getYaw();
-        }
-    
-        double ffScaler =
-            MathUtil.clamp(
-                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
-                0.0,
-                1.0);
-        driveErrorAbs = currentDistance;
-        double driveVelocityScalar =
-            driveController.getSetpoint().velocity * ffScaler
-                + driveController.calculate(driveErrorAbs, 0.0);
-        if (currentDistance < driveController.getPositionTolerance()) driveVelocityScalar = 0.0;
+      if (useLeftCam) {
+        currentDistance = RobotContainer.autoAlignLeftCam.getRobotFrontDistanceToTag(desiredTagID);
+        yawDeg = RobotContainer.autoAlignLeftCam.getTag(desiredTagID).getYaw();
+      } else {
+        currentDistance = RobotContainer.autoAlignRightCam.getRobotFrontDistanceToTag(desiredTagID);
+        yawDeg = RobotContainer.autoAlignRightCam.getTag(desiredTagID).yaw;
+      }
 
-        // Command speeds
-        var driveVelocity =
-            new Translation2d(driveVelocityScalar, new Rotation2d(Math.toRadians(yawDeg)));
-        
-        swerve.requestVelocity(new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
+      double ffScaler =
+          MathUtil.clamp(
+              (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
+              0.0,
+              1.0);
+      driveErrorAbs = currentDistance;
+      double driveVelocityScalar =
+          driveController.getSetpoint().velocity * ffScaler
+              + driveController.calculate(driveErrorAbs, 0.0);
+      if (currentDistance < driveController.getPositionTolerance()) driveVelocityScalar = 0.0;
 
-        // Log data
-        Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
-        Logger.recordOutput("DriveToPose/DistanceSetpoint", driveController.getSetpoint().position);
+      // Command speeds
+      var driveVelocity =
+          new Translation2d(driveVelocityScalar, new Rotation2d(Math.toRadians(yawDeg)));
+
+      swerve.requestPercent(
+          new ChassisSpeeds(-driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+
+      // Log data
+      Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
+      Logger.recordOutput("DriveToPose/DistanceSetpoint", driveController.getSetpoint().position);
     }
   }
 

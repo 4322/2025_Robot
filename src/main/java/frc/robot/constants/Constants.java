@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 
 // By default these constants are the **Beta** constants
@@ -12,7 +13,7 @@ public class Constants {
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
   public static final boolean posevisionEnabled = false;
-  public static final boolean autoAlignVisionEnabled = false;
+  public static final boolean autoAlignVisionEnabled = true;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
@@ -40,6 +41,11 @@ public class Constants {
 
   public static class Vision {
     public static final Pose3d leftAutAlignCamPose = new Pose3d();
-    public static final Pose3d rightAutAlignCamPose = new Pose3d();
+    public static final Pose3d rightAutAlignCamPose =
+        new Pose3d(
+            Units.inchesToMeters(7.5625),
+            Units.inchesToMeters(-4.125),
+            Units.inchesToMeters(8.0625),
+            new Rotation3d());
   }
 }

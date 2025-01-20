@@ -47,7 +47,6 @@ public class RobotContainer {
   public static AutoAlignTagDetection autoAlignLeftCam;
   public static AutoAlignTagDetection autoAlignRightCam;
 
-
   public RobotContainer() {
     if (Constants.posevisionEnabled) {
       frontLeftCamera = new PhotonCamera("front-left");
@@ -63,11 +62,15 @@ public class RobotContainer {
     }
 
     if (Constants.autoAlignVisionEnabled) {
-      leftCamera = new PhotonCamera("left");
+      // leftCamera = new PhotonCamera("left");
       rightCamera = new PhotonCamera("right");
+      /*
+       autoAlignLeftCam =
+           new AutoAlignTagDetection(leftCamera, Constants.Vision.leftAutAlignCamPose);
+      */
 
-      autoAlignLeftCam = new AutoAlignTagDetection(leftCamera, Constants.Vision.leftAutAlignCamPose);
-      autoAlignRightCam = new AutoAlignTagDetection(rightCamera, Constants.Vision.rightAutAlignCamPose);
+      autoAlignRightCam =
+          new AutoAlignTagDetection(rightCamera, Constants.Vision.rightAutAlignCamPose);
     }
 
     configureBindings();
