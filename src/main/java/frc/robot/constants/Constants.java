@@ -19,6 +19,8 @@ public class Constants {
   public static final double KRAKEN_FREE_SPEED = 6000.0;
   public static final int LED_NUM = 0; // TODO: Determine number of leds
 
+  public static final double operatorDeadband = 0.8;
+
   /* Constants pertaining to the swerve drive */
   public static class Swerve {
 

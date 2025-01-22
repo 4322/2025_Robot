@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commons.ScoringSelector;
 import frc.robot.constants.Constants;
 import java.io.File;
 import java.io.IOException;
@@ -120,6 +121,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
+    ScoringSelector.updateScoringPositions(alliance == Alliance.Blue);
     RobotContainer.swerve.clearPseudoAutoRotateHeadingLock(); // don't rotate when re-enabling
   }
 

@@ -8,11 +8,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoScoreReef;
+import frc.robot.commons.ScoringSelector;
 import frc.robot.commons.Util;
+import frc.robot.commons.ScoringSelector.Level;
+import frc.robot.commons.ScoringSelector.ScoringPeg;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.swerve.Swerve;
@@ -39,13 +44,15 @@ public class RobotContainer {
   public static PhotonCamera backLeftCamera;
   public static PhotonCamera backRightCamera;
   public static PhotonAprilTagVision aprilTagVision;
-  public static AutonomousSelector autonomousSelector;
 
   // 2D April tag cameras
   public static PhotonCamera leftCamera;
   public static PhotonCamera rightCamera;
   public static AutoAlignTagDetection autoAlignLeftCam;
   public static AutoAlignTagDetection autoAlignRightCam;
+
+  public static AutonomousSelector autonomousSelector;
+  public static ScoringSelector scoringSelector = new ScoringSelector();
 
   public RobotContainer() {
     if (Constants.posevisionEnabled) {
@@ -72,11 +79,11 @@ public class RobotContainer {
       autoAlignRightCam =
           new AutoAlignTagDetection(rightCamera, Constants.Vision.rightAutAlignCamPose);
     }
-
     configureBindings();
   }
 
   private void configureBindings() {
+    // driver controls
     swerve.setDefaultCommand(
         new RunCommand(
             () -> {
@@ -123,9 +130,46 @@ public class RobotContainer {
             },
             swerve));
     new JoystickButton(driver, XboxController.Button.kX.value)
-        .whileTrue(new AutoScoreReef(swerve, 0, 18, true));
+        .whileTrue(new AutoScoreReef(swerve, () -> scoringSelector));
     new JoystickButton(driver, XboxController.Button.kB.value)
-        .whileTrue(new AutoScoreReef(swerve, 0, 18, false));
+        .whileTrue(new AutoScoreReef(swerve, () -> scoringSelector));
+    
+    // operator controls
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value)
+        .onTrue(Commands.runOnce(() -> {scoringSelector.setPegLocation(ScoringPeg.LEFT);}));
+    new JoystickButton(operator, XboxController.Button.kRightBumper.value)
+        .onTrue(Commands.runOnce(() -> {scoringSelector.setPegLocation(ScoringPeg.RIGHT);}));
+    
+    new JoystickButton(operator, XboxController.Button.kA.value)
+        .onTrue(Commands.runOnce(() -> {scoringSelector.setScoringLevel(Level.L1);}));
+    new JoystickButton(operator, XboxController.Button.kB.value)
+        .onTrue(Commands.runOnce(() -> {scoringSelector.setScoringLevel(Level.L2);}));
+    new JoystickButton(operator, XboxController.Button.kY.value)
+        .onTrue(Commands.runOnce(() -> {scoringSelector.setScoringLevel(Level.L3);}));
+    
+    // choose robot scoring location based on operator left joystick input
+    new Trigger(() -> true).onTrue(Commands.run(() -> 
+          {
+            double x = -operator.getLeftY();
+            double y = -operator.getLeftX();
+            double[] polarOperatorCoord = Util.polarDeadband(x, y, Constants.operatorDeadband);
+            
+            if (polarOperatorCoord[0] != 0) {
+              // back left reef side case being checked
+              if (-Math.PI <= polarOperatorCoord[1] && polarOperatorCoord[1] <= (-Math.PI + Math.PI / 3)) {
+                scoringSelector.setScoringPosition(5);
+              }
+              // every other reef side case being checked counterclockwise from back
+              else {
+                for (int i = 1; i < 6; i++) {
+                  if ((-Math.PI + i * Math.PI / 3) <= polarOperatorCoord[1] && polarOperatorCoord[1] <= (-Math.PI + (i + 1) * Math.PI / 3)) {
+                    scoringSelector.setScoringPosition(i-1);
+                  }
+                }
+              }
+            }
+          } 
+        ));
   }
 
   private void configureAprilTagVision() {
