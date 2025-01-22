@@ -13,22 +13,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.LoggedTunableNumber;
+import frc.robot.commons.ScoringSelector;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.swerve.Swerve;
+
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 public class AutoScoreReef extends Command {
   private final Swerve swerve;
-  private double desiredHeading;
-  private int desiredTagID;
+  private Supplier<ScoringSelector> scoringSupplier;
+  private double driveErrorAbs;
   private boolean useLeftCam;
 
   private final ProfiledPIDController driveController =
       new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(0.0, 0.0), 0.02);
-  private final PIDController thetaController = new PIDController(6, 0, 0);
-  private double driveErrorAbs;
-
+  private final PIDController thetaController = new PIDController(0, 0, 0);
+  
   private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("DriveToPose/DriveKp");
   private static final LoggedTunableNumber driveKd = new LoggedTunableNumber("DriveToPose/DriveKd");
   private static final LoggedTunableNumber thetaKp = new LoggedTunableNumber("DriveToPose/ThetaKp");
@@ -62,12 +65,10 @@ public class AutoScoreReef extends Command {
     ffMaxRadius.initDefault(0);
   }
 
-  public AutoScoreReef(Swerve swerve, double desiredHeading, int desiredTagID, boolean useLeftCam) {
+  public AutoScoreReef(Swerve swerve, Supplier<ScoringSelector> scoringSupplier) {
     addRequirements(swerve);
     this.swerve = swerve;
-    this.desiredHeading = desiredHeading;
-    this.desiredTagID = desiredTagID;
-    this.useLeftCam = useLeftCam;
+    this.scoringSupplier = scoringSupplier;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
@@ -79,6 +80,13 @@ public class AutoScoreReef extends Command {
                 swerve.getRobotRelativeSpeeds().vxMetersPerSecond,
                 swerve.getRobotRelativeSpeeds().vyMetersPerSecond)
             .getNorm());
+
+    if (scoringSupplier.get().getPegLocation() == ScoringSelector.ScoringPeg.RIGHT) {
+      useLeftCam = true;
+    }
+    else {
+      useLeftCam = false;
+    }
   }
 
   @Override
@@ -106,14 +114,14 @@ public class AutoScoreReef extends Command {
     double dy;
 
     if (useLeftCam) {
-      hasTarget = RobotContainer.autoAlignLeftCam.hasTargetID(desiredTagID);
+      hasTarget = RobotContainer.autoAlignLeftCam.hasTargetID(scoringSupplier.get().getScoringPosition().getTagID());
     } else {
-      hasTarget = RobotContainer.autoAlignRightCam.hasTargetID(desiredTagID);
+      hasTarget = RobotContainer.autoAlignRightCam.hasTargetID(scoringSupplier.get().getScoringPosition().getTagID());
     }
 
     // Calculate theta speed
     double thetaVelocity =
-        thetaController.calculate(swerve.getPose().getRotation().getRadians(), desiredHeading);
+        thetaController.calculate(swerve.getPose().getRotation().getRadians(), scoringSupplier.get().getScoringPosition().getRobotHeadingRad());
 
     if (!hasTarget) {
       // Raw inputs
@@ -148,14 +156,14 @@ public class AutoScoreReef extends Command {
       swerve.requestPercent(new ChassisSpeeds(dx, dy, thetaVelocity), true);
     } else {
       double currentDistance;
-      double yawDeg;
+      double yawAngleToTarget;
 
       if (useLeftCam) {
-        currentDistance = RobotContainer.autoAlignLeftCam.getRobotFrontDistanceToTag(desiredTagID);
-        yawDeg = RobotContainer.autoAlignLeftCam.getTag(desiredTagID).getYaw();
+        currentDistance = RobotContainer.autoAlignLeftCam.getRobotFrontDistanceToTag(scoringSupplier.get().getScoringPosition().getTagID());
+        yawAngleToTarget = Math.toRadians(RobotContainer.autoAlignLeftCam.getTag(scoringSupplier.get().getScoringPosition().getTagID()).getYaw());
       } else {
-        currentDistance = RobotContainer.autoAlignRightCam.getRobotFrontDistanceToTag(desiredTagID);
-        yawDeg = RobotContainer.autoAlignRightCam.getTag(desiredTagID).yaw;
+        currentDistance = RobotContainer.autoAlignRightCam.getRobotFrontDistanceToTag(scoringSupplier.get().getScoringPosition().getTagID());
+        yawAngleToTarget = Math.toRadians(RobotContainer.autoAlignRightCam.getTag(scoringSupplier.get().getScoringPosition().getTagID()).getYaw());
       }
 
       double ffScaler =
@@ -171,10 +179,10 @@ public class AutoScoreReef extends Command {
 
       // Command speeds
       var driveVelocity =
-          new Translation2d(driveVelocityScalar, new Rotation2d(Math.toRadians(yawDeg)));
+          new Translation2d(driveVelocityScalar, new Rotation2d(yawAngleToTarget));
 
       swerve.requestPercent(
-          new ChassisSpeeds(-driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+          new ChassisSpeeds(-driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
 
       // Log data
       Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
