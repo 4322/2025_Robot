@@ -160,10 +160,10 @@ public class AutoScoreReef extends Command {
 
       if (useLeftCam) {
         currentDistance = RobotContainer.autoAlignLeftCam.getRobotFrontDistanceToTag(scoringSupplier.get().getScoringPosition().getTagID());
-        yawAngleToTarget = Math.toRadians(RobotContainer.autoAlignLeftCam.getTag(scoringSupplier.get().getScoringPosition().getTagID()).getYaw());
+        yawAngleToTarget = -Math.toRadians(RobotContainer.autoAlignLeftCam.getTag(scoringSupplier.get().getScoringPosition().getTagID()).getYaw());
       } else {
         currentDistance = RobotContainer.autoAlignRightCam.getRobotFrontDistanceToTag(scoringSupplier.get().getScoringPosition().getTagID());
-        yawAngleToTarget = Math.toRadians(RobotContainer.autoAlignRightCam.getTag(scoringSupplier.get().getScoringPosition().getTagID()).getYaw());
+        yawAngleToTarget = -Math.toRadians(RobotContainer.autoAlignRightCam.getTag(scoringSupplier.get().getScoringPosition().getTagID()).getYaw());
       }
 
       double ffScaler =
@@ -179,10 +179,10 @@ public class AutoScoreReef extends Command {
 
       // Command speeds
       var driveVelocity =
-          new Translation2d(driveVelocityScalar, new Rotation2d(yawAngleToTarget));
+          new Translation2d(driveVelocityScalar, new Rotation2d(yawAngleToTarget)).unaryMinus();
 
       swerve.requestPercent(
-          new ChassisSpeeds(-driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
+          new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
 
       // Log data
       Logger.recordOutput("DriveToPose/DistanceMeasured", currentDistance);
