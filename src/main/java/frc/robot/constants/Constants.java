@@ -1,5 +1,6 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.util.Units;
 
 // By default these constants are the **Beta** constants
@@ -34,5 +35,47 @@ public class Constants {
     public static final double inhibitPseudoAutoRotateRadPerSec = Units.degreesToRadians(4);
     public static final double pseudoAutoRotateMinMetersPerSec =
         0.6; // disable below this speed for fine adjustments
+  }
+
+  public static class Elevator {
+    public static final int leftMotorID = 0;
+    public static final int rightMotorID = 0;
+
+    public static final double gearRatio = 4.0;
+    public static final double sprocketDiameter = Units.inchesToMeters(1.981);
+
+    public static final double setpointToleranceMeters = 0;
+
+    public static final double supplyCurrentLimit = 40;
+    public static final double statorCurrentLimit = 100;
+
+    public static final InvertedValue rightMotorInversion = InvertedValue.CounterClockwise_Positive;
+
+    public static final double kS = 0;
+    public static final double kV = 0;
+    public static final double kP = 0;
+    public static final double kD = 0;
+
+    public static final double motionMagicAccel = 0;
+    public static final double motionMagicCruiseVel = 0;
+    public static final double motionMagicJerk = 0;
+  }
+
+  public static class EndEffector {
+    public static final int motorID = 0;
+    public static final int frontBeamBreakID = 0;
+    public static final int backBeamBreakID = 0;
+
+    public static final double supplyCurrentLimit = 40;
+    public static final double statorCurrentLimit = 100;
+    public static final InvertedValue motorInversion = InvertedValue.Clockwise_Positive;
+
+    public static final double proximityDetectionThreshold = 0.5;
+
+    public static final double feedVoltage = 0;
+    public static final double shootVoltage = 0;
+    public static final double spitVoltage = -4;
+
+    public static final double shootWaitTimerSec = 0.1;
   }
 }
