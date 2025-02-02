@@ -13,6 +13,15 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.endEffector.EndEffector;
+import frc.robot.subsystems.endEffector.EndEffectorIO;
+import frc.robot.subsystems.endEffector.EndEffectorIOTalonFX;
+import frc.robot.subsystems.flipper.Flipper;
+import frc.robot.subsystems.flipper.FlipperIO;
+import frc.robot.subsystems.flipper.FlipperIOTalonFX;
 import frc.robot.subsystems.swerve.Swerve;
 import frc.robot.vision.photonvision.PhotonAprilTagVision;
 import org.photonvision.PhotonCamera;
@@ -29,6 +38,14 @@ public class RobotContainer {
           TunerConstants.FrontRight,
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
+  
+  public static ElevatorIO elevatorIO = Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
+  public static EndEffectorIO endEffectorIO = Constants.endEffectorEnabled ? new EndEffectorIOTalonFX() : new EndEffectorIO() {};
+  public static FlipperIO flipperIO = Constants.flipperenabled ? new FlipperIOTalonFX() : new FlipperIO() {};
+
+  public static Elevator elevator = new Elevator(elevatorIO);
+  public static EndEffector endEffector = new EndEffector(endEffectorIO);
+  public static Flipper flipper = new Flipper(flipperIO);
 
   // April tag cameras
   public static PhotonCamera frontLeftCamera;

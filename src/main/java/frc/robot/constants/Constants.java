@@ -8,6 +8,10 @@ public class Constants {
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 100000000; // 100 MB
 
+  public static final boolean elevatorEnabled = true;
+  public static final boolean endEffectorEnabled = true;
+  public static final boolean flipperenabled = true;
+
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
   public static final boolean visionEnabled = false;
