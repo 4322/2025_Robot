@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandcolor.Canandcolor;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -43,8 +42,6 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     backBeamBreak = new Canandcolor(Constants.EndEffector.backBeamBreakID);
 
     // TODO: Set up config to use near-zero latency described in Redux docs
-    frontBeamBreak.resetFactoryDefaults();
-    backBeamBreak.resetFactoryDefaults();
   }
 
   @Override
@@ -54,17 +51,14 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.statorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
     inputs.supplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
     inputs.tempCelcius = motor.getDeviceTemp().getValueAsDouble();
-    inputs.frontBeamBreakTriggered = frontBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
-    inputs.backBeamBreakTriggered = backBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
+    inputs.frontBeamBreakTriggered =
+        frontBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
+    inputs.backBeamBreakTriggered =
+        backBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
   }
 
   @Override
   public void setVoltage(double voltage) {
     motor.setVoltage(voltage);
-  }
-
-  @Override
-  public void stop() {
-    motor.stopMotor();
   }
 }

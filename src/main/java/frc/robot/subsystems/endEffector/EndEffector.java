@@ -1,16 +1,15 @@
 package frc.robot.subsystems.endEffector;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
   public EndEffectorIO io;
   public EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
-  public boolean requestIdle = true;
+  public boolean requestIdle;
   public boolean requestFeed;
   public boolean requestSpit;
   public boolean requestShoot;
@@ -20,7 +19,7 @@ public class EndEffector extends SubsystemBase {
 
   private Timer shootTimer = new Timer();
 
-  public enum EndEffectorStates{
+  public enum EndEffectorStates {
     IDLE,
     FEED,
     SECURING_CORAL,
@@ -38,84 +37,66 @@ public class EndEffector extends SubsystemBase {
     Logger.processInputs("End Effector", inputs);
 
     switch (state) {
-        case IDLE:
-            io.setVoltage(0);
+      case IDLE:
+        io.setVoltage(0);
 
-            // reset coral secured in cases where coral is removed manually from robot
-            if (!hasCoral()) {
-                coralSecured = false;
-            }
+        // reset coral secured in cases where coral is removed manually from robot
+        if (!hasCoral()) {
+          coralSecured = false;
+        }
 
-            if (requestSpit) {
-                state = EndEffectorStates.SPIT;
-            }
-            else if (requestFeed && !hasCoral()) {
-                state = EndEffectorStates.FEED;
-            }
-            else if (requestShoot && coralSecured) {
-                state = EndEffectorStates.SHOOT;
-            }
-            break;
-        case FEED:
-            io.setVoltage(Constants.EndEffector.feedVoltage);
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
+        } else if (requestFeed && !hasCoral()) {
+          state = EndEffectorStates.FEED;
+        } else if (requestShoot && coralSecured) {
+          state = EndEffectorStates.SHOOT;
+        }
+        break;
+      case FEED:
+        io.setVoltage(Constants.EndEffector.feedVoltage);
 
-            if (requestSpit) {
-                state = EndEffectorStates.SPIT;
-            }
-            else if (inputs.backBeamBreakTriggered) {
-                state = EndEffectorStates.SECURING_CORAL;
-            }
-            else if (requestIdle) {
-                state = EndEffectorStates.IDLE;
-            }
-            break;
-        case SECURING_CORAL:
-            if (requestSpit) {
-                state = EndEffectorStates.SPIT;
-            }
-            else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
-                state = EndEffectorStates.IDLE;
-                coralSecured = true;
-                requestIdle(); // account for automation from sensor triggers
-            }
-            else if (requestIdle) {
-                state = EndEffectorStates.IDLE;
-            }
-            break;
-        case SHOOT:
-            io.setVoltage(Constants.EndEffector.shootVoltage);
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
+        } else if (inputs.backBeamBreakTriggered) {
+          state = EndEffectorStates.SECURING_CORAL;
+        } else if (requestIdle) {
+          state = EndEffectorStates.IDLE;
+        }
+        break;
+      case SECURING_CORAL:
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
+        } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
+          state = EndEffectorStates.IDLE;
+          coralSecured = true;
+          unsetAllRequests(); // account for automation from sensor triggers
+        }
+        break;
+      case SHOOT:
+        io.setVoltage(Constants.EndEffector.shootVoltage);
 
-            if (requestSpit) {
-                state = EndEffectorStates.SPIT;
-            }
-            else if (!inputs.frontBeamBreakTriggered) {
-                shootTimer.start();
-                if (shootTimer.hasElapsed(Constants.EndEffector.shootWaitTimerSec)) {
-                    coralSecured = false;
-                    shootTimer.stop();
-                    shootTimer.reset();
-                    state = EndEffectorStates.IDLE;
-                    requestIdle(); // account for automation from sensor triggers
-                }
-            }
-            else if (requestIdle) {
-                state = EndEffectorStates.IDLE;
-            }
-            break;
-        case SPIT:
-            io.setVoltage(Constants.EndEffector.spitVoltage);
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
+        } else if (!inputs.frontBeamBreakTriggered) {
+          shootTimer.start();
+          if (shootTimer.hasElapsed(Constants.EndEffector.shootWaitTimerSec)) {
             coralSecured = false;
-            if (requestIdle) {
-                state = EndEffectorStates.IDLE;
-            }
-            break;
-
+            shootTimer.stop();
+            shootTimer.reset();
+            state = EndEffectorStates.IDLE;
+            unsetAllRequests(); // account for automation from sensor triggers
+          }
+        }
+        break;
+      case SPIT:
+        io.setVoltage(Constants.EndEffector.spitVoltage);
+        coralSecured = false;
+        if (requestIdle) {
+          state = EndEffectorStates.IDLE;
+        }
+        break;
     }
-
-  }
-
-  public void stop() {
-    io.stop();
   }
 
   public boolean hasCoral() {
@@ -124,6 +105,12 @@ public class EndEffector extends SubsystemBase {
 
   public boolean coralSecured() {
     return coralSecured;
+  }
+
+  // Use method only to reset state when robot is disabled
+  public void forceIdle() {
+    unsetAllRequests();
+    state = EndEffectorStates.IDLE;
   }
 
   public void requestIdle() {

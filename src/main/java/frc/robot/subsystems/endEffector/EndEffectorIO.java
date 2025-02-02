@@ -18,6 +18,4 @@ public interface EndEffectorIO {
   public default void updateInputs(EndEffectorIOInputs inputs) {}
 
   public default void setVoltage(double voltage) {}
-
-  public default void stop() {}
 }
