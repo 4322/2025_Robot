@@ -37,8 +37,8 @@ public class Constants {
   }
 
   public static class Elevator {
-    public static final int leftMotorID = 0;
-    public static final int rightMotorID = 0;
+    public static final int leftMotorID = 0; // follower motor
+    public static final int rightMotorID = 0; // leader motor
 
     public static final double gearRatio = 4.0;
     public static final double sprocketDiameter = Units.inchesToMeters(1.981);
@@ -76,5 +76,34 @@ public class Constants {
     public static final double spitVoltage = -4;
 
     public static final double shootWaitTimerSec = 0.1;
+  }
+
+  public static class Flipper {
+    public static final int deployMotorID = 0;
+    public static final int feederMotorID = 0;
+    public static final int encoderID = 0;
+
+    public static class Deploy {
+      public static final double supplyCurrentLimit = 40;
+      public static final double statorCurrentLimit = 100;
+      public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
+      public static final double kP = 0;
+      public static final double kD = 0;
+
+      public static final double absEncoderGearRatio = 24.0 / 22.0;
+      public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
+      public static final double deploySetpointMechanismRotations = 0;
+      public static final double setpointToleranceMechanismRotations = 0.05;
+      // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
+      public static final double absZeroWrapThreshold = 0.95; 
+    }
+
+    public static class Feeder {
+      public static final double supplyCurrentLimit = 40;
+      public static final double statorCurrentLimit = 100;
+      public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
+
+      public static final double descoreVoltage = 0;
+    }
   }
 }
