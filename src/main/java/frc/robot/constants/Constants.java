@@ -45,7 +45,7 @@ public class Constants {
     public static final int rightMotorID = 2; // leader motor
 
     public static final double gearRatio = 4.0;
-    public static final double sprocketDiameter = Units.inchesToMeters(1.981);
+    public static final double sprocketDiameter = Units.inchesToMeters(1.751); // pitch diameter
 
     public static final double setpointToleranceMeters = 0;
 
