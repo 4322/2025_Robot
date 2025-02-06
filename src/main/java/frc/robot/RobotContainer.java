@@ -38,10 +38,13 @@ public class RobotContainer {
           TunerConstants.FrontRight,
           TunerConstants.BackLeft,
           TunerConstants.BackRight);
-  
-  public static ElevatorIO elevatorIO = Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
-  public static EndEffectorIO endEffectorIO = Constants.endEffectorEnabled ? new EndEffectorIOTalonFX() : new EndEffectorIO() {};
-  public static FlipperIO flipperIO = Constants.flipperenabled ? new FlipperIOTalonFX() : new FlipperIO() {};
+
+  public static ElevatorIO elevatorIO =
+      Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
+  public static EndEffectorIO endEffectorIO =
+      Constants.endEffectorEnabled ? new EndEffectorIOTalonFX() : new EndEffectorIO() {};
+  public static FlipperIO flipperIO =
+      Constants.flipperenabled ? new FlipperIOTalonFX() : new FlipperIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static EndEffector endEffector = new EndEffector(endEffectorIO);

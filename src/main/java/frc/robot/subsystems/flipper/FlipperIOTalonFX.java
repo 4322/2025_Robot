@@ -7,7 +7,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.reduxrobotics.sensors.canandmag.Canandmag;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
@@ -84,9 +83,11 @@ public class FlipperIOTalonFX implements FlipperIO {
     inputs.deployStatorCurrentAmps = deployMotor.getStatorCurrent().getValueAsDouble();
     inputs.deploySupplyCurrentAmps = deployMotor.getStatorCurrent().getValueAsDouble();
     inputs.deployTempCelcius = deployMotor.getStatorCurrent().getValueAsDouble();
-    inputs.deployPosMotorRotations =
-        deployMotor.getPosition().getValueAsDouble();
-    inputs.deployPosAbsMechanismRotations = (encoder.getAbsPosition() > Constants.Flipper.Deploy.absZeroWrapThreshold) ? 0.0 : (encoder.getAbsPosition() / Constants.Flipper.Deploy.absEncoderGearRatio);
+    inputs.deployPosMotorRotations = deployMotor.getPosition().getValueAsDouble();
+    inputs.deployPosAbsMechanismRotations =
+        (encoder.getAbsPosition() > Constants.Flipper.Deploy.absZeroWrapThreshold)
+            ? 0.0
+            : (encoder.getAbsPosition() / Constants.Flipper.Deploy.absEncoderGearRatio);
     inputs.feederAppliedVoltage = feederMotor.getMotorVoltage().getValueAsDouble();
     inputs.feederStatorCurrentAmps = feederMotor.getStatorCurrent().getValueAsDouble();
     inputs.feederSupplyCurrentAmps = feederMotor.getStatorCurrent().getValueAsDouble();

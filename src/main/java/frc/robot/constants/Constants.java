@@ -41,8 +41,8 @@ public class Constants {
   }
 
   public static class Elevator {
-    public static final int leftMotorID = 0; // follower motor
-    public static final int rightMotorID = 0; // leader motor
+    public static final int leftMotorID = 3; // follower motor
+    public static final int rightMotorID = 2; // leader motor
 
     public static final double gearRatio = 4.0;
     public static final double sprocketDiameter = Units.inchesToMeters(1.981);
@@ -65,15 +65,15 @@ public class Constants {
   }
 
   public static class EndEffector {
-    public static final int motorID = 0;
-    public static final int frontBeamBreakID = 0;
-    public static final int backBeamBreakID = 0;
+    public static final int motorID = 4;
+    public static final int frontBeamBreakID = 8;
+    public static final int backBeamBreakID = 9;
 
     public static final double supplyCurrentLimit = 40;
     public static final double statorCurrentLimit = 100;
     public static final InvertedValue motorInversion = InvertedValue.Clockwise_Positive;
 
-    public static final double proximityDetectionThreshold = 0.5;
+    public static final double proximityDetectionThreshold = 0.3;
 
     public static final double feedVoltage = 0;
     public static final double shootVoltage = 0;
@@ -83,9 +83,9 @@ public class Constants {
   }
 
   public static class Flipper {
-    public static final int deployMotorID = 0;
-    public static final int feederMotorID = 0;
-    public static final int encoderID = 0;
+    public static final int deployMotorID = 5;
+    public static final int feederMotorID = 6;
+    public static final int encoderID = 7;
 
     public static class Deploy {
       public static final double supplyCurrentLimit = 40;
@@ -99,7 +99,7 @@ public class Constants {
       public static final double deploySetpointMechanismRotations = 0;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
-      public static final double absZeroWrapThreshold = 0.95; 
+      public static final double absZeroWrapThreshold = 0.95;
     }
 
     public static class Feeder {
