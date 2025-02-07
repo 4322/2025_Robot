@@ -47,7 +47,7 @@ public class Constants {
     public static final double gearRatio = 4.0;
     public static final double sprocketDiameter = Units.inchesToMeters(1.751); // pitch diameter
 
-    public static final double setpointToleranceMeters = 0;
+    public static final double setpointToleranceMeters = 0.01;
 
     public static final double supplyCurrentLimit = 40;
     public static final double statorCurrentLimit = 100;
@@ -75,8 +75,8 @@ public class Constants {
 
     public static final double proximityDetectionThreshold = 0.3;
 
-    public static final double feedVoltage = 0;
-    public static final double shootVoltage = 0;
+    public static final double feedVoltage = 4;
+    public static final double shootVoltage = 7;
     public static final double spitVoltage = -4;
 
     public static final double shootWaitTimerSec = 0.1;
@@ -107,7 +107,7 @@ public class Constants {
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
-      public static final double descoreVoltage = 0;
+      public static final double descoreVoltage = 4;
     }
   }
 }
