@@ -62,6 +62,9 @@ public class Constants {
     public static final double motionMagicAccel = 0;
     public static final double motionMagicCruiseVel = 0;
     public static final double motionMagicJerk = 0;
+
+    public static final double L2ScoringHeight = 0;
+    public static final double L3ScoringHeight = 0;
   }
 
   public static class EndEffector {
