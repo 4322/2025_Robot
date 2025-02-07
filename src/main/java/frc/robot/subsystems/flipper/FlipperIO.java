@@ -5,25 +5,25 @@ import org.littletonrobotics.junction.AutoLog;
 public interface FlipperIO {
   @AutoLog
   public static class FlipperIOInputs {
-    public double deployAppliedVoltage = 0.0;
-    public double deploySupplyCurrentAmps = 0.0;
-    public double deployStatorCurrentAmps = 0.0;
-    public double deployTempCelcius = 0.0;
-    public double deployPosMotorRotations = 0.0;
-    public double deployPosAbsMechanismRotations = 0.0;
+    public double pivotAppliedVoltage = 0.0;
+    public double pivotSupplyCurrentAmps = 0.0;
+    public double pivotStatorCurrentAmps = 0.0;
+    public double pivotTempCelcius = 0.0;
+    public double pivotPosMotorRotations = 0.0;
+    public double pivotPosAbsMechanismRotations = 0.0;
 
-    public double feederAppliedVoltage = 0.0;
-    public double feederSupplyCurrentAmps = 0.0;
-    public double feederStatorCurrentAmps = 0.0;
-    public double feederTempCelcius = 0.0;
-    public double feederSpeedRotationsPerSec = 0.0;
+    public double rollerAppliedVoltage = 0.0;
+    public double rollerSupplyCurrentAmps = 0.0;
+    public double rollerStatorCurrentAmps = 0.0;
+    public double rollerTempCelcius = 0.0;
+    public double rollerSpeedRotationsPerSec = 0.0;
   }
 
   public default void updateInputs(FlipperIOInputs inputs) {}
 
-  public default void setDeployPosition(double mechanismRotations) {}
+  public default void setPivotPosition(double mechanismRotations) {}
 
-  public default void setFeederVoltage(double voltage) {}
+  public default void setRollerVoltage(double voltage) {}
 
-  public default void seedPosition(double newPositionMechanismRot) {}
+  public default void seedPivotPosition(double newPositionMechanismRot) {}
 }

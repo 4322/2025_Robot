@@ -31,19 +31,19 @@ public class Flipper extends SubsystemBase {
     Logger.processInputs("Flipper", inputs);
     switch (state) {
       case SEED_POSITION:
-        io.seedPosition(inputs.deployPosAbsMechanismRotations);
+        io.seedPivotPosition(inputs.pivotPosAbsMechanismRotations);
         state = FlipperStates.IDLE;
         break;
       case IDLE:
-        io.setDeployPosition(0);
-        io.setFeederVoltage(0);
+        io.setPivotPosition(0);
+        io.setRollerVoltage(0);
 
         if (requestDescore) {
           state = FlipperStates.FLIP;
         }
         break;
       case FLIP:
-        io.setDeployPosition(Constants.Flipper.Deploy.deploySetpointMechanismRotations);
+        io.setPivotPosition(Constants.Flipper.Pivot.deployedSetpointMechanismRotations);
         if (requestIdle) {
           state = FlipperStates.IDLE;
         }
@@ -52,7 +52,7 @@ public class Flipper extends SubsystemBase {
         }
         break;
       case SPIN:
-        io.setFeederVoltage(Constants.Flipper.Feeder.descoreVoltage);
+        io.setRollerVoltage(Constants.Flipper.Roller.descoreVoltage);
         if (requestIdle) {
           state = FlipperStates.IDLE;
         }
@@ -62,9 +62,9 @@ public class Flipper extends SubsystemBase {
 
   public boolean atDeploySetpoint() {
     return Util.atReference(
-        inputs.deployPosAbsMechanismRotations,
-        Constants.Flipper.Deploy.deploySetpointMechanismRotations,
-        Constants.Flipper.Deploy.setpointToleranceMechanismRotations,
+        inputs.pivotPosAbsMechanismRotations,
+        Constants.Flipper.Pivot.deployedSetpointMechanismRotations,
+        Constants.Flipper.Pivot.setpointToleranceMechanismRotations,
         true);
   }
 

@@ -11,103 +11,103 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
 public class FlipperIOTalonFX implements FlipperIO {
-  private TalonFX deployMotor;
-  private TalonFX feederMotor;
-  private Canandmag encoder;
+  private TalonFX pivotMotor;
+  private TalonFX rollerMotor;
+  private Canandmag pivotEncoder;
 
-  private TalonFXConfiguration deployConfig = new TalonFXConfiguration();
-  private TalonFXConfiguration feederConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
+  private TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
 
   public FlipperIOTalonFX() {
-    deployMotor = new TalonFX(Constants.Flipper.deployMotorID);
-    feederMotor = new TalonFX(Constants.Flipper.feederMotorID);
+    pivotMotor = new TalonFX(Constants.Flipper.pivotMotorID);
+    rollerMotor = new TalonFX(Constants.Flipper.rollerMotorID);
 
-    StatusCode deployConfigStatus = configDeploy();
-    StatusCode feederConfigStatus = configFeeder();
+    StatusCode pivotConfigStatus = configPivot();
+    StatusCode rollerConfigStatus = configRoller();
 
-    if (deployConfigStatus != StatusCode.OK) {
+    if (pivotConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
-              + deployMotor.getDeviceID()
-              + " error (Algae Deployer): "
-              + deployConfigStatus.getDescription(),
+              + pivotMotor.getDeviceID()
+              + " error (Algae Pivot): "
+              + pivotConfigStatus.getDescription(),
           false);
     }
 
-    if (feederConfigStatus != StatusCode.OK) {
+    if (rollerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
-              + feederMotor.getDeviceID()
-              + " error (Algae Feeder): "
-              + feederConfigStatus.getDescription(),
+              + rollerMotor.getDeviceID()
+              + " error (Algae Roller): "
+              + rollerConfigStatus.getDescription(),
           false);
     }
 
-    encoder = new Canandmag(Constants.Flipper.encoderID);
+    pivotEncoder = new Canandmag(Constants.Flipper.pivotEncoderID);
 
     // TODO: Set configs for encoder referencing Redux docs
   }
 
-  private StatusCode configDeploy() {
-    deployConfig.CurrentLimits.StatorCurrentLimit = Constants.Flipper.Deploy.statorCurrentLimit;
-    deployConfig.CurrentLimits.SupplyCurrentLimit = Constants.Flipper.Deploy.supplyCurrentLimit;
+  private StatusCode configPivot() {
+    pivotConfig.CurrentLimits.StatorCurrentLimit = Constants.Flipper.Pivot.statorCurrentLimit;
+    pivotConfig.CurrentLimits.SupplyCurrentLimit = Constants.Flipper.Pivot.supplyCurrentLimit;
 
-    deployConfig.MotorOutput.Inverted = Constants.Flipper.Deploy.motorInversion;
-    deployConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    pivotConfig.MotorOutput.Inverted = Constants.Flipper.Pivot.motorInversion;
+    pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    deployConfig.Slot0.kP = Constants.Flipper.Deploy.kP;
-    deployConfig.Slot0.kD = Constants.Flipper.Deploy.kD;
+    pivotConfig.Slot0.kP = Constants.Flipper.Pivot.kP;
+    pivotConfig.Slot0.kD = Constants.Flipper.Pivot.kD;
 
-    deployConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    deployConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
+    pivotConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    pivotConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
 
-    return deployMotor.getConfigurator().apply(deployConfig);
+    return pivotMotor.getConfigurator().apply(pivotConfig);
   }
 
-  private StatusCode configFeeder() {
-    feederConfig.CurrentLimits.StatorCurrentLimit = Constants.Flipper.Feeder.statorCurrentLimit;
-    feederConfig.CurrentLimits.SupplyCurrentLimit = Constants.Flipper.Feeder.supplyCurrentLimit;
+  private StatusCode configRoller() {
+    rollerConfig.CurrentLimits.StatorCurrentLimit = Constants.Flipper.Roller.statorCurrentLimit;
+    rollerConfig.CurrentLimits.SupplyCurrentLimit = Constants.Flipper.Roller.supplyCurrentLimit;
 
-    feederConfig.MotorOutput.Inverted = Constants.Flipper.Feeder.motorInversion;
-    feederConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    rollerConfig.MotorOutput.Inverted = Constants.Flipper.Roller.motorInversion;
+    rollerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    feederConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    feederConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
+    rollerConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
+    rollerConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
 
-    return feederMotor.getConfigurator().apply(feederConfig);
+    return rollerMotor.getConfigurator().apply(rollerConfig);
   }
 
   @Override
   public void updateInputs(FlipperIOInputs inputs) {
-    inputs.deployAppliedVoltage = deployMotor.getMotorVoltage().getValueAsDouble();
-    inputs.deployStatorCurrentAmps = deployMotor.getStatorCurrent().getValueAsDouble();
-    inputs.deploySupplyCurrentAmps = deployMotor.getStatorCurrent().getValueAsDouble();
-    inputs.deployTempCelcius = deployMotor.getStatorCurrent().getValueAsDouble();
-    inputs.deployPosMotorRotations = deployMotor.getPosition().getValueAsDouble();
-    inputs.deployPosAbsMechanismRotations =
-        (encoder.getAbsPosition() > Constants.Flipper.Deploy.absZeroWrapThreshold)
+    inputs.pivotAppliedVoltage = pivotMotor.getMotorVoltage().getValueAsDouble();
+    inputs.pivotStatorCurrentAmps = pivotMotor.getStatorCurrent().getValueAsDouble();
+    inputs.pivotSupplyCurrentAmps = pivotMotor.getStatorCurrent().getValueAsDouble();
+    inputs.pivotTempCelcius = pivotMotor.getStatorCurrent().getValueAsDouble();
+    inputs.pivotPosMotorRotations = pivotMotor.getPosition().getValueAsDouble();
+    inputs.pivotPosAbsMechanismRotations =
+        (pivotEncoder.getAbsPosition() > Constants.Flipper.Pivot.absZeroWrapThreshold)
             ? 0.0
-            : (encoder.getAbsPosition() / Constants.Flipper.Deploy.absEncoderGearRatio);
-    inputs.feederAppliedVoltage = feederMotor.getMotorVoltage().getValueAsDouble();
-    inputs.feederStatorCurrentAmps = feederMotor.getStatorCurrent().getValueAsDouble();
-    inputs.feederSupplyCurrentAmps = feederMotor.getStatorCurrent().getValueAsDouble();
-    inputs.feederTempCelcius = feederMotor.getStatorCurrent().getValueAsDouble();
-    inputs.feederSpeedRotationsPerSec = feederMotor.getVelocity().getValueAsDouble();
+            : (pivotEncoder.getAbsPosition() / Constants.Flipper.Pivot.absEncoderGearRatio);
+    inputs.rollerAppliedVoltage = rollerMotor.getMotorVoltage().getValueAsDouble();
+    inputs.rollerStatorCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
+    inputs.rollerSupplyCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
+    inputs.rollerTempCelcius = rollerMotor.getStatorCurrent().getValueAsDouble();
+    inputs.rollerSpeedRotationsPerSec = rollerMotor.getVelocity().getValueAsDouble();
   }
 
   @Override
-  public void setDeployPosition(double mechanismRotations) {
-    deployMotor.setControl(
-        new PositionVoltage(mechanismRotations * Constants.Flipper.Deploy.motorGearRatio));
+  public void setPivotPosition(double mechanismRotations) {
+    pivotMotor.setControl(
+        new PositionVoltage(mechanismRotations * Constants.Flipper.Pivot.motorGearRatio));
   }
 
   @Override
-  public void setFeederVoltage(double voltage) {
-    feederMotor.setControl(new VoltageOut(voltage));
+  public void setRollerVoltage(double voltage) {
+    rollerMotor.setControl(new VoltageOut(voltage));
   }
 
   @Override
-  public void seedPosition(double newPositionMechanismRot) {
-    deployMotor.setPosition(newPositionMechanismRot * Constants.Flipper.Deploy.motorGearRatio);
+  public void seedPivotPosition(double newPositionMechanismRot) {
+    pivotMotor.setPosition(newPositionMechanismRot * Constants.Flipper.Pivot.motorGearRatio);
   }
 }

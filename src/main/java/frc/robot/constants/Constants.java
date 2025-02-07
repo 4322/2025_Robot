@@ -83,11 +83,11 @@ public class Constants {
   }
 
   public static class Flipper {
-    public static final int deployMotorID = 5;
-    public static final int feederMotorID = 6;
-    public static final int encoderID = 7;
+    public static final int pivotMotorID = 5;
+    public static final int rollerMotorID = 6;
+    public static final int pivotEncoderID = 7;
 
-    public static class Deploy {
+    public static class Pivot {
       public static final double supplyCurrentLimit = 40;
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
@@ -96,13 +96,13 @@ public class Constants {
 
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
-      public static final double deploySetpointMechanismRotations = 0;
+      public static final double deployedSetpointMechanismRotations = 0;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
     }
 
-    public static class Feeder {
+    public static class Roller {
       public static final double supplyCurrentLimit = 40;
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
