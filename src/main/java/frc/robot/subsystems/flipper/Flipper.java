@@ -6,13 +6,13 @@ import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Flipper extends SubsystemBase {
-  public FlipperIO io;
-  public FlipperIOInputsAutoLogged inputs = new FlipperIOInputsAutoLogged();
+  private FlipperIO io;
+  private FlipperIOInputsAutoLogged inputs = new FlipperIOInputsAutoLogged();
 
-  public boolean requestIdle;
-  public boolean requestDescore;
+  private boolean requestIdle;
+  private boolean requestDescore;
 
-  public FlipperStates state = FlipperStates.SEED_POSITION;
+  private FlipperStates state = FlipperStates.SEED_POSITION;
 
   public enum FlipperStates {
     SEED_POSITION,
@@ -29,6 +29,8 @@ public class Flipper extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Flipper", inputs);
+    Logger.recordOutput("Flipper/State", state.toString());
+
     switch (state) {
       case SEED_POSITION:
         io.seedPivotPosition(inputs.pivotPosAbsMechanismRotations);

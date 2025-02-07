@@ -6,16 +6,16 @@ import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffector extends SubsystemBase {
-  public EndEffectorIO io;
-  public EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
+  private EndEffectorIO io;
+  private EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
-  public boolean requestIdle;
-  public boolean requestFeed;
-  public boolean requestSpit;
-  public boolean requestShoot;
+  private boolean requestIdle;
+  private boolean requestFeed;
+  private boolean requestSpit;
+  private boolean requestShoot;
 
-  public boolean coralSecured;
-  public EndEffectorStates state = EndEffectorStates.IDLE;
+  private boolean coralSecured;
+  private EndEffectorStates state = EndEffectorStates.IDLE;
 
   private Timer shootTimer = new Timer();
 
@@ -35,6 +35,9 @@ public class EndEffector extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
+    Logger.recordOutput("End Effector/State", state.toString());
+    Logger.recordOutput("End Effector/Coral Detection", hasCoral());
+    Logger.recordOutput("End Effector/Coral Detetion", coralSecured());
 
     switch (state) {
       case IDLE:
