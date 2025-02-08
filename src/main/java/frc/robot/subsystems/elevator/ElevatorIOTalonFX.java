@@ -33,8 +33,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     motorConfigs.Slot0.kP = Constants.Elevator.kP;
     motorConfigs.Slot0.kD = Constants.Elevator.kD;
 
-    motorConfigs.MotionMagic.MotionMagicAcceleration = Constants.Elevator.motionMagicAccel;
-    motorConfigs.MotionMagic.MotionMagicCruiseVelocity = Constants.Elevator.motionMagicCruiseVel;
+    motorConfigs.MotionMagic.MotionMagicAcceleration =
+        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+            * Constants.Elevator.gearRatio;
+    motorConfigs.MotionMagic.MotionMagicCruiseVelocity =
+        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
+            * Constants.Elevator.gearRatio;
     motorConfigs.MotionMagic.MotionMagicJerk = Constants.Elevator.motionMagicJerk;
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;

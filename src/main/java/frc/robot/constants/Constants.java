@@ -59,12 +59,9 @@ public class Constants {
     public static final double kP = 0;
     public static final double kD = 0;
 
-    public static final double motionMagicAccel = 0;
-    public static final double motionMagicCruiseVel = 0;
+    public static final double mechanismMaxAccel = 11; // Used for motion magic
+    public static final double mechanismMaxCruiseVel = 1.6; // Used for motion magic
     public static final double motionMagicJerk = 0;
-
-    public static final double L2ScoringHeight = 0;
-    public static final double L3ScoringHeight = 0;
   }
 
   public static class EndEffector {
@@ -112,5 +109,10 @@ public class Constants {
 
       public static final double descoreVoltage = 4;
     }
+  }
+
+  public static class Scoring {
+    public static final double L2ScoringHeight = 0;
+    public static final double L3ScoringHeight = 0;
   }
 }
