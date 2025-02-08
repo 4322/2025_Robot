@@ -25,6 +25,9 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Elevator.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Elevator.supplyCurrentLimit;
 
+    motorConfigs.Voltage.PeakForwardVoltage = Constants.Elevator.peakForwardVoltage;
+    motorConfigs.Voltage.PeakReverseVoltage = Constants.Elevator.peakReverseVoltage;
+
     motorConfigs.MotorOutput.Inverted = Constants.Elevator.rightMotorInversion;
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
@@ -100,7 +103,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setHeight(double heightMeters) {
-    leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)));
+    leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)).withEnableFOC(true));
   }
 
   @Override

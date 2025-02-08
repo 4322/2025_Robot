@@ -10,7 +10,7 @@ public class Constants {
 
   public static final boolean elevatorEnabled = false;
   public static final boolean endEffectorEnabled = false;
-  public static final boolean flipperenabled = true;
+  public static final boolean flipperenabled = false;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -52,15 +52,18 @@ public class Constants {
     public static final double supplyCurrentLimit = 40;
     public static final double statorCurrentLimit = 100;
 
-    public static final InvertedValue rightMotorInversion = InvertedValue.CounterClockwise_Positive;
+    public static final double peakForwardVoltage = 11.5;
+    public static final double peakReverseVoltage = -11.5;
 
-    public static final double kS = 0;
+    public static final InvertedValue rightMotorInversion = InvertedValue.Clockwise_Positive;
+
+    public static final double kS = 0.4;
     public static final double kV = 0;
     public static final double kP = 0;
     public static final double kD = 0;
 
-    public static final double mechanismMaxAccel = 11; // Used for motion magic
-    public static final double mechanismMaxCruiseVel = 1.6; // Used for motion magic
+    public static final double mechanismMaxAccel = 22; // Used for motion magic
+    public static final double mechanismMaxCruiseVel = 3.2; // Used for motion magic
     public static final double motionMagicJerk = 0;
   }
 
