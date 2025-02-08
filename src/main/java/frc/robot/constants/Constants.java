@@ -58,7 +58,6 @@ public class Constants {
     public static final InvertedValue rightMotorInversion = InvertedValue.Clockwise_Positive;
 
     public static final double kS = 0.4;
-    public static final double kV = 0;
     public static final double kP = 0;
     public static final double kD = 0;
 

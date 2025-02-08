@@ -7,14 +7,25 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 
 public class ElevatorIOTalonFX implements ElevatorIO {
   private TalonFX leader;
   private TalonFX follower;
-
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
+
+    /* Gains */
+  LoggedTunableNumber kS = new LoggedTunableNumber("Elevator/kS", Constants.Elevator.kS);
+  LoggedTunableNumber kP = new LoggedTunableNumber("Elevator/kP", Constants.Elevator.kP);
+  LoggedTunableNumber kD = new LoggedTunableNumber("Elevator/kD", Constants.Elevator.kD);
+
+  LoggedTunableNumber maxAcceleration =
+      new LoggedTunableNumber("Elevator/MaxAcceleration", Constants.Elevator.mechanismMaxAccel);
+  LoggedTunableNumber maxVelocity =
+      new LoggedTunableNumber("Elevator/MaxCruiseVelocity", Constants.Elevator.mechanismMaxCruiseVel);
+  LoggedTunableNumber motionJerk = new LoggedTunableNumber("Elevator/MotionJerk", Constants.Elevator.motionMagicJerk);
 
   public ElevatorIOTalonFX() {
     leader =
@@ -31,18 +42,17 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     motorConfigs.MotorOutput.Inverted = Constants.Elevator.rightMotorInversion;
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    motorConfigs.Slot0.kS = Constants.Elevator.kS;
-    motorConfigs.Slot0.kV = Constants.Elevator.kV;
-    motorConfigs.Slot0.kP = Constants.Elevator.kP;
-    motorConfigs.Slot0.kD = Constants.Elevator.kD;
+    motorConfigs.Slot0.kS = kS.get();
+    motorConfigs.Slot0.kP = kP.get();
+    motorConfigs.Slot0.kD = kD.get();
 
     motorConfigs.MotionMagic.MotionMagicAcceleration =
-        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+        (maxAcceleration.get() / (Math.PI * Constants.Elevator.sprocketDiameter))
             * Constants.Elevator.gearRatio;
     motorConfigs.MotionMagic.MotionMagicCruiseVelocity =
-        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
+        (maxVelocity.get() / (Math.PI * Constants.Elevator.sprocketDiameter))
             * Constants.Elevator.gearRatio;
-    motorConfigs.MotionMagic.MotionMagicJerk = Constants.Elevator.motionMagicJerk;
+    motorConfigs.MotionMagic.MotionMagicJerk = motionJerk.get();
 
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
@@ -121,5 +131,27 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     return rotations
         / Constants.Elevator.gearRatio
         * (Math.PI * Constants.Elevator.sprocketDiameter);
+  }
+  
+  @Override
+  public void updateTunableNumbers() {
+    if (kP.hasChanged(0) || kD.hasChanged(0) || kS.hasChanged(0) || maxAcceleration.hasChanged(0) || maxVelocity.hasChanged(0) || motionJerk.hasChanged(0)) {
+      motorConfigs.Slot0.kP = kP.get();
+      motorConfigs.Slot0.kD = kD.get();
+      motorConfigs.Slot0.kS = kS.get();
+
+      motorConfigs.MotionMagic.MotionMagicAcceleration = (maxAcceleration.get() / (Math.PI * Constants.Elevator.sprocketDiameter))
+      * Constants.Elevator.gearRatio;
+      motorConfigs.MotionMagic.MotionMagicCruiseVelocity = motorConfigs.MotionMagic.MotionMagicCruiseVelocity =
+      (maxVelocity.get() / (Math.PI * Constants.Elevator.sprocketDiameter))
+          * Constants.Elevator.gearRatio;
+      motorConfigs.MotionMagic.MotionMagicJerk = motionJerk.get();
+
+      leader.getConfigurator().apply(motorConfigs);
+      follower.getConfigurator().apply(motorConfigs);
+
+      // Reset follower mode because it's lost during reconfig
+      follower.setControl(new Follower(Constants.Elevator.rightMotorID, true));
+    }
   }
 }

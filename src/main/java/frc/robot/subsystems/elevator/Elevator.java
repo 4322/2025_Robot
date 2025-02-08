@@ -21,6 +21,10 @@ public class Elevator extends SubsystemBase {
     Logger.processInputs("Elevator", inputs);
 
     Logger.recordOutput("Elevator", setpoint);
+
+    if (Constants.tuningMode) {
+      io.updateTunableNumbers();
+    }
   }
 
   public void setHeight(double heightMeters) {
