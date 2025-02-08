@@ -98,7 +98,8 @@ public class FlipperIOTalonFX implements FlipperIO {
   @Override
   public void setPivotPosition(double mechanismRotations) {
     pivotMotor.setControl(
-        new PositionVoltage(mechanismRotations * Constants.Flipper.Pivot.motorGearRatio));
+        new PositionVoltage(mechanismRotations * Constants.Flipper.Pivot.motorGearRatio)
+            .withEnableFOC(true));
   }
 
   @Override
