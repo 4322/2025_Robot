@@ -74,8 +74,7 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case PRE_SCORE:
-        elevator.setHeight(
-            Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
+        elevator.setHeight(Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
         flipper.requestIdle();
 
         if (requestIdle) {
@@ -87,8 +86,7 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case PRE_SCORE_FLIP:
-        elevator.setHeight(
-            Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
+        elevator.setHeight(Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
         flipper.requestDescore();
 
         if (requestIdle) {

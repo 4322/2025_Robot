@@ -10,7 +10,7 @@ public class Constants {
 
   public static final boolean elevatorEnabled = false;
   public static final boolean endEffectorEnabled = false;
-  public static final boolean flipperenabled = false;
+  public static final boolean flipperenabled = true;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -91,12 +91,13 @@ public class Constants {
       public static final double supplyCurrentLimit = 40;
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
-      public static final double kP = 0;
+      public static final double kP = 1.0;
       public static final double kD = 0;
 
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
-      public static final double deployedSetpointMechanismRotations = 0;
+      public static final double stowedSetpointMechanismRotations = 0.14015;
+      public static final double deployedSetpointMechanismRotations = 0.3372;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;

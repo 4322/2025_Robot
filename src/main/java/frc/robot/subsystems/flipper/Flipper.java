@@ -37,7 +37,7 @@ public class Flipper extends SubsystemBase {
         state = FlipperStates.IDLE;
         break;
       case IDLE:
-        io.setPivotPosition(0);
+        io.setPivotPosition(Constants.Flipper.Pivot.stowedSetpointMechanismRotations);
         io.setRollerVoltage(0);
 
         if (requestDescore) {
