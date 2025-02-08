@@ -20,7 +20,7 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
 
-    Logger.recordOutput("Elevator", setpoint);
+    Logger.recordOutput("Elevator/Setpoint", setpoint);
 
     if (Constants.tuningMode) {
       io.updateTunableNumbers();
