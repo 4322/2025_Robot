@@ -132,7 +132,10 @@ public class Constants {
   }
 
   public static class Scoring {
-    public static final double L2ScoringHeight = 0;
-    public static final double L3ScoringHeight = 0;
+    public static final double L2ScoringHeight = 0.300 + Units.inchesToMeters(0.125);
+    public static final double L3ScoringHeight = 0.685;
+
+    public static final double L2SafeFlipHeight = 0.240; // elv position to go to initially for pivot to flip
+    public static final double L2SafeFlipPosition = 0.217; // position to retract elevator at
   }
 }
