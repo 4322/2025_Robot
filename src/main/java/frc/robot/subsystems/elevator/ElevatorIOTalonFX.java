@@ -32,9 +32,18 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     motorConfigs.MotorOutput.Inverted = Constants.Elevator.rightMotorInversion;
     motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    motorConfigs.Slot0.kS = Constants.Elevator.kS;
-    motorConfigs.Slot0.kP = Constants.Elevator.kP;
-    motorConfigs.Slot0.kD = Constants.Elevator.kD;
+    motorConfigs.Slot0.kS = Constants.Elevator.kS0;
+    motorConfigs.Slot0.kP = Constants.Elevator.kP0;
+    motorConfigs.Slot0.kD = Constants.Elevator.kD0;
+
+    motorConfigs.Slot1.kS = Constants.Elevator.kS1;
+    motorConfigs.Slot1.kP = Constants.Elevator.kP1;
+    motorConfigs.Slot1.kD = Constants.Elevator.kD1;
+
+    motorConfigs.Slot2.kS = Constants.Elevator.kS2;
+    motorConfigs.Slot2.kP = Constants.Elevator.kP2;
+    motorConfigs.Slot2.kD = Constants.Elevator.kD2;
+    motorConfigs.Slot2.kG = Constants.Elevator.kG2;
 
     motorConfigs.MotionMagic.MotionMagicAcceleration =
         (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
@@ -103,7 +112,16 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setHeight(double heightMeters) {
-    leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)).withEnableFOC(true));
+    if (heightMeters == Constants.Scoring.L2ScoringHeight) {
+      leader.setControl(
+          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(1).withEnableFOC(true));
+    } else if (heightMeters == Constants.Scoring.L3ScoringHeight) {
+      leader.setControl(
+          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(2).withEnableFOC(true));
+    } else {
+      leader.setControl(
+          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(0).withEnableFOC(true));
+    }
   }
 
   @Override

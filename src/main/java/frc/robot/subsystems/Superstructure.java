@@ -14,7 +14,7 @@ public class Superstructure extends SubsystemBase {
   private boolean requestPreScoreFlip;
   private boolean requestScore;
 
-  private Superstates state = Superstates.HOMING;
+  private Superstates state = Superstates.IDLE;
   private Elevator elevator;
   private EndEffector endEffector;
   private Flipper flipper;
@@ -22,7 +22,6 @@ public class Superstructure extends SubsystemBase {
   private Level level = Level.L1;
 
   public static enum Superstates {
-    HOMING,
     IDLE,
     FEEDING,
     EJECT,
@@ -46,13 +45,8 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
     switch (state) {
-      case HOMING:
-        if (elevator.isHomed()) {
-          state = Superstates.IDLE;
-        }
-        break;
       case IDLE:
-        elevator.setHeight(0);
+        elevator.requestHeight(0);
         endEffector.requestIdle();
         flipper.requestIdle();
 
@@ -89,13 +83,14 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE:
         if (level == Level.L1) {
-          elevator.setHeight(0);
+          elevator.requestHeight(0);
         }
         else if (level == Level.L2) {
-          elevator.setHeight(Constants.Scoring.L2ScoringHeight);
+          elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
         }
         else if (level == Level.L3) {
-          elevator.setHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestHeight(
+            Constants.Scoring.L3ScoringHeight);
         }
         flipper.requestIdle();
 
@@ -109,13 +104,14 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE_FLIP:
         if (level == Level.L1) {
-          elevator.setHeight(0);
+          elevator.requestHeight(0);
         }
         else if (level == Level.L2) {
-          elevator.setHeight(Constants.Scoring.L2ScoringHeight);
+          elevator.requestHeight(0);(Constants.Scoring.L2ScoringHeight);
         }
         else if (level == Level.L3) {
-          elevator.setHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestHeight(
+            Constants.Scoring.L3ScoringHeight);
         }
         flipper.requestDescore();
 

@@ -3,7 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.util.Units;
 
-// By default these constants are the **Beta** constants
 public class Constants {
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 100000000; // 100 MB
@@ -57,15 +56,27 @@ public class Constants {
 
     public static final InvertedValue rightMotorInversion = InvertedValue.Clockwise_Positive;
 
-    public static final double kS = 0.4;
-    public static final double kP = 2.0;
-    public static final double kD = 0;
+    // L1 height gains
+    public static final double kS0 = 0.4;
+    public static final double kP0 = 2.0;
+    public static final double kD0 = 0;
+
+    // L2 height gains
+    public static final double kS1 = 0.4;
+    public static final double kP1 = 2.0;
+    public static final double kD1 = 0;
+
+    // L3 height gains
+    public static final double kS2 = 0;
+    public static final double kP2 = 2.0;
+    public static final double kD2 = 0;
+    public static final double kG2 = 0.4;
 
     public static final double mechanismMaxAccel = 22; // Used for motion magic
     public static final double mechanismMaxCruiseVel = 3.2; // Used for motion magic
     public static final double motionMagicJerk = 0;
 
-    public static final double homingVoltage = -2;
+    public static final double homingVoltage = -1.0;
     public static final double homingVelocityThreshold = 0.01;
     public static final double homingThresholdSec = 0.25;
   }
