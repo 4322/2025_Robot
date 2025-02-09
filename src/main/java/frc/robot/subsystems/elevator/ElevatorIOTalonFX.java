@@ -43,6 +43,7 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     motorConfigs.Slot2.kS = Constants.Elevator.kS2;
     motorConfigs.Slot2.kP = Constants.Elevator.kP2;
     motorConfigs.Slot2.kD = Constants.Elevator.kD2;
+    motorConfigs.Slot2.kG = Constants.Elevator.kG2;
 
     motorConfigs.MotionMagic.MotionMagicAcceleration =
         (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))

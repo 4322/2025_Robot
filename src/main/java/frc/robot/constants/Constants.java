@@ -67,9 +67,10 @@ public class Constants {
     public static final double kD1 = 0;
 
     // L3 height gains
-    public static final double kS2 = 0.4;
+    public static final double kS2 = 0;
     public static final double kP2 = 2.0;
     public static final double kD2 = 0;
+    public static final double kG2 = 0.4;
 
     public static final double mechanismMaxAccel = 22; // Used for motion magic
     public static final double mechanismMaxCruiseVel = 3.2; // Used for motion magic
