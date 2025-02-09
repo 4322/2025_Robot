@@ -3,7 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.util.Units;
 
-// By default these constants are the **Beta** constants
 public class Constants {
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 100000000; // 100 MB
@@ -76,7 +75,7 @@ public class Constants {
     public static final double mechanismMaxCruiseVel = 3.2; // Used for motion magic
     public static final double motionMagicJerk = 0;
 
-    public static final double homingVoltage = -2;
+    public static final double homingVoltage = -1.0;
     public static final double homingVelocityThreshold = 0.01;
     public static final double homingThresholdSec = 0.25;
   }

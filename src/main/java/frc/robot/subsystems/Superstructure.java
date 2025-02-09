@@ -14,13 +14,12 @@ public class Superstructure extends SubsystemBase {
   private boolean requestPreScoreFlip;
   private boolean requestScore;
 
-  private Superstates state = Superstates.HOMING;
+  private Superstates state = Superstates.IDLE;
   private Elevator elevator;
   private EndEffector endEffector;
   private Flipper flipper;
 
   public static enum Superstates {
-    HOMING,
     IDLE,
     FEEDING,
     EJECT,
@@ -38,13 +37,8 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
     switch (state) {
-      case HOMING:
-        if (elevator.isHomed()) {
-          state = Superstates.IDLE;
-        }
-        break;
       case IDLE:
-        elevator.setHeight(0);
+        elevator.requestHeight(0);
         endEffector.requestIdle();
         flipper.requestIdle();
 
@@ -80,7 +74,8 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case PRE_SCORE:
-        elevator.setHeight(Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
+        elevator.requestHeight(
+            Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
         flipper.requestIdle();
 
         if (requestIdle) {
@@ -92,7 +87,8 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case PRE_SCORE_FLIP:
-        elevator.setHeight(Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
+        elevator.requestHeight(
+            Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
         flipper.requestDescore();
 
         if (requestIdle) {

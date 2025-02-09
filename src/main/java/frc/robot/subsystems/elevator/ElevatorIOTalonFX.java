@@ -112,15 +112,15 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   @Override
   public void setHeight(double heightMeters) {
     if (heightMeters == Constants.Scoring.L2ScoringHeight) {
-      leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(1).withEnableFOC(true));
+      leader.setControl(
+          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(1).withEnableFOC(true));
+    } else if (heightMeters == Constants.Scoring.L3ScoringHeight) {
+      leader.setControl(
+          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(2).withEnableFOC(true));
+    } else {
+      leader.setControl(
+          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(0).withEnableFOC(true));
     }
-    else if (heightMeters == Constants.Scoring.L3ScoringHeight) {
-      leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(2).withEnableFOC(true));
-    }
-    else {
-      leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(0).withEnableFOC(true));
-    }
-    
   }
 
   @Override
