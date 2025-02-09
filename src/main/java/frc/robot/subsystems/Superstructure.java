@@ -14,12 +14,13 @@ public class Superstructure extends SubsystemBase {
   private boolean requestPreScoreFlip;
   private boolean requestScore;
 
-  private Superstates state = Superstates.IDLE;
+  private Superstates state = Superstates.HOMING;
   private Elevator elevator;
   private EndEffector endEffector;
   private Flipper flipper;
 
   public static enum Superstates {
+    HOMING,
     IDLE,
     FEEDING,
     EJECT,
@@ -37,6 +38,11 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
     switch (state) {
+      case HOMING:
+        if (elevator.isHomed()) {
+          state = Superstates.IDLE;
+        }
+        break;
       case IDLE:
         elevator.setHeight(0);
         endEffector.requestIdle();

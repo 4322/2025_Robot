@@ -136,6 +136,12 @@ public class Robot extends LoggedRobot {
         .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning
     // wildly in place
     // RobotController.setBrownoutVoltage(5.75); // roboRIO 2 only
+    
+    // Set elevator to homed state because we assume for match elevator is fully down
+    if (DriverStation.isFMSAttached()) {
+      RobotContainer.elevator.setHomingState(true);
+      RobotContainer.elevator.seedPosition(0);
+    }
   }
 
   @Override
@@ -156,7 +162,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    
+  }
 
   @Override
   public void teleopExit() {}

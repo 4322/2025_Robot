@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -103,6 +104,17 @@ public class ElevatorIOTalonFX implements ElevatorIO {
   @Override
   public void setHeight(double heightMeters) {
     leader.setControl(new MotionMagicVoltage(metersToRotations(heightMeters)).withEnableFOC(true));
+  }
+
+  @Override
+  public void setVoltage(double voltage) {
+    leader.setControl(new VoltageOut(voltage));
+  }
+
+  @Override
+  public void seedPosition(double motorPostionRot) {
+    leader.setPosition(motorPostionRot);
+    follower.setPosition(motorPostionRot);
   }
 
   @Override

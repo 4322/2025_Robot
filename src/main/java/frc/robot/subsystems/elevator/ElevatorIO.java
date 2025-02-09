@@ -17,5 +17,9 @@ public interface ElevatorIO {
 
   public default void setHeight(double heightMeters) {}
 
+  public default void setVoltage(double voltage) {}
+
+  public default void seedPosition(double motorPositionRot) {}
+
   public default void stop() {}
 }

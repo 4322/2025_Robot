@@ -64,6 +64,10 @@ public class Constants {
     public static final double mechanismMaxAccel = 22; // Used for motion magic
     public static final double mechanismMaxCruiseVel = 3.2; // Used for motion magic
     public static final double motionMagicJerk = 0;
+
+    public static final double homingVoltage = -2;
+    public static final double homingVelocityThreshold = 0.01;
+    public static final double homingThresholdSec = 0.25;
   }
 
   public static class EndEffector {
