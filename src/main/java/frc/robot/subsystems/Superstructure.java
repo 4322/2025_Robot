@@ -19,6 +19,8 @@ public class Superstructure extends SubsystemBase {
   private EndEffector endEffector;
   private Flipper flipper;
 
+  private Level level = Level.L1;
+
   public static enum Superstates {
     HOMING,
     IDLE,
@@ -27,6 +29,12 @@ public class Superstructure extends SubsystemBase {
     PRE_SCORE,
     PRE_SCORE_FLIP,
     SCORE
+  }
+
+  public static enum Level {
+    L1,
+    L2,
+    L3
   }
 
   public Superstructure(Elevator elevator, EndEffector endEffector, Flipper flipper) {
@@ -80,7 +88,15 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case PRE_SCORE:
-        elevator.setHeight(Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
+        if (level == Level.L1) {
+          elevator.setHeight(0);
+        }
+        else if (level == Level.L2) {
+          elevator.setHeight(Constants.Scoring.L2ScoringHeight);
+        }
+        else if (level == Level.L3) {
+          elevator.setHeight(Constants.Scoring.L3ScoringHeight);
+        }
         flipper.requestIdle();
 
         if (requestIdle) {
@@ -92,7 +108,15 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case PRE_SCORE_FLIP:
-        elevator.setHeight(Constants.Scoring.L3ScoringHeight); // TODO: Modify for any scoring level
+        if (level == Level.L1) {
+          elevator.setHeight(0);
+        }
+        else if (level == Level.L2) {
+          elevator.setHeight(Constants.Scoring.L2ScoringHeight);
+        }
+        else if (level == Level.L3) {
+          elevator.setHeight(Constants.Scoring.L3ScoringHeight);
+        }
         flipper.requestDescore();
 
         if (requestIdle) {
@@ -154,5 +178,9 @@ public class Superstructure extends SubsystemBase {
     requestPreScore = false;
     requestPreScoreFlip = false;
     requestScore = false;
+  }
+
+  public void requestLevel(Level level) {
+    this.level = level;
   }
 }
