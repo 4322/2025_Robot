@@ -107,7 +107,7 @@ public class Superstructure extends SubsystemBase {
           elevator.requestHeight(0);
         }
         else if (level == Level.L2) {
-          elevator.requestHeight(0);(Constants.Scoring.L2ScoringHeight);
+          elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
         }
         else if (level == Level.L3) {
           elevator.requestHeight(
