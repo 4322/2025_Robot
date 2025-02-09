@@ -16,6 +16,7 @@ import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
@@ -136,6 +137,10 @@ public class RobotContainer {
 
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {superstructure.requestScore();}));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+
+    new JoystickButton(operator, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {superstructure.requestLevel(Level.L1);}));
+    new JoystickButton(operator, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {superstructure.requestLevel(Level.L2);}));
+    new JoystickButton(operator, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> {superstructure.requestLevel(Level.L3);}));
   }
 
   private void configureAprilTagVision() {
