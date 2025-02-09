@@ -8,7 +8,7 @@ public class Constants {
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 100000000; // 100 MB
 
-  public static final boolean elevatorEnabled = false;
+  public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = false;
   public static final boolean flipperenabled = false;
 
@@ -58,7 +58,7 @@ public class Constants {
     public static final InvertedValue rightMotorInversion = InvertedValue.Clockwise_Positive;
 
     public static final double kS = 0.4;
-    public static final double kP = 0;
+    public static final double kP = 2.0;
     public static final double kD = 0;
 
     public static final double mechanismMaxAccel = 22; // Used for motion magic
