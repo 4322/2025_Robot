@@ -110,7 +110,7 @@ public class Superstructure extends SubsystemBase {
         } else if (level == Level.L3) {
           elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
         }
-        
+
         if (elevator.atSetpoint() && level != Level.L1) {
           flipper.requestDescore();
         }
@@ -158,11 +158,9 @@ public class Superstructure extends SubsystemBase {
         if (flipper.getPivotPosition() < Constants.Scoring.safeFlipPosition) {
           if (requestIdle) {
             state = Superstates.IDLE;
-          }
-          else if (requestPreScoreFlip) {
+          } else if (requestPreScoreFlip) {
             state = Superstates.SAFE_FLIP;
-          }
-          else if (requestPreScore) {
+          } else if (requestPreScore) {
             state = Superstates.PRE_SCORE;
           }
         }
