@@ -90,7 +90,7 @@ public class Constants {
     public static final double statorCurrentLimit = 100;
     public static final InvertedValue motorInversion = InvertedValue.Clockwise_Positive;
 
-    public static final double proximityDetectionThreshold = 0.3;
+    public static final double proximityDetectionThreshold = 0.075;
 
     public static final double feedVoltage = 4;
     public static final double shootVoltage = 7;
