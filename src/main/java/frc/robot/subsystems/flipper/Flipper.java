@@ -70,6 +70,10 @@ public class Flipper extends SubsystemBase {
         true);
   }
 
+  public double getPivotPosition() {
+    return inputs.pivotPosAbsMechanismRotations;
+  }
+
   // Use method only to reset state when robot is disabled
   public void forceIdle() {
     unsetAllRequests();

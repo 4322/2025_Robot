@@ -20,12 +20,15 @@ public class Superstructure extends SubsystemBase {
   private Flipper flipper;
 
   private Level level = Level.L1;
+  private Level prevLevel = Level.L1;
 
   public static enum Superstates {
     IDLE,
     FEEDING,
     EJECT,
     PRE_SCORE,
+    SAFE_FLIP,
+    SAFE_RETRACT,
     PRE_SCORE_FLIP,
     SCORE
   }
@@ -57,7 +60,7 @@ public class Superstructure extends SubsystemBase {
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
         } else if (requestPreScoreFlip) {
-          state = Superstates.PRE_SCORE_FLIP;
+          state = Superstates.SAFE_FLIP;
         }
         break;
       case FEEDING:
@@ -94,27 +97,74 @@ public class Superstructure extends SubsystemBase {
         if (requestIdle) {
           state = Superstates.IDLE;
         } else if (requestPreScoreFlip) {
-          state = Superstates.PRE_SCORE_FLIP;
+          state = Superstates.SAFE_FLIP;
         } else if (requestScore && elevator.atSetpoint() && endEffector.coralSecured()) {
           state = Superstates.SCORE;
         }
         break;
-      case PRE_SCORE_FLIP:
+      case SAFE_FLIP:
         if (level == Level.L1) {
           elevator.requestHeight(0);
         } else if (level == Level.L2) {
-          elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
+          elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
         } else if (level == Level.L3) {
           elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
         }
-        flipper.requestDescore();
+        
+        if (elevator.atSetpoint() && level != Level.L1) {
+          flipper.requestDescore();
+        }
+
+        if (flipper.atDeploySetpoint() || level == Level.L1) {
+          state = Superstates.PRE_SCORE_FLIP;
+        }
+        break;
+      case PRE_SCORE_FLIP:
+        if (prevLevel != level) {
+          state = Superstates.SAFE_RETRACT;
+        }
+        if (level == Level.L1) {
+          elevator.requestHeight(0);
+          prevLevel = level;
+        } else if (level == Level.L2) {
+          elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
+          prevLevel = level;
+        } else if (level == Level.L3) {
+          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          prevLevel = level;
+        }
 
         if (requestIdle) {
-          state = Superstates.IDLE;
+          state = Superstates.SAFE_RETRACT;
         } else if (requestPreScore) {
-          state = Superstates.PRE_SCORE;
+          state = Superstates.SAFE_RETRACT;
         } else if (requestScore && elevator.atSetpoint() && endEffector.coralSecured()) {
           state = Superstates.SCORE;
+        }
+        break;
+      case SAFE_RETRACT:
+        if (level == Level.L1) {
+          elevator.requestHeight(0);
+        } else if (level == Level.L2) {
+          elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
+        } else if (level == Level.L3) {
+          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+        }
+
+        if (elevator.atSetpoint()) {
+          flipper.requestIdle();
+        }
+
+        if (flipper.getPivotPosition() < Constants.Scoring.safeFlipPosition) {
+          if (requestIdle) {
+            state = Superstates.IDLE;
+          }
+          else if (requestPreScoreFlip) {
+            state = Superstates.SAFE_FLIP;
+          }
+          else if (requestPreScore) {
+            state = Superstates.PRE_SCORE;
+          }
         }
         break;
       case SCORE:
