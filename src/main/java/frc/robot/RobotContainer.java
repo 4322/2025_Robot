@@ -8,11 +8,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
@@ -49,6 +52,7 @@ public class RobotContainer {
   public static Elevator elevator = new Elevator(elevatorIO);
   public static EndEffector endEffector = new EndEffector(endEffectorIO);
   public static Flipper flipper = new Flipper(flipperIO);
+  public static Superstructure superstructure = new Superstructure(elevator, endEffector, flipper);
 
   // April tag cameras
   public static PhotonCamera frontLeftCamera;
@@ -121,6 +125,17 @@ public class RobotContainer {
               }
             },
             swerve));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {superstructure.requestFeed();}));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+
+    new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {superstructure.requestPreScoreFlip();}));
+    new JoystickButton(driver, XboxController.Button.kX.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+
+    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {superstructure.requestPreScore();}));
+    new JoystickButton(driver, XboxController.Button.kA.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {superstructure.requestScore();}));
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
   }
 
   private void configureAprilTagVision() {
