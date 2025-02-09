@@ -61,4 +61,9 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   public void setVoltage(double voltage) {
     motor.setVoltage(voltage);
   }
+
+  @Override
+  public void stop() {
+    motor.stopMotor();
+  }
 }

@@ -41,7 +41,7 @@ public class EndEffector extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        io.setVoltage(0);
+        io.stop();
 
         // reset coral secured in cases where coral is removed manually from robot
         if (!hasCoral()) {
@@ -61,13 +61,15 @@ public class EndEffector extends SubsystemBase {
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
-        } else if (inputs.backBeamBreakTriggered) {
+        } else if (inputs.frontBeamBreakTriggered) {
           state = EndEffectorStates.SECURING_CORAL;
         } else if (requestIdle) {
           state = EndEffectorStates.IDLE;
         }
         break;
       case SECURING_CORAL:
+        io.setVoltage(Constants.EndEffector.secondFeedVoltage);
+
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
         } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
