@@ -126,21 +126,76 @@ public class RobotContainer {
               }
             },
             swerve));
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {superstructure.requestFeed();}));
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestFeed();
+                }));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
-    new JoystickButton(driver, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {superstructure.requestPreScoreFlip();}));
-    new JoystickButton(driver, XboxController.Button.kX.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+    new JoystickButton(driver, XboxController.Button.kX.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestPreScoreFlip();
+                }));
+    new JoystickButton(driver, XboxController.Button.kX.value)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
-    new JoystickButton(driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {superstructure.requestPreScore();}));
-    new JoystickButton(driver, XboxController.Button.kA.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+    new JoystickButton(driver, XboxController.Button.kA.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestPreScore();
+                }));
+    new JoystickButton(driver, XboxController.Button.kA.value)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {superstructure.requestScore();}));
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestScore();
+                }));
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
-    new JoystickButton(operator, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> {superstructure.requestLevel(Level.L1);}));
-    new JoystickButton(operator, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> {superstructure.requestLevel(Level.L2);}));
-    new JoystickButton(operator, XboxController.Button.kY.value).onTrue(new InstantCommand(() -> {superstructure.requestLevel(Level.L3);}));
+    new JoystickButton(operator, XboxController.Button.kA.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestLevel(Level.L1);
+                }));
+    new JoystickButton(operator, XboxController.Button.kB.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestLevel(Level.L2);
+                }));
+    new JoystickButton(operator, XboxController.Button.kY.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestLevel(Level.L3);
+                }));
   }
 
   private void configureAprilTagVision() {

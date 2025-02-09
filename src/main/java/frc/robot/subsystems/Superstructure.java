@@ -84,13 +84,10 @@ public class Superstructure extends SubsystemBase {
       case PRE_SCORE:
         if (level == Level.L1) {
           elevator.requestHeight(0);
-        }
-        else if (level == Level.L2) {
+        } else if (level == Level.L2) {
           elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
-        }
-        else if (level == Level.L3) {
-          elevator.requestHeight(
-            Constants.Scoring.L3ScoringHeight);
+        } else if (level == Level.L3) {
+          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
         }
         flipper.requestIdle();
 
@@ -105,13 +102,10 @@ public class Superstructure extends SubsystemBase {
       case PRE_SCORE_FLIP:
         if (level == Level.L1) {
           elevator.requestHeight(0);
-        }
-        else if (level == Level.L2) {
+        } else if (level == Level.L2) {
           elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
-        }
-        else if (level == Level.L3) {
-          elevator.requestHeight(
-            Constants.Scoring.L3ScoringHeight);
+        } else if (level == Level.L3) {
+          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
         }
         flipper.requestDescore();
 

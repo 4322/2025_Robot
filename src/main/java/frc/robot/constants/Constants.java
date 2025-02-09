@@ -8,8 +8,8 @@ public class Constants {
   public static final long minFreeSpace = 100000000; // 100 MB
 
   public static final boolean elevatorEnabled = true;
-  public static final boolean endEffectorEnabled = false;
-  public static final boolean flipperenabled = false;
+  public static final boolean endEffectorEnabled = true;
+  public static final boolean flipperenabled = true;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -90,7 +90,7 @@ public class Constants {
     public static final double statorCurrentLimit = 100;
     public static final InvertedValue motorInversion = InvertedValue.Clockwise_Positive;
 
-    public static final double proximityDetectionThreshold = 0.3;
+    public static final double proximityDetectionThreshold = 0.075;
 
     public static final double feedVoltage = 4;
     public static final double shootVoltage = 7;
@@ -130,7 +130,7 @@ public class Constants {
   }
 
   public static class Scoring {
-    public static final double L2ScoringHeight = 0;
-    public static final double L3ScoringHeight = 0;
+    public static final double L2ScoringHeight = 0.3;
+    public static final double L3ScoringHeight = 0.6;
   }
 }
