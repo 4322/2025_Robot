@@ -5,6 +5,7 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.flipper.Flipper;
+import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
   private boolean requestIdle;
@@ -30,6 +31,7 @@ public class Superstructure extends SubsystemBase {
     SAFE_FLIP,
     SAFE_RETRACT,
     PRE_SCORE_FLIP,
+    TRANSITION_FLIP,
     SCORE
   }
 
@@ -47,6 +49,7 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Logger.recordOutput("Superstructure/State", state.toString());
     switch (state) {
       case IDLE:
         elevator.requestHeight(0);
@@ -105,10 +108,13 @@ public class Superstructure extends SubsystemBase {
       case SAFE_FLIP:
         if (level == Level.L1) {
           elevator.requestHeight(0);
+          prevLevel = level;
         } else if (level == Level.L2) {
           elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
+          prevLevel = level;
         } else if (level == Level.L3) {
           elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          prevLevel = level;
         }
 
         if (elevator.atSetpoint() && level != Level.L1) {
@@ -121,7 +127,8 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE_FLIP:
         if (prevLevel != level) {
-          state = Superstates.SAFE_RETRACT;
+          state = Superstates.TRANSITION_FLIP;
+          break;
         }
         if (level == Level.L1) {
           elevator.requestHeight(0);
@@ -142,6 +149,23 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SCORE;
         }
         break;
+      case TRANSITION_FLIP:
+        if (prevLevel == Level.L1) {
+          elevator.requestHeight(0);
+        } else if (prevLevel == Level.L2) {
+          elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
+        } else if (level == Level.L3) {
+          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+        }
+
+        if (elevator.atSetpoint()) {
+          flipper.requestIdle();
+        }
+
+        if (flipper.getPivotPosition() < Constants.Scoring.safeFlipPosition) {
+          state = Superstates.SAFE_FLIP;
+        }
+        break;
       case SAFE_RETRACT:
         if (level == Level.L1) {
           elevator.requestHeight(0);
@@ -158,8 +182,6 @@ public class Superstructure extends SubsystemBase {
         if (flipper.getPivotPosition() < Constants.Scoring.safeFlipPosition) {
           if (requestIdle) {
             state = Superstates.IDLE;
-          } else if (requestPreScoreFlip) {
-            state = Superstates.SAFE_FLIP;
           } else if (requestPreScore) {
             state = Superstates.PRE_SCORE;
           }
@@ -169,7 +191,7 @@ public class Superstructure extends SubsystemBase {
         endEffector.requestShoot();
 
         if (!endEffector.coralSecured() && requestIdle) {
-          state = Superstates.IDLE;
+          state = Superstates.SAFE_RETRACT;
         }
         break;
     }
