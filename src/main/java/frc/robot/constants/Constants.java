@@ -57,9 +57,9 @@ public class Constants {
     public static final InvertedValue rightMotorInversion = InvertedValue.Clockwise_Positive;
 
     // L1 height gains
-    public static final double kS0 = 0.4;
+    public static final double kS0 = 0;
     public static final double kP0 = 2.0;
-    public static final double kD0 = 0;
+    public static final double kD0 = 0.05;
 
     // L2 height gains
     public static final double kS1 = 0.4;
@@ -69,8 +69,8 @@ public class Constants {
     // L3 height gains
     public static final double kS2 = 0;
     public static final double kP2 = 2.0;
-    public static final double kD2 = 0;
-    public static final double kG2 = 0.4;
+    public static final double kD2 = 0.05;
+    public static final double kG2 = 0.40;
 
     public static final double mechanismMaxAccel = 22; // Used for motion magic
     public static final double mechanismMaxCruiseVel = 3.2; // Used for motion magic
@@ -127,7 +127,7 @@ public class Constants {
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
-      public static final double descoreVoltage = 4;
+      public static final double descoreVoltage = -4;
     }
   }
 
