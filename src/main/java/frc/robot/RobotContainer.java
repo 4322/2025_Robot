@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousSelector;
+import frc.robot.commands.LeftFeed;
+import frc.robot.commands.ManualScore;
+import frc.robot.commands.RightFeed;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
@@ -34,6 +37,7 @@ public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
   public static XboxController operator = new XboxController(1);
+  public static boolean flipTriggered = false; // Temporary constant until button board
 
   public static final Swerve swerve =
       new Swerve(
@@ -126,58 +130,15 @@ public class RobotContainer {
               }
             },
             swerve));
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestFeed();
-                }));
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestIdle();
-                }));
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new RightFeed(swerve, superstructure));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new LeftFeed(swerve, superstructure));
+    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value).whileTrue(new ManualScore(superstructure));
+    // driver right trigger controls manual shooting of coral in ManualScore command
 
-    new JoystickButton(driver, XboxController.Button.kX.value)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestPreScoreFlip();
-                }));
-    new JoystickButton(driver, XboxController.Button.kX.value)
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestIdle();
-                }));
-
-    new JoystickButton(driver, XboxController.Button.kA.value)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestPreScore();
-                }));
-    new JoystickButton(driver, XboxController.Button.kA.value)
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestIdle();
-                }));
-
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestScore();
-                }));
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestIdle();
-                }));
-
+    new JoystickButton(operator, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {flipTriggered = true;}));
+    new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {flipTriggered = false;}));
+    new JoystickButton(operator, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {superstructure.requestEject();}, superstructure));
+    new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}, superstructure));
     new JoystickButton(operator, XboxController.Button.kA.value)
         .onTrue(
             new InstantCommand(
