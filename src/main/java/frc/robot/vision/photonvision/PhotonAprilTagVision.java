@@ -1,7 +1,5 @@
 package frc.robot.vision.photonvision;
 
-import static frc.robot.constants.FieldConstants.aprilTags;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -14,6 +12,9 @@ import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.SingleTagAdjusters;
+
+import static frc.robot.constants.FieldConstants.aprilTagFieldLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -162,7 +163,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
 
           // Populate array of tag poses with tags used
           for (int id : unprocessedResult.getMultiTagResult().get().fiducialIDsUsed) {
-            tagPose3ds.add(aprilTags.getTagPose(id).get());
+            tagPose3ds.add(aprilTagFieldLayout.getTagPose(id).get());
           }
 
           Logger.recordOutput("Photon/Camera Pose (Multi tag) " + instanceIndex, cameraPose);
@@ -177,11 +178,11 @@ public class PhotonAprilTagVision extends SubsystemBase {
           //   continue;
           // }
 
-          if (aprilTags.getTagPose(target.getFiducialId()).isEmpty()) {
+          if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isEmpty()) {
             continue;
           }
 
-          Pose3d tagPos = aprilTags.getTagPose(target.getFiducialId()).get();
+          Pose3d tagPos = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
 
           Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
           Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());

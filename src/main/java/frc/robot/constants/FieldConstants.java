@@ -1,146 +1,178 @@
 package frc.robot.constants;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Quaternion;
-import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
-import java.util.List;
+import java.util.*;
 
+/**
+ * Contains various field dimensions and useful reference points. All units are in meters and poses
+ * have a blue alliance origin.
+ */
 public class FieldConstants {
+  public static final double fieldLength = Units.inchesToMeters(690.876);
+  public static final double fieldWidth = Units.inchesToMeters(317);
+  public static final double startingLineX =
+      Units.inchesToMeters(299.438); // Measured from the inside of starting line
+  public static final double algaeDiameter = Units.inchesToMeters(16);
 
-  public static final double fieldLength = 16.451;
-  public static final double fieldWidth = 8.211;
+  public static class Processor {
+    public static final Pose2d centerFace =
+        new Pose2d(Units.inchesToMeters(235.726), 0, Rotation2d.fromDegrees(90));
+  }
 
-  // AprilTag constants
-  public static final double aprilTagWidth = Units.inchesToMeters(8.12500);
+  public static class Barge {
+    public static final Translation2d farCage =
+        new Translation2d(Units.inchesToMeters(345.428), Units.inchesToMeters(286.779));
+    public static final Translation2d middleCage =
+        new Translation2d(Units.inchesToMeters(345.428), Units.inchesToMeters(242.855));
+    public static final Translation2d closeCage =
+        new Translation2d(Units.inchesToMeters(345.428), Units.inchesToMeters(199.947));
 
-  public static final AprilTagFieldLayout aprilTags =
-      new AprilTagFieldLayout(
-          List.of(
-              new AprilTag(
-                  1,
-                  new Pose3d(
-                      15.079471999999997,
-                      0.24587199999999998,
-                      1.355852,
-                      new Rotation3d(
-                          new Quaternion(0.5000000000000001, 0.0, 0.0, 0.8660254037844386)))),
-              new AprilTag(
-                  2,
-                  new Pose3d(
-                      16.185134,
-                      0.883666,
-                      1.355852,
-                      new Rotation3d(
-                          new Quaternion(0.5000000000000001, 0.0, 0.0, 0.8660254037844386)))),
-              new AprilTag(
-                  3,
-                  new Pose3d(
-                      16.579342,
-                      4.982717999999999,
-                      1.4511020000000001,
-                      new Rotation3d(new Quaternion(6.123233995736766e-17, 0.0, 0.0, 1.0)))),
-              new AprilTag(
-                  4,
-                  new Pose3d(
-                      16.579342,
-                      5.547867999999999,
-                      1.4511020000000001,
-                      new Rotation3d(new Quaternion(6.123233995736766e-17, 0.0, 0.0, 1.0)))),
-              new AprilTag(
-                  5,
-                  new Pose3d(
-                      14.700757999999999,
-                      8.2042,
-                      1.355852,
-                      new Rotation3d(
-                          new Quaternion(-0.7071067811865475, 0.0, 0.0, 0.7071067811865476)))),
-              new AprilTag(
-                  6,
-                  new Pose3d(
-                      1.8415,
-                      8.2042,
-                      1.355852,
-                      new Rotation3d(
-                          new Quaternion(-0.7071067811865475, 0.0, 0.0, 0.7071067811865476)))),
-              new AprilTag(
-                  7,
-                  new Pose3d(
-                      -0.038099999999999995,
-                      5.547867999999999,
-                      1.4511020000000001,
-                      new Rotation3d(new Quaternion(1.0, 0.0, 0.0, 0.0)))),
-              new AprilTag(
-                  8,
-                  new Pose3d(
-                      -0.038099999999999995,
-                      4.982717999999999,
-                      1.4511020000000001,
-                      new Rotation3d(new Quaternion(1.0, 0.0, 0.0, 0.0)))),
-              new AprilTag(
-                  9,
-                  new Pose3d(
-                      0.356108,
-                      0.883666,
-                      1.355852,
-                      new Rotation3d(
-                          new Quaternion(0.8660254037844387, 0.0, 0.0, 0.49999999999999994)))),
-              new AprilTag(
-                  10,
-                  new Pose3d(
-                      1.4615159999999998,
-                      0.24587199999999998,
-                      1.355852,
-                      new Rotation3d(
-                          new Quaternion(0.8660254037844387, 0.0, 0.0, 0.49999999999999994)))),
-              new AprilTag(
-                  11,
-                  new Pose3d(
-                      11.904726,
-                      3.7132259999999997,
-                      1.3208,
-                      new Rotation3d(
-                          new Quaternion(-0.8660254037844387, 0.0, 0.0, 0.49999999999999994)))),
-              new AprilTag(
-                  12,
-                  new Pose3d(
-                      11.904726,
-                      4.49834,
-                      1.3208,
-                      new Rotation3d(
-                          new Quaternion(0.8660254037844387, 0.0, 0.0, 0.49999999999999994)))),
-              new AprilTag(
-                  13,
-                  new Pose3d(
-                      11.220196,
-                      4.105148,
-                      1.3208,
-                      new Rotation3d(new Quaternion(6.123233995736766e-17, 0.0, 0.0, 1.0)))),
-              new AprilTag(
-                  14,
-                  new Pose3d(
-                      5.320792,
-                      4.105148,
-                      1.3208,
-                      new Rotation3d(new Quaternion(1.0, 0.0, 0.0, 0.0)))),
-              new AprilTag(
-                  15,
-                  new Pose3d(
-                      4.641342,
-                      4.49834,
-                      1.3208,
-                      new Rotation3d(
-                          new Quaternion(0.5000000000000001, 0.0, 0.0, 0.8660254037844386)))),
-              new AprilTag(
-                  16,
-                  new Pose3d(
-                      4.641342,
-                      3.7132259999999997,
-                      1.3208,
-                      new Rotation3d(
-                          new Quaternion(-0.4999999999999998, 0.0, 0.0, 0.8660254037844387))))),
-          fieldLength,
-          fieldWidth);
+    // Measured from floor to bottom of cage
+    public static final double deepHeight = Units.inchesToMeters(3.125);
+    public static final double shallowHeight = Units.inchesToMeters(30.125);
+  }
+
+  public static class CoralStation {
+    public static final double stationLength = Units.inchesToMeters(79.750);
+    public static final Pose2d leftCenterFace =
+        new Pose2d(
+            Units.inchesToMeters(33.526),
+            Units.inchesToMeters(291.176),
+            Rotation2d.fromDegrees(90 - 144.011)); // -54
+    public static final Pose2d rightCenterFace =
+        new Pose2d(
+            Units.inchesToMeters(33.526),
+            Units.inchesToMeters(25.824),
+            Rotation2d.fromDegrees(144.011 - 90)); // 54
+  }
+
+  public static class Reef {
+    public static final double faceLength = Units.inchesToMeters(36.792600);
+    public static final Translation2d center =
+        new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501));
+    public static final double faceToZoneLine =
+        Units.inchesToMeters(12); // Side of the reef to the inside of the reef zone line
+
+    public static final Pose2d[] centerFaces =
+        new Pose2d[6]; // Starting facing the driver station in clockwise order
+    public static final List<Map<ReefLevel, Pose3d>> branchPositions =
+        new ArrayList<>(); // Starting at the right branch facing the driver station in clockwise
+
+    static {
+      // Initialize faces
+      centerFaces[0] =
+          new Pose2d(
+              Units.inchesToMeters(144.003),
+              Units.inchesToMeters(158.500),
+              Rotation2d.fromDegrees(180));
+      centerFaces[1] =
+          new Pose2d(
+              Units.inchesToMeters(160.373),
+              Units.inchesToMeters(186.857),
+              Rotation2d.fromDegrees(120));
+      centerFaces[2] =
+          new Pose2d(
+              Units.inchesToMeters(193.116),
+              Units.inchesToMeters(186.858),
+              Rotation2d.fromDegrees(60));
+      centerFaces[3] =
+          new Pose2d(
+              Units.inchesToMeters(209.489),
+              Units.inchesToMeters(158.502),
+              Rotation2d.fromDegrees(0));
+      centerFaces[4] =
+          new Pose2d(
+              Units.inchesToMeters(193.118),
+              Units.inchesToMeters(130.145),
+              Rotation2d.fromDegrees(-60));
+      centerFaces[5] =
+          new Pose2d(
+              Units.inchesToMeters(160.375),
+              Units.inchesToMeters(130.144),
+              Rotation2d.fromDegrees(-120));
+
+      // Initialize branch positions
+      for (int face = 0; face < 6; face++) {
+        Map<ReefLevel, Pose3d> fillRight = new HashMap<>();
+        Map<ReefLevel, Pose3d> fillLeft = new HashMap<>();
+        for (var level : ReefLevel.values()) {
+          Pose2d poseDirection = new Pose2d(center, Rotation2d.fromDegrees(180 - (60 * face)));
+          double adjustX = Units.inchesToMeters(30.738);
+          double adjustY = Units.inchesToMeters(6.469);
+
+          fillRight.put(
+              level,
+              new Pose3d(
+                  new Translation3d(
+                      poseDirection
+                          .transformBy(new Transform2d(adjustX, adjustY, new Rotation2d()))
+                          .getX(),
+                      poseDirection
+                          .transformBy(new Transform2d(adjustX, adjustY, new Rotation2d()))
+                          .getY(),
+                      level.height),
+                  new Rotation3d(
+                      0,
+                      Units.degreesToRadians(level.pitch),
+                      poseDirection.getRotation().getRadians())));
+          fillLeft.put(
+              level,
+              new Pose3d(
+                  new Translation3d(
+                      poseDirection
+                          .transformBy(new Transform2d(adjustX, -adjustY, new Rotation2d()))
+                          .getX(),
+                      poseDirection
+                          .transformBy(new Transform2d(adjustX, -adjustY, new Rotation2d()))
+                          .getY(),
+                      level.height),
+                  new Rotation3d(
+                      0,
+                      Units.degreesToRadians(level.pitch),
+                      poseDirection.getRotation().getRadians())));
+        }
+        branchPositions.add(fillRight);
+        branchPositions.add(fillLeft);
+      }
+    }
+  }
+
+  public static class StagingPositions {
+    // Measured from the center of the ice cream
+    public static final Pose2d leftIceCream =
+        new Pose2d(Units.inchesToMeters(48), Units.inchesToMeters(230.5), new Rotation2d());
+    public static final Pose2d middleIceCream =
+        new Pose2d(Units.inchesToMeters(48), Units.inchesToMeters(158.5), new Rotation2d());
+    public static final Pose2d rightIceCream =
+        new Pose2d(Units.inchesToMeters(48), Units.inchesToMeters(86.5), new Rotation2d());
+  }
+
+  public enum ReefLevel {
+    L1(Units.inchesToMeters(25.0), 0),
+    L2(Units.inchesToMeters(31.875), -35),
+    L3(Units.inchesToMeters(47.625), -35),
+    L4(Units.inchesToMeters(72), -90);
+
+    ReefLevel(double height, double pitch) {
+      this.height = height;
+      this.pitch = pitch; // in degrees
+    }
+
+    public static ReefLevel fromLevel(int level) {
+      return Arrays.stream(values())
+          .filter(height -> height.ordinal() == level)
+          .findFirst()
+          .orElse(L4);
+    }
+
+    public final double height;
+    public final double pitch;
+  }
+
+  public static final double aprilTagWidth = Units.inchesToMeters(6.50);
+  public static final int aprilTagCount = 22;
+  public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
 }
