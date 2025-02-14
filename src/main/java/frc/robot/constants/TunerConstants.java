@@ -41,7 +41,7 @@ public class TunerConstants {
 
   private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
   private static final ClosedLoopOutputType driveClosedLoopOutput =
-      ClosedLoopOutputType.TorqueCurrentFOC;
+      ClosedLoopOutputType.Voltage;
 
   // Theoretical free speed (m/s) at 12v applied output;
   public static final double kSpeedAt12VoltsMps = 5.395;

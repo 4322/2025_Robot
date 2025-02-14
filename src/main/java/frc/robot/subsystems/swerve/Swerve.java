@@ -10,8 +10,6 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.swerve.SwerveRequest.ApplyFieldSpeeds;
-import com.ctre.phoenix6.swerve.SwerveRequest.ApplyRobotSpeeds;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import edu.wpi.first.math.VecBuilder;
@@ -36,8 +34,6 @@ public class Swerve extends SubsystemBase {
 
   /* Stores requests and parameters */
   private ChassisSpeeds desired = new ChassisSpeeds();
-  private double[] desiredWheelForceFFX = new double[4];
-  private double[] desiredWheelForceFFY = new double[4];
   private boolean fieldRelative = false;
 
   private boolean isBrakeMode = true;
@@ -134,20 +130,20 @@ public class Swerve extends SubsystemBase {
       case VELOCITY:
         if (fieldRelative) {
           drivetrain.setControl(
-              new ApplyFieldSpeeds()
-                  .withSpeeds(desired)
-                  .withWheelForceFeedforwardsX(desiredWheelForceFFX)
-                  .withWheelForceFeedforwardsY(desiredWheelForceFFY)
+              new FieldCentric()
+                  .withVelocityX(desired.vxMetersPerSecond)
+                  .withVelocityY(desired.vyMetersPerSecond)
+                  .withRotationalRate(desired.omegaRadiansPerSecond)
                   .withDriveRequestType(DriveRequestType.Velocity)
                   .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         } else {
           drivetrain.setControl(
-              new ApplyRobotSpeeds()
-                  .withSpeeds(desired)
-                  .withWheelForceFeedforwardsX(desiredWheelForceFFX)
-                  .withWheelForceFeedforwardsY(desiredWheelForceFFY)
-                  .withDriveRequestType(DriveRequestType.Velocity)
-                  .withSteerRequestType(SteerRequestType.MotionMagicExpo));
+              new RobotCentric()
+                .withVelocityX(desired.vxMetersPerSecond)
+                .withVelocityY(desired.vyMetersPerSecond)
+                .withRotationalRate(desired.omegaRadiansPerSecond)
+                .withDriveRequestType(DriveRequestType.Velocity)
+                .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         }
         break;
     }
@@ -177,21 +173,11 @@ public class Swerve extends SubsystemBase {
   /* Request the drivetrain to drive at the specified velocity
    * "speeds" should be in meters per second
    */
-  public void requestVelocity(
-      ChassisSpeeds speeds,
-      double[] desiredWheelForceFFX,
-      double[] desiredWheelForceFFY,
-      boolean fieldRelative) {
+  public void requestVelocity(ChassisSpeeds speeds, boolean fieldRelative) {
     systemState = SwerveState.VELOCITY;
 
     this.desired = speeds;
-    this.desiredWheelForceFFX = desiredWheelForceFFX;
-    this.desiredWheelForceFFY = desiredWheelForceFFY;
     this.fieldRelative = fieldRelative;
-  }
-
-  public void requestVelocity(ChassisSpeeds speeds, boolean fieldRelative) {
-    requestVelocity(speeds, new double[4], new double[4], fieldRelative);
   }
 
   /* Request the drivetrain to drive at the specified velocity OPEN LOOP
