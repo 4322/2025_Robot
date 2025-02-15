@@ -50,7 +50,7 @@ public class EndEffector extends SubsystemBase {
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
-        } else if (requestFeed && !hasCoral()) {
+        } else if (requestFeed && !coralSecured()) {
           state = EndEffectorStates.FEED;
         } else if (requestShoot && coralSecured) {
           state = EndEffectorStates.SHOOT;

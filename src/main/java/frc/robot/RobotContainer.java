@@ -154,15 +154,17 @@ public class RobotContainer {
     new JoystickButton(operatorBoard.getLeftController(), 8)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  operatorBoard.setFlipRequest(true);
-                }));
+                    () -> {
+                      operatorBoard.setFlipRequest(true);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(operatorBoard.getLeftController(), 8)
-        .onFalse(
+        .whileFalse(
             new InstantCommand(
-                () -> {
-                  operatorBoard.setFlipRequest(false);
-                }));
+                    () -> {
+                      operatorBoard.setFlipRequest(false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(
             new InstantCommand(
