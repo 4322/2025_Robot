@@ -150,7 +150,7 @@ public class ScoringManager {
                 () -> {
                   setScoringPosition(5, false);
                 }));
-    new JoystickButton(rightController, 4)
+    new JoystickButton(leftController, 4)
         .onTrue(
             new InstantCommand(
                 () -> {
