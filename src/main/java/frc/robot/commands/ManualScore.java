@@ -17,7 +17,7 @@ public class ManualScore extends Command {
 
     @Override
     public void execute() {
-        if (RobotContainer.flipTriggered) {
+        if (RobotContainer.operatorBoard.getFlipRequested()) {
             superstructure.requestPreScoreFlip();
         }
         else {

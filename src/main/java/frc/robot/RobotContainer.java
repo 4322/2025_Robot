@@ -36,7 +36,7 @@ import org.photonvision.PhotonCamera;
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
-  public static ScoringManager operator = new ScoringManager(1, 2);
+  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
 
   public static final Swerve swerve =
       new Swerve(
@@ -134,22 +134,25 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value).whileTrue(new ManualScore(superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
-    operator.configScoringPositions();
-    new JoystickButton(operator.getLeftController(), 5).onTrue(new InstantCommand(() -> {superstructure.requestEject();}));
-    new JoystickButton(operator.getLeftController(), 5).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
-    new JoystickButton(operator.getRightController(), 1)
+    operatorBoard.configScoringPositions();
+    new JoystickButton(operatorBoard.getLeftController(), 5).onTrue(new InstantCommand(() -> {superstructure.requestEject();}));
+    new JoystickButton(operatorBoard.getLeftController(), 5).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+
+    new JoystickButton(operatorBoard.getLeftController(), 8).onTrue(new InstantCommand(() -> {operatorBoard.setFlipRequest(true);}));
+    new JoystickButton(operatorBoard.getLeftController(), 8).onFalse(new InstantCommand(() -> {operatorBoard.setFlipRequest(false);}));
+    new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L1);
                 }));
-    new JoystickButton(operator.getRightController(), 2)
+    new JoystickButton(operatorBoard.getRightController(), 2)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L2);
                 }));
-    new JoystickButton(operator.getRightController(), 3)
+    new JoystickButton(operatorBoard.getRightController(), 3)
         .onTrue(
             new InstantCommand(
                 () -> {

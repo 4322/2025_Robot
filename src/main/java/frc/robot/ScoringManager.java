@@ -50,14 +50,20 @@ public class ScoringManager {
         19,
     };
 
-    private boolean useLeftCamera = false;
+    private boolean useLeftCamera;
     private double autoRotatePosition;
     private int aprilTag;
+
+    private boolean flipReqested;
 
     public void setScoringPosition(double autoRotatePosition, int aprilTag, boolean useLeftCamera){
        this.autoRotatePosition = autoRotatePosition;
        this.aprilTag = aprilTag;
        this.useLeftCamera = useLeftCamera; 
+    }
+
+    public void setFlipRequest(boolean requestFlip) {
+        flipReqested = requestFlip;
     }
 
     public GenericHID getRightController(){
@@ -78,6 +84,10 @@ public class ScoringManager {
 
     public boolean getUseLeftCamera(){
         return useLeftCamera;
+    }
+
+    public boolean getFlipRequested() {
+        return flipReqested;
     }
 
     public void configScoringPositions(){
