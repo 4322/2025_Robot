@@ -139,11 +139,11 @@ public class Swerve extends SubsystemBase {
         } else {
           drivetrain.setControl(
               new RobotCentric()
-                .withVelocityX(desired.vxMetersPerSecond)
-                .withVelocityY(desired.vyMetersPerSecond)
-                .withRotationalRate(desired.omegaRadiansPerSecond)
-                .withDriveRequestType(DriveRequestType.Velocity)
-                .withSteerRequestType(SteerRequestType.MotionMagicExpo));
+                  .withVelocityX(desired.vxMetersPerSecond)
+                  .withVelocityY(desired.vyMetersPerSecond)
+                  .withRotationalRate(desired.omegaRadiansPerSecond)
+                  .withDriveRequestType(DriveRequestType.Velocity)
+                  .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         }
         break;
     }

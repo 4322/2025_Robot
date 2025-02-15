@@ -1,5 +1,7 @@
 package frc.robot.vision.photonvision;
 
+import static frc.robot.constants.FieldConstants.aprilTagFieldLayout;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -12,9 +14,6 @@ import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.SingleTagAdjusters;
-
-import static frc.robot.constants.FieldConstants.aprilTagFieldLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;

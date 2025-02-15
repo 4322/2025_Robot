@@ -129,17 +129,40 @@ public class RobotContainer {
               }
             },
             swerve));
-    new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new RightFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new LeftFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value).whileTrue(new ManualScore(swerve, superstructure));
+    new JoystickButton(driver, XboxController.Button.kRightBumper.value)
+        .whileTrue(new RightFeed(swerve, superstructure));
+    new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
+        .whileTrue(new LeftFeed(swerve, superstructure));
+    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value)
+        .whileTrue(new ManualScore(swerve, superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
     operatorBoard.configScoringPositions();
-    new JoystickButton(operatorBoard.getLeftController(), 5).onTrue(new InstantCommand(() -> {superstructure.requestEject();}));
-    new JoystickButton(operatorBoard.getLeftController(), 5).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+    new JoystickButton(operatorBoard.getLeftController(), 5)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestEject();
+                }));
+    new JoystickButton(operatorBoard.getLeftController(), 5)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
-    new JoystickButton(operatorBoard.getLeftController(), 8).onTrue(new InstantCommand(() -> {operatorBoard.setFlipRequest(true);}));
-    new JoystickButton(operatorBoard.getLeftController(), 8).onFalse(new InstantCommand(() -> {operatorBoard.setFlipRequest(false);}));
+    new JoystickButton(operatorBoard.getLeftController(), 8)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  operatorBoard.setFlipRequest(true);
+                }));
+    new JoystickButton(operatorBoard.getLeftController(), 8)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  operatorBoard.setFlipRequest(false);
+                }));
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(
             new InstantCommand(
