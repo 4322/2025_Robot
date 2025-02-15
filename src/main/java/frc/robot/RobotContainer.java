@@ -36,8 +36,7 @@ import org.photonvision.PhotonCamera;
 public class RobotContainer {
 
   public static XboxController driver = new XboxController(0);
-  public static XboxController operator = new XboxController(1);
-  public static boolean flipTriggered = false; // Temporary constant until button board
+  public static ScoringManager operator = new ScoringManager(1, 2);
 
   public static final Swerve swerve =
       new Swerve(
@@ -135,23 +134,22 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value).whileTrue(new ManualScore(superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
-    new JoystickButton(operator, XboxController.Button.kRightBumper.value).onTrue(new InstantCommand(() -> {flipTriggered = true;}));
-    new JoystickButton(operator, XboxController.Button.kLeftBumper.value).onTrue(new InstantCommand(() -> {flipTriggered = false;}));
-    new JoystickButton(operator, XboxController.Button.kX.value).onTrue(new InstantCommand(() -> {superstructure.requestEject();}, superstructure));
-    new JoystickButton(operator, XboxController.Button.kX.value).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}, superstructure));
-    new JoystickButton(operator, XboxController.Button.kA.value)
+    operator.configScoringPositions();
+    new JoystickButton(operator.getLeftController(), 5).onTrue(new InstantCommand(() -> {superstructure.requestEject();}));
+    new JoystickButton(operator.getLeftController(), 5).onFalse(new InstantCommand(() -> {superstructure.requestIdle();}));
+    new JoystickButton(operator.getRightController(), 1)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L1);
                 }));
-    new JoystickButton(operator, XboxController.Button.kB.value)
+    new JoystickButton(operator.getRightController(), 2)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L2);
                 }));
-    new JoystickButton(operator, XboxController.Button.kY.value)
+    new JoystickButton(operator.getRightController(), 3)
         .onTrue(
             new InstantCommand(
                 () -> {
