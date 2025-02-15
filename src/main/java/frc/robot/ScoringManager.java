@@ -36,9 +36,18 @@ public class ScoringManager {
 
   private boolean flipReqested;
 
-  public void setScoringPosition(double autoRotatePosition, int aprilTag, boolean useLeftCamera) {
-    this.autoRotatePosition = autoRotatePosition;
-    this.aprilTag = aprilTag;
+  // scoring face enumerated from 0 - 5 counterclockwise starting at reef face 
+  // closest to middle driver station for blue and red
+  public void setScoringPosition(int scoringFace, boolean useLeftCamera) {
+    if (Robot.alliance == DriverStation.Alliance.Blue) {
+      this.autoRotatePosition = autoRotateBlue[scoringFace];
+      this.aprilTag = aprilTagBlue[scoringFace];
+    }
+    else {
+      this.autoRotatePosition = autoRotateRed[scoringFace];
+      this.aprilTag = aprilTagRed[scoringFace];
+    }
+
     this.useLeftCamera = useLeftCamera;
   }
 
@@ -74,127 +83,79 @@ public class ScoringManager {
     new JoystickButton(rightController, 5)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[0], aprilTagBlue[0], false);
-                  } else {
-                    setScoringPosition(autoRotateRed[0], aprilTagRed[0], false);
-                  }
-                }));
+              () -> {
+                setScoringPosition(0, false);
+              }));
     new JoystickButton(rightController, 6)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[0], aprilTagBlue[0], true);
-                  } else {
-                    setScoringPosition(autoRotateRed[0], aprilTagRed[0], true);
-                  }
-                }));
+              () -> {
+                setScoringPosition(0, true);
+              }));
 
     new JoystickButton(rightController, 7)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[1], aprilTagBlue[1], false);
-                  } else {
-                    setScoringPosition(autoRotateRed[1], aprilTagRed[1], false);
-                  }
-                }));
+              () -> {
+                setScoringPosition(1, false);
+              }));
     new JoystickButton(rightController, 8)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[1], aprilTagBlue[1], true);
-                  } else {
-                    setScoringPosition(autoRotateRed[1], aprilTagRed[1], true);
-                  }
-                }));
+              () -> {
+                setScoringPosition(1, true);
+              }));
 
     new JoystickButton(rightController, 9)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[2], aprilTagBlue[2], false);
-                  } else {
-                    setScoringPosition(autoRotateRed[2], aprilTagRed[2], false);
-                  }
-                }));
+              () -> {
+                setScoringPosition(2, false);
+              }));
     new JoystickButton(rightController, 10)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[2], aprilTagBlue[2], true);
-                  } else {
-                    setScoringPosition(autoRotateRed[2], aprilTagRed[2], true);
-                  }
-                }));
+              () -> {
+                setScoringPosition(2, true);
+              }));
 
     new JoystickButton(rightController, 11)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[3], aprilTagBlue[3], false);
-                  } else {
-                    setScoringPosition(autoRotateRed[3], aprilTagRed[3], false);
-                  }
-                }));
+              () -> {
+                setScoringPosition(3, false);
+              }));
     new JoystickButton(rightController, 12)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[3], aprilTagBlue[3], true);
-                  } else {
-                    setScoringPosition(autoRotateRed[3], aprilTagRed[3], true);
-                  }
-                }));
+              () -> {
+                setScoringPosition(3, true);
+              }));
 
     new JoystickButton(leftController, 1)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[4], aprilTagBlue[4], false);
-                  } else {
-                    setScoringPosition(autoRotateRed[4], aprilTagRed[4], false);
-                  }
-                }));
+              () -> {
+                setScoringPosition(4, false);
+              }));
     new JoystickButton(leftController, 2)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[4], aprilTagBlue[4], true);
-                  } else {
-                    setScoringPosition(autoRotateRed[4], aprilTagRed[4], true);
-                  }
-                }));
+              () -> {
+                setScoringPosition(4, true);
+              }));
 
     new JoystickButton(leftController, 3)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[5], aprilTagBlue[5], false);
-                  } else {
-                    setScoringPosition(autoRotateRed[5], aprilTagRed[5], false);
-                  }
-                }));
+              () -> {
+                setScoringPosition(5, false);
+              }));
     new JoystickButton(rightController, 4)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  if (Robot.alliance == DriverStation.Alliance.Blue) {
-                    setScoringPosition(autoRotateBlue[5], aprilTagBlue[5], true);
-                  } else {
-                    setScoringPosition(autoRotateRed[5], aprilTagRed[5], true);
-                  }
-                }));
+              () -> {
+                setScoringPosition(5, true);
+              }));
   }
 }
