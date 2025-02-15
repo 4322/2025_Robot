@@ -131,7 +131,7 @@ public class RobotContainer {
             swerve));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value).whileTrue(new RightFeed(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value).whileTrue(new LeftFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value).whileTrue(new ManualScore(superstructure));
+    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value).whileTrue(new ManualScore(swerve, superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
     operatorBoard.configScoringPositions();
