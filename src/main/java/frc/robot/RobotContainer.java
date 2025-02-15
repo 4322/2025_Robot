@@ -137,7 +137,7 @@ public class RobotContainer {
         .whileTrue(new ManualScore(swerve, superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
-    operatorBoard.configScoringPositions();
+    operatorBoard.configScoringPosButtons();
     new JoystickButton(operatorBoard.getLeftController(), 5)
         .onTrue(
             new InstantCommand(

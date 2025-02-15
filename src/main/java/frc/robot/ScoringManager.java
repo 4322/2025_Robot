@@ -79,7 +79,7 @@ public class ScoringManager {
     return flipReqested;
   }
 
-  public void configScoringPositions() {
+  public void configScoringPosButtons() {
     new JoystickButton(rightController, 5)
         .onTrue(
             new InstantCommand(
