@@ -36,14 +36,13 @@ public class ScoringManager {
 
   private boolean flipReqested;
 
-  // scoring face enumerated from 0 - 5 counterclockwise starting at reef face 
+  // scoring face enumerated from 0 - 5 counterclockwise starting at reef face
   // closest to middle driver station for blue and red
   public void setScoringPosition(int scoringFace, boolean useLeftCamera) {
     if (Robot.alliance == DriverStation.Alliance.Blue) {
       this.autoRotatePosition = autoRotateBlue[scoringFace];
       this.aprilTag = aprilTagBlue[scoringFace];
-    }
-    else {
+    } else {
       this.autoRotatePosition = autoRotateRed[scoringFace];
       this.aprilTag = aprilTagRed[scoringFace];
     }
@@ -83,79 +82,79 @@ public class ScoringManager {
     new JoystickButton(rightController, 5)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(0, false);
-              }));
+                () -> {
+                  setScoringPosition(0, false);
+                }));
     new JoystickButton(rightController, 6)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(0, true);
-              }));
+                () -> {
+                  setScoringPosition(0, true);
+                }));
 
     new JoystickButton(rightController, 7)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(1, false);
-              }));
+                () -> {
+                  setScoringPosition(1, false);
+                }));
     new JoystickButton(rightController, 8)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(1, true);
-              }));
+                () -> {
+                  setScoringPosition(1, true);
+                }));
 
     new JoystickButton(rightController, 9)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(2, false);
-              }));
+                () -> {
+                  setScoringPosition(2, false);
+                }));
     new JoystickButton(rightController, 10)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(2, true);
-              }));
+                () -> {
+                  setScoringPosition(2, true);
+                }));
 
     new JoystickButton(rightController, 11)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(3, false);
-              }));
+                () -> {
+                  setScoringPosition(3, false);
+                }));
     new JoystickButton(rightController, 12)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(3, true);
-              }));
+                () -> {
+                  setScoringPosition(3, true);
+                }));
 
     new JoystickButton(leftController, 1)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(4, false);
-              }));
+                () -> {
+                  setScoringPosition(4, false);
+                }));
     new JoystickButton(leftController, 2)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(4, true);
-              }));
+                () -> {
+                  setScoringPosition(4, true);
+                }));
 
     new JoystickButton(leftController, 3)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(5, false);
-              }));
+                () -> {
+                  setScoringPosition(5, false);
+                }));
     new JoystickButton(rightController, 4)
         .onTrue(
             new InstantCommand(
-              () -> {
-                setScoringPosition(5, true);
-              }));
+                () -> {
+                  setScoringPosition(5, true);
+                }));
   }
 }

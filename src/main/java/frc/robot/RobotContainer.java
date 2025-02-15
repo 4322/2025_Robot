@@ -133,7 +133,7 @@ public class RobotContainer {
         .whileTrue(new RightFeed(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new LeftFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value)
+    new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new ManualScore(swerve, superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
