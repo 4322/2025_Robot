@@ -32,7 +32,8 @@ import frc.robot.subsystems.flipper.Flipper;
 import frc.robot.subsystems.flipper.FlipperIO;
 import frc.robot.subsystems.flipper.FlipperIOTalonFX;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.vision.photonvision.PhotonAprilTagVision;
+import frc.robot.vision.GlobalAprilTagVision;
+
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
@@ -65,7 +66,7 @@ public class RobotContainer {
   public static PhotonCamera frontRightCamera;
   public static PhotonCamera backLeftCamera;
   public static PhotonCamera backRightCamera;
-  public static PhotonAprilTagVision aprilTagVision;
+  public static GlobalAprilTagVision aprilTagVision;
   public static AutonomousSelector autonomousSelector;
 
   public RobotContainer() {
@@ -77,7 +78,7 @@ public class RobotContainer {
       // Order of cameras being passed into constructor must reflect order of camera pose
       // definitions in PhotonAprilTagVision
       aprilTagVision =
-          new PhotonAprilTagVision(
+          new GlobalAprilTagVision(
               frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
       configureAprilTagVision();
     }
