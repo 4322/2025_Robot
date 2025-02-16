@@ -20,4 +20,6 @@ public interface EndEffectorIO {
   public default void setVoltage(double voltage) {}
 
   public default void stop() {}
+
+  public default void enableBrakeMode(boolean enable) {}
 }

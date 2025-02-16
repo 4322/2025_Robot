@@ -26,4 +26,6 @@ public interface FlipperIO {
   public default void setRollerVoltage(double voltage) {}
 
   public default void seedPivotPosition(double newPositionMechanismRot) {}
+
+  public default void enableBrakeMode(boolean enable) {}
 }

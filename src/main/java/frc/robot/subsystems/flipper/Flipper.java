@@ -102,4 +102,8 @@ public class Flipper extends SubsystemBase {
     requestDescore = false;
     requestIdle = false;
   }
+
+  public void enableBrakeMode(boolean enable) {
+    io.enableBrakeMode(enable);
+  }
 }

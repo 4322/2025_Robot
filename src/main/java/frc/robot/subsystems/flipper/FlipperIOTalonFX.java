@@ -111,4 +111,10 @@ public class FlipperIOTalonFX implements FlipperIO {
   public void seedPivotPosition(double newPositionMechanismRot) {
     pivotMotor.setPosition(newPositionMechanismRot * Constants.Flipper.Pivot.motorGearRatio);
   }
+
+  @Override
+  public void enableBrakeMode(boolean enable) {
+    pivotMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    rollerMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
 }
