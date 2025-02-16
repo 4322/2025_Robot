@@ -141,6 +141,12 @@ public class ElevatorIOTalonFX implements ElevatorIO {
     follower.stopMotor();
   }
 
+  @Override
+  public void enableBrakeMode(boolean enable) {
+    leader.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    follower.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
   private double metersToRotations(double heightMeters) {
     return (heightMeters / (Math.PI * Constants.Elevator.sprocketDiameter))
         * Constants.Elevator.gearRatio;

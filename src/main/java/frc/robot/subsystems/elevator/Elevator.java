@@ -81,6 +81,10 @@ public class Elevator extends SubsystemBase {
     io.seedPosition(motorRotations);
   }
 
+  public void enableBrakeMode(boolean enable) {
+    io.enableBrakeMode(enable);
+  }
+
   public void stop() {
     io.stop();
   }

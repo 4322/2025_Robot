@@ -144,4 +144,8 @@ public class EndEffector extends SubsystemBase {
     requestShoot = false;
     requestSpit = false;
   }
+
+  public void enableBrakeMode(boolean enable) {
+    io.enableBrakeMode(enable);
+  }
 }

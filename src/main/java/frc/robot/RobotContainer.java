@@ -159,12 +159,32 @@ public class RobotContainer {
                     })
                 .ignoringDisable(true));
     new JoystickButton(operatorBoard.getLeftController(), 8)
-        .whileFalse(
+        .onFalse(
             new InstantCommand(
                     () -> {
                       operatorBoard.setFlipRequest(false);
                     })
                 .ignoringDisable(true));
+
+    new JoystickButton(operatorBoard.getLeftController(), 12)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      flipper.enableBrakeMode(false);
+                      elevator.enableBrakeMode(false);
+                      endEffector.enableBrakeMode(false);
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 12)
+    .onFalse(
+        new InstantCommand(
+                () -> {
+                  flipper.enableBrakeMode(true);
+                  elevator.enableBrakeMode(true);
+                  endEffector.enableBrakeMode(true);
+                })
+            .ignoringDisable(true));
+
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(
             new InstantCommand(
