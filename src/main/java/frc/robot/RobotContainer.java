@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -130,21 +129,11 @@ public class RobotContainer {
         .whileTrue(new RightFeed(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new LeftFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value)
+    new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
         .whileTrue(new ManualScore(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new AutoScore(swerve, superstructure, true)); // TODO: Change back to fast mode
-    new Trigger(() -> endEffector.coralSecured())
-        .onTrue(
-            new RunCommand(
-                    () -> {
-                      driver.setRumble(RumbleType.kBothRumble, 1);
-                    })
-                .withTimeout(0.5)
-                .handleInterrupt(
-                    () -> {
-                      driver.setRumble(RumbleType.kBothRumble, 0);
-                    }));
+
     // driver right trigger controls manual shooting of coral in ManualScore command
 
     operatorBoard.configScoringPosButtons();
@@ -153,12 +142,6 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   superstructure.requestEject();
-                }));
-    new JoystickButton(operatorBoard.getLeftController(), 5)
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestIdle();
                 }));
 
     new JoystickButton(operatorBoard.getLeftController(), 8)
