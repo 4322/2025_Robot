@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
@@ -15,7 +16,7 @@ public class ManualScore extends Command {
   private Superstructure superstructure;
   private Swerve swerve;
 
-  private PIDController turnPID = new PIDController(7, 0, 0);
+  private PIDController turnPID = new PIDController(6, 0, 0);
 
   private double setpoint;
 
@@ -71,14 +72,16 @@ public class ManualScore extends Command {
 
     swerve.requestPercent(new ChassisSpeeds(dx, dy, output), true);
 
-    if (RobotContainer.operatorBoard.getFlipRequested()) {
-      superstructure.requestPreScoreFlip();
-    } else {
-      superstructure.requestPreScore();
-    }
-
-    if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
-      superstructure.requestScore();
+    if (swerve.atAngularSetpoint(setpoint)) {
+      if (RobotContainer.operatorBoard.getFlipRequested()) {
+        superstructure.requestPreScoreFlip();
+      } else {
+        superstructure.requestPreScore();
+      }
+  
+      if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
+        superstructure.requestScore();
+      }
     }
   }
 
