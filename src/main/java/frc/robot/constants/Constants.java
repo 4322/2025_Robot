@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -146,12 +145,14 @@ public class Constants {
   }
 
   public static class Vision {
-    public static final Pose3d frontLeftCamera3dPos = new Pose3d(new Translation3d(), new Rotation3d()); // TODO
-    public static final Pose3d frontRightCamera3dPos = new Pose3d(new Translation3d(), new Rotation3d()); // TODO
+    public static final Pose3d frontLeftCamera3dPos =
+        new Pose3d(new Translation3d(), new Rotation3d()); // TODO
+    public static final Pose3d frontRightCamera3dPos =
+        new Pose3d(new Translation3d(), new Rotation3d()); // TODO
 
     public static final double xPosVisionStandardDev = 0.1;
     public static final double yPosVisionStandardDev = 0.1;
-    public static final double thetaVisionStandardDev = 4322; // very high because we don't trust rotation from vision
-
+    public static final double thetaVisionStandardDev =
+        4322; // very high because we don't trust rotation from vision
   }
 }
