@@ -15,6 +15,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.GeomUtil;
@@ -125,6 +126,11 @@ public class SingleTagAprilTagVision extends SubsystemBase {
                 continue;
             }
 
+            // Use gyro to rotate vision translation vector to be more accurate
+            Rotation2d robotThetaError = robotPose.getRotation().minus(RobotContainer.swerve.getPose().getRotation());
+            Pose2d tagToRobotPose = robotPose.relativeTo(tagPos.toPose2d());
+            robotPose = tagPos.toPose2d().transformBy(GeomUtil.poseToTransform(tagToRobotPose.rotateBy(robotThetaError)));
+            
             // Move on to next camera if robot pose is off the field
             if (robotPose.getX() < -fieldBorderMargin
                 || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
@@ -147,7 +153,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
             
             Logger.recordOutput("Vision/Pose Estimate 1", robotPose0);
             Logger.recordOutput("Vision/Pose Estimate 2", robotPose1);
-            Logger.recordOutput("Vision/Pose Estimate", robotPose1);
+            Logger.recordOutput("Vision/Pose Estimate", robotPose);
         }
 
         // Apply all vision updates to pose estimator
