@@ -1,6 +1,10 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -139,5 +143,15 @@ public class Constants {
         0.240; // elv position to go to initially for pivot to flip
     public static final double safeFlipPosition =
         0.217; // position to retract elevator at when flipper in reef
+  }
+
+  public static class Vision {
+    public static final Pose3d frontLeftCamera3dPos = new Pose3d(new Translation3d(), new Rotation3d());
+    public static final Pose3d frontRightCamera3dPos = new Pose3d(new Translation3d(), new Rotation3d());
+
+    public static final double xPosVisionStandardDev = 0.1;
+    public static final double yPosVisionStandardDev = 0.1;
+    public static final double thetaVisionStandardDev = 4322; // very high because we don't trust rotation from vision
+
   }
 }
