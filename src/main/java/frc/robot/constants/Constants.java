@@ -116,7 +116,7 @@ public class Constants {
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
       public static final double stowedSetpointMechanismRotations = 0.14015;
-      public static final double deployedSetpointMechanismRotations = 0.3372 + 0.014;
+      public static final double deployedSetpointMechanismRotations = 0.2234;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
@@ -127,7 +127,7 @@ public class Constants {
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
-      public static final double descoreVoltage = -4;
+      public static final double descoreVoltage = 4;
     }
   }
 
@@ -135,8 +135,10 @@ public class Constants {
     public static final double L2ScoringHeight = 0.300 + Units.inchesToMeters(0.125);
     public static final double L3ScoringHeight = 0.685;
 
-    public static final double L2SafeFlipHeight =
-        0.240; // elv position to go to initially for pivot to flip
+    public static final double L2FlipScoringHeight = 0;
+    public static final double L3FlipScoringHeight =
+        (0.685 + (0.300 + Units.inchesToMeters(0.125))) / 2;
+
     public static final double safeFlipPosition =
         0.217; // position to retract elevator at when flipper in reef
   }

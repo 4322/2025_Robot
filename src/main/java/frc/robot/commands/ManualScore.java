@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
@@ -78,7 +77,7 @@ public class ManualScore extends Command {
       } else {
         superstructure.requestPreScore();
       }
-  
+
       if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
         superstructure.requestScore();
       }

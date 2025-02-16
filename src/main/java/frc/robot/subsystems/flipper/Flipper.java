@@ -70,6 +70,14 @@ public class Flipper extends SubsystemBase {
         true);
   }
 
+  public boolean atStowSetpoint() {
+    return Util.atReference(
+        inputs.pivotPosAbsMechanismRotations,
+        Constants.Flipper.Pivot.stowedSetpointMechanismRotations,
+        Constants.Flipper.Pivot.setpointToleranceMechanismRotations,
+        true);
+  }
+
   public double getPivotPosition() {
     return inputs.pivotPosAbsMechanismRotations;
   }
