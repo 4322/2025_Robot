@@ -54,7 +54,7 @@ public class RobotContainer {
   public static EndEffectorIO endEffectorIO =
       Constants.endEffectorEnabled ? new EndEffectorIOTalonFX() : new EndEffectorIO() {};
   public static FlipperIO flipperIO =
-      Constants.flipperenabled ? new FlipperIOTalonFX() : new FlipperIO() {};
+      Constants.flipperEnabled ? new FlipperIOTalonFX() : new FlipperIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static EndEffector endEffector = new EndEffector(endEffectorIO);
