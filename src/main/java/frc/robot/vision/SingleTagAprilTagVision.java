@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -143,6 +144,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
                       Constants.Vision.xPosVisionStandardDev * xyStdDev,
                       Constants.Vision.yPosVisionStandardDev * xyStdDev,
                       Constants.Vision.thetaVisionStandardDev)));
+            
+            Logger.recordOutput("Vision/Pose Estimate 1", robotPose0);
+            Logger.recordOutput("Vision/Pose Estimate 2", robotPose1);
+            Logger.recordOutput("Vision/Pose Estimate", robotPose1);
         }
 
         // Apply all vision updates to pose estimator
