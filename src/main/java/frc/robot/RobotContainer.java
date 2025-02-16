@@ -133,7 +133,7 @@ public class RobotContainer {
         .whileTrue(new RightFeed(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new LeftFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Button.kA.value)
+    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value)
         .whileTrue(new ManualScore(swerve, superstructure));
     // driver right trigger controls manual shooting of coral in ManualScore command
 
@@ -176,14 +176,14 @@ public class RobotContainer {
                     })
                 .ignoringDisable(true));
     new JoystickButton(operatorBoard.getLeftController(), 12)
-    .onFalse(
-        new InstantCommand(
-                () -> {
-                  flipper.enableBrakeMode(true);
-                  elevator.enableBrakeMode(true);
-                  endEffector.enableBrakeMode(true);
-                })
-            .ignoringDisable(true));
+        .onFalse(
+            new InstantCommand(
+                    () -> {
+                      flipper.enableBrakeMode(true);
+                      elevator.enableBrakeMode(true);
+                      endEffector.enableBrakeMode(true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(
