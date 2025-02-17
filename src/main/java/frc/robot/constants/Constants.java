@@ -150,9 +150,8 @@ public class Constants {
     public static final Pose3d frontRightCamera3dPos =
         new Pose3d(new Translation3d(), new Rotation3d()); // TODO
 
-    public static final double xPosVisionStandardDev = 0.1;
-    public static final double yPosVisionStandardDev = 0.1;
-    public static final double thetaVisionStandardDev =
-        4322; // very high because we don't trust rotation from vision
+    public static final double xPosVisionStandardDev = 0.2;
+    public static final double yPosVisionStandardDev = 0.2;
+    public static final double thetaVisionStandardDev = 0.2;
   }
 }

@@ -59,8 +59,8 @@ public class Swerve extends SubsystemBase {
             CANcoder::new,
             drivetrainConstants,
             250,
-            VecBuilder.fill(0.2, 0.2, 0.01),
-            VecBuilder.fill(0.9, 0.9, 0.9),
+            VecBuilder.fill(0.2, 0.2, 0.002),
+            VecBuilder.fill(0.4, 0.4, 4322),
             moduleConstants);
 
     drivetrain.configNeutralMode(NeutralModeValue.Brake);
