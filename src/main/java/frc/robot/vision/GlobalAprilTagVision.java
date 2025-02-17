@@ -1,4 +1,4 @@
-package frc.robot.vision.photonvision;
+package frc.robot.vision;
 
 import static frc.robot.constants.FieldConstants.aprilTagFieldLayout;
 
@@ -23,7 +23,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class PhotonAprilTagVision extends SubsystemBase {
+public class GlobalAprilTagVision extends SubsystemBase {
   private PhotonCamera[] cameras;
   private static final double fieldBorderMargin = 0.5;
   private Consumer<List<TimestampedVisionUpdate>> visionConsumer = (x) -> {};
@@ -90,7 +90,7 @@ public class PhotonAprilTagVision extends SubsystemBase {
                 Units.degreesToRadians(-165.0))),
       };
 
-  public PhotonAprilTagVision(PhotonCamera... cameras) {
+  public GlobalAprilTagVision(PhotonCamera... cameras) {
     this.cameras = cameras;
   }
 

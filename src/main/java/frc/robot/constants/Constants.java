@@ -1,6 +1,9 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -9,7 +12,7 @@ public class Constants {
 
   public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = true;
-  public static final boolean flipperenabled = true;
+  public static final boolean flipperEnabled = true;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -96,7 +99,7 @@ public class Constants {
     public static final double secondFeedVoltage = 1;
 
     public static final double shootVoltage = 7;
-    public static final double spitVoltage = -1;
+    public static final double spitVoltage = -0.5;
 
     public static final double shootWaitTimerSec = 0.1;
   }
@@ -115,7 +118,7 @@ public class Constants {
 
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
-      public static final double stowedSetpointMechanismRotations = 0.14015;
+      public static final double stowedSetpointMechanismRotations = 0;
       public static final double deployedSetpointMechanismRotations = 0.2234;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
@@ -141,5 +144,17 @@ public class Constants {
 
     public static final double safeFlipPosition =
         0.217; // position to retract elevator at when flipper in reef
+  }
+
+  public static class Vision {
+    public static final Pose3d frontLeftCamera3dPos =
+        new Pose3d(new Translation3d(), new Rotation3d()); // TODO
+    public static final Pose3d frontRightCamera3dPos =
+        new Pose3d(new Translation3d(), new Rotation3d()); // TODO
+
+    public static final double xPosVisionStandardDev = 0.1;
+    public static final double yPosVisionStandardDev = 0.1;
+    public static final double thetaVisionStandardDev =
+        4322; // very high because we don't trust rotation from vision
   }
 }

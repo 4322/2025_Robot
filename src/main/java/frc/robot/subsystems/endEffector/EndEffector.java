@@ -48,7 +48,7 @@ public class EndEffector extends SubsystemBase {
           coralSecured = false;
         }
 
-        if (requestEject && inputs.backBeamBreakTriggered) {
+        if (requestEject) {
           state = EndEffectorStates.EJECT;
         } else if (requestFeed && !coralSecured()) {
           state = EndEffectorStates.FEED;

@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousSelector;
+import frc.robot.commands.AutoScore;
 import frc.robot.commands.LeftFeed;
 import frc.robot.commands.ManualScore;
 import frc.robot.commands.RightFeed;
@@ -32,7 +32,7 @@ import frc.robot.subsystems.flipper.Flipper;
 import frc.robot.subsystems.flipper.FlipperIO;
 import frc.robot.subsystems.flipper.FlipperIOTalonFX;
 import frc.robot.subsystems.swerve.Swerve;
-import frc.robot.vision.photonvision.PhotonAprilTagVision;
+import frc.robot.vision.SingleTagAprilTagVision;
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
@@ -53,7 +53,7 @@ public class RobotContainer {
   public static EndEffectorIO endEffectorIO =
       Constants.endEffectorEnabled ? new EndEffectorIOTalonFX() : new EndEffectorIO() {};
   public static FlipperIO flipperIO =
-      Constants.flipperenabled ? new FlipperIOTalonFX() : new FlipperIO() {};
+      Constants.flipperEnabled ? new FlipperIOTalonFX() : new FlipperIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static EndEffector endEffector = new EndEffector(endEffectorIO);
@@ -65,20 +65,14 @@ public class RobotContainer {
   public static PhotonCamera frontRightCamera;
   public static PhotonCamera backLeftCamera;
   public static PhotonCamera backRightCamera;
-  public static PhotonAprilTagVision aprilTagVision;
+  public static SingleTagAprilTagVision aprilTagVision;
   public static AutonomousSelector autonomousSelector;
 
   public RobotContainer() {
     if (Constants.visionEnabled) {
       frontLeftCamera = new PhotonCamera("front-left");
       frontRightCamera = new PhotonCamera("front-right");
-      backLeftCamera = new PhotonCamera("back-left");
-      backRightCamera = new PhotonCamera("back-right");
-      // Order of cameras being passed into constructor must reflect order of camera pose
-      // definitions in PhotonAprilTagVision
-      aprilTagVision =
-          new PhotonAprilTagVision(
-              frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
+      aprilTagVision = new SingleTagAprilTagVision(frontLeftCamera, frontRightCamera);
       configureAprilTagVision();
     }
 
@@ -135,19 +129,11 @@ public class RobotContainer {
         .whileTrue(new RightFeed(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new LeftFeed(swerve, superstructure));
-    new JoystickButton(driver, XboxController.Axis.kLeftTrigger.value)
+    new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
         .whileTrue(new ManualScore(swerve, superstructure));
-    new Trigger(() -> endEffector.coralSecured())
-        .onTrue(
-            new RunCommand(
-                    () -> {
-                      driver.setRumble(RumbleType.kBothRumble, 1);
-                    })
-                .withTimeout(0.5)
-                .handleInterrupt(
-                    () -> {
-                      driver.setRumble(RumbleType.kBothRumble, 0);
-                    }));
+    new JoystickButton(driver, XboxController.Button.kA.value)
+        .whileTrue(new AutoScore(swerve, superstructure, true)); // TODO: Change back to fast mode
+
     // driver right trigger controls manual shooting of coral in ManualScore command
 
     operatorBoard.configScoringPosButtons();
@@ -156,12 +142,6 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   superstructure.requestEject();
-                }));
-    new JoystickButton(operatorBoard.getLeftController(), 5)
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superstructure.requestIdle();
                 }));
 
     new JoystickButton(operatorBoard.getLeftController(), 8)
