@@ -77,7 +77,7 @@ public class TunerConstants {
                   TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>()
               .withDriveMotorGearRatio(kDriveGearRatio)
               .withSteerMotorGearRatio(kSteerGearRatio)
-              .withWheelRadius(kWheelRadiusInches)
+              .withWheelRadius(Units.inchesToMeters(kWheelRadiusInches))
               .withSlipCurrent(kSlipCurrentA)
               .withSteerMotorGains(steerGains)
               .withDriveMotorGains(driveGains)
