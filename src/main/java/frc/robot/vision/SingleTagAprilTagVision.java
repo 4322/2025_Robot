@@ -6,6 +6,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.commons.GeomUtil;
@@ -194,6 +195,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       Logger.recordOutput("Vision/YPosStandDev", Constants.Vision.yPosVisionStandardDev * xyStdDev);
       Logger.recordOutput(
           "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
+      Logger.recordOutput("Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
     }
     
     // Apply all vision updates to pose estimator
