@@ -139,15 +139,18 @@ public class SingleTagAprilTagVision extends SubsystemBase {
         robotPose = robotPose1;
       }
 
-      // Use gyro to rotate vision translation vector to be more accurate
-      Rotation2d robotThetaError =
-          robotPose.getRotation().minus(RobotContainer.swerve.getPose().getRotation());
+      // Use gyro to rotate vision translation vector for greater accuracy
+      Rotation2d robotThetaError = RobotContainer.swerve.getPose().getRotation().minus(robotPose.getRotation());
+      // Account for rotation discontinuity from bound (-179,180]
+      if (Math.abs(robotThetaError.getRadians()) > Math.PI) {
+        double minThetaError = robotThetaError.getRadians() + (Math.signum(robotThetaError.getRadians()) * -360);
+        robotThetaError = Rotation2d.fromRadians(minThetaError);
+      }
       Pose2d tagToRobotPose = robotPose.relativeTo(tagPos.toPose2d());
       robotPose =
           tagPos
               .toPose2d()
               .transformBy(GeomUtil.poseToTransform(tagToRobotPose.rotateBy(robotThetaError)));
-      // TODO: Do wrap to stop discontinuity from messing up the minus calculation
       
       Logger.recordOutput("Vision/Pose Estimate 1", robotPose0);
       Logger.recordOutput("Vision/Pose Estimate 2", robotPose1);
