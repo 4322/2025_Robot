@@ -130,11 +130,6 @@ public class SingleTagAprilTagVision extends SubsystemBase {
         robotPose = robotPose1;
       }
 
-      // Continue with filtering after disambiguation
-      if (cameraPose == null || robotPose == null) {
-        continue;
-      }
-
       // Use gyro to rotate vision translation vector to be more accurate
       Rotation2d robotThetaError =
           robotPose.getRotation().minus(RobotContainer.swerve.getPose().getRotation());
@@ -143,6 +138,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           tagPos
               .toPose2d()
               .transformBy(GeomUtil.poseToTransform(tagToRobotPose.rotateBy(robotThetaError)));
+      
+      Logger.recordOutput("Vision/Pose Estimate 1", robotPose0);
+      Logger.recordOutput("Vision/Pose Estimate 2", robotPose1);
+      Logger.recordOutput("Vision/Pose Estimate", robotPose);
 
       // Move on to next camera if robot pose is off the field
       if (robotPose.getX() < -fieldBorderMargin
@@ -164,10 +163,6 @@ public class SingleTagAprilTagVision extends SubsystemBase {
                   Constants.Vision.xPosVisionStandardDev * xyStdDev,
                   Constants.Vision.yPosVisionStandardDev * xyStdDev,
                   Constants.Vision.thetaVisionStandardDev)));
-
-      Logger.recordOutput("Vision/Pose Estimate 1", robotPose0);
-      Logger.recordOutput("Vision/Pose Estimate 2", robotPose1);
-      Logger.recordOutput("Vision/Pose Estimate", robotPose);
     }
 
     // Apply all vision updates to pose estimator
