@@ -42,15 +42,15 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           },
           new double[] {0.005, 0.0135, 0.016, 0.038, 0.0515, 0.0925, 0.12, 0.14, 0.17, 0.27, 0.38},
           2);
-  
+
   private PolynomialRegression thetaStdDevModel =
-    new PolynomialRegression(
-        new double[] {
-          0.752358, 1.016358, 1.296358, 1.574358, 1.913358, 2.184358, 2.493358, 2.758358,
-          3.223358, 4.093358, 4.726358
-        },
-        new double[] {0.008, 0.027, 0.015, 0.044, 0.04, 0.078, 0.049, 0.027, 0.059, 0.029, 0.068},
-        1);
+      new PolynomialRegression(
+          new double[] {
+            0.752358, 1.016358, 1.296358, 1.574358, 1.913358, 2.184358, 2.493358, 2.758358,
+            3.223358, 4.093358, 4.726358
+          },
+          new double[] {0.008, 0.027, 0.015, 0.044, 0.04, 0.078, 0.049, 0.027, 0.059, 0.029, 0.068},
+          1);
 
   public SingleTagAprilTagVision(PhotonCamera frontLeftCamera, PhotonCamera frontRightCamera) {
     this.frontLeftCamera = frontLeftCamera;
@@ -140,10 +140,12 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       }
 
       // Use gyro to rotate vision translation vector for greater accuracy
-      Rotation2d robotThetaError = RobotContainer.swerve.getPose().getRotation().minus(robotPose.getRotation());
+      Rotation2d robotThetaError =
+          RobotContainer.swerve.getPose().getRotation().minus(robotPose.getRotation());
       // Account for rotation discontinuity from bound (-179,180]
       if (Math.abs(robotThetaError.getRadians()) > Math.PI) {
-        double minThetaError = robotThetaError.getRadians() + (Math.signum(robotThetaError.getRadians()) * -360);
+        double minThetaError =
+            robotThetaError.getRadians() + (Math.signum(robotThetaError.getRadians()) * -360);
         robotThetaError = Rotation2d.fromRadians(minThetaError);
       }
       Pose2d tagToRobotPose = robotPose.relativeTo(tagPos.toPose2d());
@@ -151,7 +153,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           tagPos
               .toPose2d()
               .transformBy(GeomUtil.poseToTransform(tagToRobotPose.rotateBy(robotThetaError)));
-      
+
       Logger.recordOutput("Vision/Pose Estimate 1", robotPose0);
       Logger.recordOutput("Vision/Pose Estimate 2", robotPose1);
       Logger.recordOutput("Vision/Pose Estimate", robotPose);
@@ -167,7 +169,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       // Scale xy standard deviation with distance
       double xyStdDev =
           xyStdDevModel.predict(tagPos.getTranslation().getDistance(cameraPose.getTranslation()));
-      double thetaStdDev = thetaStdDevModel.predict(tagPos.getTranslation().getDistance(cameraPose.getTranslation()));
+      double thetaStdDev =
+          thetaStdDevModel.predict(
+              tagPos.getTranslation().getDistance(cameraPose.getTranslation()));
 
       visionUpdates.add(
           new TimestampedVisionUpdate(
