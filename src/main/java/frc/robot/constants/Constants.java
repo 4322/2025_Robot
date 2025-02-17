@@ -16,7 +16,7 @@ public class Constants {
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
-  public static final boolean visionEnabled = false;
+  public static final boolean visionEnabled = true;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
@@ -159,14 +159,20 @@ public class Constants {
     public static double driveToleranceSlow = 0.06;
     public static double ffMinRadius = 0.2;
     public static double ffMaxRadius = 0.8;
-
   }
 
   public static class Vision {
     public static final Pose3d frontLeftCamera3dPos =
-        new Pose3d(new Translation3d(), new Rotation3d()); // TODO
+        new Pose3d(
+            new Translation3d(
+                Units.inchesToMeters(7.42), Units.inchesToMeters(7.5), Units.inchesToMeters(11.86)),
+            new Rotation3d());
     public static final Pose3d frontRightCamera3dPos =
-        new Pose3d(new Translation3d(), new Rotation3d()); // TODO
+        new Pose3d(
+            Units.inchesToMeters(7.42),
+            Units.inchesToMeters(-7.5),
+            Units.inchesToMeters(11.86),
+            new Rotation3d());
 
     public static final double xPosVisionStandardDev = 0.2;
     public static final double yPosVisionStandardDev = 0.2;
