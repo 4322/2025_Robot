@@ -173,6 +173,15 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           thetaStdDevModel.predict(
               tagPos.getTranslation().getDistance(cameraPose.getTranslation()));
 
+      // make sure standard deviations aren't negative
+      if (xyStdDev < 0) {
+        xyStdDev = 0.00001;
+      }
+
+      if (thetaStdDev < 0) {
+        thetaStdDev = 0.00001;
+      }
+
       visionUpdates.add(
           new TimestampedVisionUpdate(
               robotPose,
@@ -181,8 +190,12 @@ public class SingleTagAprilTagVision extends SubsystemBase {
                   Constants.Vision.xPosVisionStandardDev * xyStdDev,
                   Constants.Vision.yPosVisionStandardDev * xyStdDev,
                   Constants.Vision.thetaVisionStandardDev * thetaStdDev)));
+      Logger.recordOutput("Vision/XPosStandDev", Constants.Vision.xPosVisionStandardDev * xyStdDev);
+      Logger.recordOutput("Vision/YPosStandDev", Constants.Vision.yPosVisionStandardDev * xyStdDev);
+      Logger.recordOutput(
+          "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
     }
-
+    
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
   }
