@@ -31,7 +31,8 @@ public class AutoScore extends Command {
 
   private final ProfiledPIDController driveController =
       new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(0.0, 0.0));
-  private PIDController thetaController = new PIDController(Constants.Swerve.autoRotatekP, 0, Constants.Swerve.autoRotatekD);
+  private PIDController thetaController =
+      new PIDController(Constants.Swerve.autoRotatekP, 0, Constants.Swerve.autoRotatekD);
 
   private double driveErrorAbs;
   private Translation2d lastSetpointTranslation;
