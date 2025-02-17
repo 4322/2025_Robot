@@ -53,9 +53,21 @@ public class Robot extends LoggedRobot {
       if (!directory.exists()) {
         directory.mkdir();
       }
+      var files = directory.listFiles();
+
+      // delete all hoot files first before deleting wpilogs
+      if (files != null) {
+        for (File file : files) {
+          if (file.getName().endsWith(".hoot")) {
+            file.delete();
+            DriverStation.reportWarning("Deleted " + file.getName() + " to free up space", false);
+          }
+        }
+      }
+
       // ensure that there is enough space on the roboRIO to log data
       if (directory.getFreeSpace() < Constants.minFreeSpace) {
-        var files = directory.listFiles();
+        files = directory.listFiles();
         if (files != null) {
           // Sorting the files by name will ensure that the oldest files are deleted first
           files = Arrays.stream(files).sorted().toArray(File[]::new);
