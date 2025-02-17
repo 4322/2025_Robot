@@ -145,8 +145,8 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       // Account for rotation discontinuity from bound (-179,180]
       if (Math.abs(robotThetaError.getRadians()) > Math.PI) {
         double minThetaError =
-            robotThetaError.getRadians() + (Math.signum(robotThetaError.getRadians()) * -360);
-        robotThetaError = Rotation2d.fromRadians(minThetaError);
+            robotThetaError.getDegrees() + (Math.signum(robotThetaError.getDegrees()) * -360);
+        robotThetaError = Rotation2d.fromDegrees(minThetaError);
       }
       Pose2d tagToRobotPose = robotPose.relativeTo(tagPos.toPose2d());
       robotPose =
