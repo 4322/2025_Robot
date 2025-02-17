@@ -22,8 +22,13 @@ public class Constants {
   public static final double KRAKEN_FREE_SPEED = 6000.0;
   public static final int LED_NUM = 0; // TODO: Determine number of leds
 
+  public static final double bumperEdgeWidth = Units.inchesToMeters(3.5);
+  public static final double robotFrameLength = Units.inchesToMeters(26);
+
   /* Constants pertaining to the swerve drive */
   public static class Swerve {
+    public static final double autoRotatekP = 6;
+    public static final double autoRotatekD = 0;
 
     public static final double SWERVE_COAST_TRESHOLD_MPS = 0.05;
     public static final double SWERVE_COAST_TRESHOLD_SEC = 5.0;
@@ -142,6 +147,19 @@ public class Constants {
         0.240; // elv position to go to initially for pivot to flip
     public static final double safeFlipPosition =
         0.217; // position to retract elevator at when flipper in reef
+  }
+
+  public static class AutoScoring {
+    public static double drivekP = 2.0;
+    public static double drivekD = 0.0;
+    public static double driveMaxVelocity = Units.inchesToMeters(150.0);
+    public static double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
+    public static double driveMaxAcceleration = Units.inchesToMeters(95.0);
+    public static double driveTolerance = 0.01;
+    public static double driveToleranceSlow = 0.06;
+    public static double ffMinRadius = 0.2;
+    public static double ffMaxRadius = 0.8;
+
   }
 
   public static class Vision {
