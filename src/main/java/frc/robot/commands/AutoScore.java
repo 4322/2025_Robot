@@ -43,6 +43,7 @@ public class AutoScore extends Command {
   private boolean useLeftCam;
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private boolean atScoringSequenceThreshold;
+  private Pose2d robotPose;
 
   private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("AutoScore/DriveKp");
   private static final LoggedTunableNumber driveKd = new LoggedTunableNumber("AutoScore/DriveKd");
@@ -91,10 +92,11 @@ public class AutoScore extends Command {
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
 
+    robotPose = RobotContainer.aprilTagVision.getVisionPose();
+
     // set current translation to front edge of bumper aligned with a camera
     currentTranslation =
-        swerve
-            .getPose()
+        robotPose
             .getTranslation()
             .plus(
                 new Translation2d(
@@ -143,6 +145,8 @@ public class AutoScore extends Command {
     autoRotateSetpoint = RobotContainer.operatorBoard.getAutoRotatePosition();
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
 
+    robotPose = RobotContainer.aprilTagVision.getVisionPose();
+
     double thetaVelocity =
         thetaController.calculate(swerve.getPose().getRotation().getRadians(), autoRotateSetpoint);
 
@@ -181,8 +185,7 @@ public class AutoScore extends Command {
     } else {
       // Get current and target pose
       currentTranslation =
-          swerve
-              .getPose()
+          robotPose
               .getTranslation()
               .plus(
                   new Translation2d(

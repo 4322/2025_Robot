@@ -33,6 +33,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
   private PhotonPipelineResult latestResult = new PhotonPipelineResult();
   private int targetTagID;
+  private Pose2d visionPose = new Pose2d();
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -194,8 +195,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       Logger.recordOutput("Vision/YPosStandDev", Constants.Vision.yPosVisionStandardDev * xyStdDev);
       Logger.recordOutput(
           "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
+
+      visionPose = robotPose;
     }
-    
+
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
   }
@@ -209,5 +212,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       }
     }
     return false;
+  }
+
+  public Pose2d getVisionPose() {
+    return visionPose;
   }
 }
