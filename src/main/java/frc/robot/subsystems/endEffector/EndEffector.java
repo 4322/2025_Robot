@@ -11,7 +11,7 @@ public class EndEffector extends SubsystemBase {
 
   private boolean requestIdle;
   private boolean requestFeed;
-  private boolean requestEject;
+  private boolean requestSpit;
   private boolean requestShoot;
 
   private boolean coralSecured;
@@ -24,7 +24,7 @@ public class EndEffector extends SubsystemBase {
     FEED,
     SECURING_CORAL,
     SHOOT,
-    EJECT
+    SPIT
   }
 
   public EndEffector(EndEffectorIO io) {
@@ -48,8 +48,8 @@ public class EndEffector extends SubsystemBase {
           coralSecured = false;
         }
 
-        if (requestEject) {
-          state = EndEffectorStates.EJECT;
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
         } else if (requestFeed && !coralSecured()) {
           state = EndEffectorStates.FEED;
         } else if (requestShoot && coralSecured) {
@@ -59,8 +59,8 @@ public class EndEffector extends SubsystemBase {
       case FEED:
         io.setVoltage(Constants.EndEffector.feedVoltage);
 
-        if (requestEject && inputs.backBeamBreakTriggered) {
-          state = EndEffectorStates.EJECT;
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
         } else if (inputs.frontBeamBreakTriggered) {
           state = EndEffectorStates.SECURING_CORAL;
         } else if (requestIdle) {
@@ -70,8 +70,8 @@ public class EndEffector extends SubsystemBase {
       case SECURING_CORAL:
         io.setVoltage(Constants.EndEffector.secondFeedVoltage);
 
-        if (requestEject) {
-          state = EndEffectorStates.EJECT;
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
         } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
           state = EndEffectorStates.IDLE;
           coralSecured = true;
@@ -81,8 +81,8 @@ public class EndEffector extends SubsystemBase {
       case SHOOT:
         io.setVoltage(Constants.EndEffector.shootVoltage);
 
-        if (requestEject) {
-          state = EndEffectorStates.EJECT;
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
         } else if (!inputs.frontBeamBreakTriggered) {
           shootTimer.start();
           if (shootTimer.hasElapsed(Constants.EndEffector.shootWaitTimerSec)) {
@@ -94,11 +94,11 @@ public class EndEffector extends SubsystemBase {
           }
         }
         break;
-      case EJECT:
+      case SPIT:
         io.setVoltage(Constants.EndEffector.spitVoltage);
         coralSecured = false;
-        if (!inputs.backBeamBreakTriggered) {
-          state = EndEffectorStates.FEED;
+        if (requestIdle) {
+          state = EndEffectorStates.IDLE;
         }
         break;
     }
@@ -133,16 +133,16 @@ public class EndEffector extends SubsystemBase {
     requestShoot = true;
   }
 
-  public void requestEject() {
+  public void requestSpit() {
     unsetAllRequests();
-    requestEject = true;
+    requestSpit = true;
   }
 
   private void unsetAllRequests() {
     requestFeed = false;
     requestIdle = false;
     requestShoot = false;
-    requestEject = false;
+    requestSpit = false;
   }
 
   public void enableBrakeMode(boolean enable) {

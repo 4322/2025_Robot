@@ -81,7 +81,7 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case EJECT:
-        endEffector.requestEject();
+        endEffector.requestSpit();
 
         if (requestIdle) {
           state = Superstates.IDLE;
