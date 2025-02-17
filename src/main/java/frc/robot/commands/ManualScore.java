@@ -15,7 +15,7 @@ public class ManualScore extends Command {
   private Superstructure superstructure;
   private Swerve swerve;
 
-  private PIDController turnPID = new PIDController(6, 0, 0);
+  private PIDController turnPID = new PIDController(Constants.Swerve.autoRotatekP, 0, Constants.Swerve.autoRotatekD);
 
   private double setpoint;
 

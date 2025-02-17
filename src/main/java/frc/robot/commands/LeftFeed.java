@@ -16,7 +16,7 @@ public class LeftFeed extends Command {
   private Swerve swerve;
   private Superstructure superstructure;
 
-  private PIDController turnPID = new PIDController(6, 0, 0);
+  private PIDController turnPID = new PIDController(Constants.Swerve.autoRotatekP, 0, Constants.Swerve.autoRotatekD);
 
   private double setpoint;
 
