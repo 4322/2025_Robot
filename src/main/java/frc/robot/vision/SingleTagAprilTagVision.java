@@ -199,6 +199,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
       visionPose = robotPose;
       Logger.recordOutput("Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
+      Logger.recordOutput("Vision/TargetTagVisible", hasTargetTag());
     }
 
     // Apply all vision updates to pose estimator
