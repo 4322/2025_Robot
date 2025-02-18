@@ -266,7 +266,7 @@ public class AutoScore extends Command {
       Logger.recordOutput("AutoScore/DistanceMeasured", currentDistance);
       Logger.recordOutput("AutoScore/DistanceSetpoint", driveController.getSetpoint().position);
       Logger.recordOutput(
-          "Odometry/DriveToPoseSetpoint",
+          "AutoScore/DriveToPoseSetpoint",
           new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
       Logger.recordOutput("AutoScore/DesiredPoseSetpoint", desiredPoseSetpoint);
     }
@@ -276,8 +276,5 @@ public class AutoScore extends Command {
   public void end(boolean interrupted) {
     swerve.requestPercent(new ChassisSpeeds(), true);
     superstructure.requestIdle();
-
-    Logger.recordOutput("Odometry/DriveToPoseSetpoint", new double[] {});
-    Logger.recordOutput("Odometry/DriveToPoseGoal", new double[] {});
   }
 }
