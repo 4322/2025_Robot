@@ -198,8 +198,7 @@ public class AutoScore extends Command {
 
       // Either drive to offset tag center setpoint or begin scoring sequence if at center
       if (!atScoringSequenceThreshold) {
-        desiredPoseSetpoint =
-            desiredTagPose.transformBy(new Transform2d(0.5, 0, desiredTagPose.getRotation()));
+        desiredPoseSetpoint = desiredTagPose.transformBy(new Transform2d(0.5, 0, new Rotation2d()));
       } else {
         desiredPoseSetpoint = desiredTagPose;
 
@@ -263,7 +262,7 @@ public class AutoScore extends Command {
               driveVelocity.getY(),
               thetaVelocity,
               swerve.getPose().getRotation()),
-          true);
+          false);
 
       // Log data
       Logger.recordOutput("AutoScore/DistanceMeasured", currentDistance);
