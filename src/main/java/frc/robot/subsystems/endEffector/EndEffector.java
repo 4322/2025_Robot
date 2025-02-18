@@ -23,6 +23,7 @@ public class EndEffector extends SubsystemBase {
     IDLE,
     FEED,
     SECURING_CORAL,
+    PULL_BACK,
     SHOOT,
     SPIT
   }
@@ -73,6 +74,15 @@ public class EndEffector extends SubsystemBase {
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
         } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
+          state = EndEffectorStates.PULL_BACK;
+        }
+        break;
+      case PULL_BACK:
+        io.setVoltage(Constants.EndEffector.thirdFeedVoltage);
+
+        if (requestSpit) {
+          state = EndEffectorStates.SPIT;
+        } else if (inputs.backBeamBreakTriggered) {
           state = EndEffectorStates.IDLE;
           coralSecured = true;
           unsetAllRequests(); // account for automation from sensor triggers
