@@ -43,6 +43,7 @@ public class AutoScore extends Command {
   private boolean useLeftCam;
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private boolean atScoringSequenceThreshold;
+  private boolean firstTime;
 
   private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("AutoScore/DriveKp");
   private static final LoggedTunableNumber driveKd = new LoggedTunableNumber("AutoScore/DriveKd");
@@ -86,38 +87,11 @@ public class AutoScore extends Command {
   @Override
   public void initialize() {
     atScoringSequenceThreshold = false;
+    firstTime = true;
     autoRotateSetpoint = RobotContainer.operatorBoard.getAutoRotatePosition();
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-
-    // set current translation to front edge of bumper aligned with a camera
-    currentTranslation =
-        swerve
-            .getPose()
-            .getTranslation()
-            .plus(
-                new Translation2d(
-                        (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth,
-                        useLeftCam
-                            ? Constants.Vision.frontLeftCamera3dPos.getY()
-                            : Constants.Vision.frontRightCamera3dPos.getY())
-                    .rotateBy(swerve.getPose().getRotation()));
-
-    driveController.reset(
-        currentTranslation.getDistance(desiredTagPose.getTranslation()),
-        Math.min(
-            0.0,
-            -new Translation2d(
-                    swerve.getFieldRelativeSpeeds().getX(), swerve.getFieldRelativeSpeeds().getY())
-                .rotateBy(
-                    desiredTagPose
-                        .getTranslation()
-                        .minus(swerve.getPose().getTranslation())
-                        .getAngle()
-                        .unaryMinus())
-                .getX()));
-    lastSetpointTranslation = currentTranslation;
   }
 
   @Override
@@ -192,6 +166,24 @@ public class AutoScore extends Command {
                               : Constants.Vision.frontRightCamera3dPos.getY())
                       .rotateBy(swerve.getPose().getRotation()));
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+
+      if (firstTime) {
+        driveController.reset(
+        currentTranslation.getDistance(desiredTagPose.getTranslation()),
+        Math.min(
+            0.0,
+            -new Translation2d(
+                    swerve.getFieldRelativeSpeeds().getX(), swerve.getFieldRelativeSpeeds().getY())
+                .rotateBy(
+                    desiredTagPose
+                        .getTranslation()
+                        .minus(swerve.getPose().getTranslation())
+                        .getAngle()
+                        .unaryMinus())
+                .getX()));
+        lastSetpointTranslation = currentTranslation;
+        firstTime = false;
+      }
 
       // Either drive to offset tag center setpoint or begin scoring sequence if at center
       if (!atScoringSequenceThreshold) {
