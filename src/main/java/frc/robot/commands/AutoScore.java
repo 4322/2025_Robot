@@ -195,8 +195,7 @@ public class AutoScore extends Command {
 
       // Either drive to offset tag center setpoint or begin scoring sequence if at center
       if (!atScoringSequenceThreshold) {
-        desiredPoseSetpoint =
-            desiredTagPose.transformBy(new Transform2d(0.5, 0, desiredTagPose.getRotation()));
+        desiredPoseSetpoint = desiredTagPose.transformBy(new Transform2d(0.5, 0, new Rotation2d()));
       } else {
         desiredPoseSetpoint = desiredTagPose;
 
