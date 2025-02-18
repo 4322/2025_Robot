@@ -259,7 +259,7 @@ public class AutoScore extends Command {
               driveVelocity.getY(),
               thetaVelocity,
               swerve.getPose().getRotation()),
-          true);
+          false);
 
       // Log data
       Logger.recordOutput("AutoScore/DistanceMeasured", currentDistance);
