@@ -31,6 +31,7 @@ public class Elevator extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
     Logger.recordOutput("Elevator/Setpoint", setpoint);
+    Logger.recordOutput("Elevator/atSetpoint", atSetpoint());
 
     switch (state) {
       case STARTING_CONFIG:
