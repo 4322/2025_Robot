@@ -5,11 +5,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
@@ -38,8 +36,6 @@ public class AutoScore extends Command {
   private double currentDistance;
   private double ffScaler;
   private Pose2d desiredTagPose;
-  private Pose2d desiredOffsetPose;
-  private Pose2d desiredPoseGoal;
 
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private Translation2d lastSetpointTranslation = new Translation2d();
@@ -85,7 +81,6 @@ public class AutoScore extends Command {
   public enum AutoScoreStates {
     TARGET_TAG_NOT_VISIBLE,
     TARGET_TAG_VISIBLE,
-    DRIVE_TO_TAG_OFFSET,
     DRIVE_TO_TAG
   }
 
@@ -105,7 +100,6 @@ public class AutoScore extends Command {
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-    desiredOffsetPose = desiredTagPose.transformBy(new Transform2d(0.5, 0, new Rotation2d()));
     state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
   }
 
@@ -132,7 +126,6 @@ public class AutoScore extends Command {
     autoRotateSetpoint = RobotContainer.operatorBoard.getAutoRotatePosition();
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-    desiredOffsetPose = desiredTagPose.transformBy(new Transform2d(0.5, 0, new Rotation2d()));
 
     double thetaVelocity =
         thetaController.calculate(swerve.getPose().getRotation().getRadians(), autoRotateSetpoint);
@@ -187,93 +180,35 @@ public class AutoScore extends Command {
                                 : Constants.Vision.frontRightCamera3dPos.getY())
                         .rotateBy(swerve.getPose().getRotation()));
 
-        if (currentTranslation.getDistance(desiredTagPose.getTranslation())
-            < Units.inchesToMeters(12)) {
-          desiredPoseGoal = desiredTagPose;
-          state = AutoScoreStates.DRIVE_TO_TAG;
-        } else {
-          desiredPoseGoal = desiredOffsetPose;
-          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET;
-        }
         // reset controller after determining initial desired pose to account for initial robot
-        // velocity from regular driving
+        // velocity from regular driving.
+        // Resets velocity to magnitude of current robot velocity in direction of goal pose.
+        // Negative sign used because negative error(goal > current) requires negative velocity input.
         driveController.reset(
-            currentTranslation.getDistance(desiredPoseGoal.getTranslation()),
+            currentTranslation.getDistance(desiredTagPose.getTranslation()),
             Math.min(
                 0.0,
                 -new Translation2d(
                         swerve.getFieldRelativeSpeeds().getX(),
                         swerve.getFieldRelativeSpeeds().getY())
                     .rotateBy(
-                        desiredPoseGoal
+                        desiredTagPose
                             .getTranslation()
                             .minus(swerve.getPose().getTranslation())
                             .getAngle()
                             .unaryMinus())
                     .getX()));
         lastSetpointTranslation = currentTranslation;
-        break;
-      case DRIVE_TO_TAG_OFFSET:
-        currentTranslation =
-            swerve
-                .getPose()
-                .getTranslation()
-                .plus(
-                    new Translation2d(
-                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth,
-                            useLeftCam
-                                ? Constants.Vision.frontLeftCamera3dPos.getY()
-                                : Constants.Vision.frontRightCamera3dPos.getY())
-                        .rotateBy(swerve.getPose().getRotation()));
-
-        // Calculate drive speed
-        currentDistance = currentTranslation.getDistance(desiredPoseGoal.getTranslation());
-        ffScaler =
-            MathUtil.clamp(
-                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
-                0.0,
-                1.0);
-        driveErrorAbs = currentDistance;
-        driveController.reset(
-            lastSetpointTranslation.getDistance(desiredPoseGoal.getTranslation()),
-            driveController.getSetpoint().velocity);
-        driveVelocityScalar =
-            driveController.getSetpoint().velocity * ffScaler
-                + driveController.calculate(driveErrorAbs, 0);
-
-        // cache setpoint value for use during next iteration
-        lastSetpointTranslation =
-            new Pose2d(
-                    desiredPoseGoal.getTranslation(),
-                    currentTranslation.minus(desiredPoseGoal.getTranslation()).getAngle())
-                .transformBy(
-                    GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
-                .getTranslation();
-
-        // Command speeds
-        driveVelocity =
-            new Pose2d(
-                    new Translation2d(),
-                    currentTranslation.minus(desiredPoseGoal.getTranslation()).getAngle())
-                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
-                .getTranslation();
-
-        // TODO: Change to request velocity
-        swerve.requestPercent(
-            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
-
-        if (currentTranslation.getDistance(desiredTagPose.getTranslation())
-            < Units.inchesToMeters(12)) {
-          desiredPoseGoal = desiredTagPose;
-          state = AutoScoreStates.DRIVE_TO_TAG;
-        }
+        state = AutoScoreStates.DRIVE_TO_TAG;
         break;
       case DRIVE_TO_TAG:
-        if (RobotContainer.operatorBoard.getFlipRequested()) {
-          superstructure.requestPreScoreFlip();
-        } else {
-          superstructure.requestPreScore();
-        }
+        if (currentTranslation.getDistance(desiredTagPose.getTranslation()) < Constants.AutoScoring.elevatorRaiseThreshold) {
+          if (RobotContainer.operatorBoard.getFlipRequested()) {
+            superstructure.requestPreScoreFlip();
+          } else {
+            superstructure.requestPreScore();
+          }
+        }   
 
         currentTranslation =
             swerve
@@ -288,7 +223,7 @@ public class AutoScore extends Command {
                         .rotateBy(swerve.getPose().getRotation()));
 
         // Calculate drive speed
-        currentDistance = currentTranslation.getDistance(desiredPoseGoal.getTranslation());
+        currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
         ffScaler =
             MathUtil.clamp(
                 (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
@@ -296,24 +231,26 @@ public class AutoScore extends Command {
                 1.0);
         driveErrorAbs = currentDistance;
         driveController.reset(
-            lastSetpointTranslation.getDistance(desiredPoseGoal.getTranslation()),
+            lastSetpointTranslation.getDistance(desiredTagPose.getTranslation()),
             driveController.getSetpoint().velocity);
         driveVelocityScalar =
             driveController.getSetpoint().velocity * ffScaler
                 + driveController.calculate(driveErrorAbs, 0.0);
 
-        // cache setpoint value for use during next iteration
+        // cache setpoint value for logging and use during next iteration
         lastSetpointTranslation =
             new Pose2d(
-                    desiredPoseGoal.getTranslation(),
-                    currentTranslation.minus(desiredPoseGoal.getTranslation()).getAngle())
+                    desiredTagPose.getTranslation(),
+                    currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
                 .transformBy(
                     GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
                 .getTranslation();
 
         // check if at scoring position
         if (currentDistance < driveController.getPositionTolerance()) {
-          superstructure.requestScore();
+          if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
+            superstructure.requestScore();
+          }
           driveVelocityScalar = 0;
         }
 
@@ -321,7 +258,7 @@ public class AutoScore extends Command {
         driveVelocity =
             new Pose2d(
                     new Translation2d(),
-                    currentTranslation.minus(desiredPoseGoal.getTranslation()).getAngle())
+                    currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
                 .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
                 .getTranslation();
 
@@ -337,7 +274,7 @@ public class AutoScore extends Command {
     Logger.recordOutput(
         "AutoScore/DriveToPoseSetpoint",
         new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
-    Logger.recordOutput("AutoScore/DesiredPoseGoal", desiredPoseGoal);
+    Logger.recordOutput("AutoScore/DesiredPoseGoal", desiredTagPose);
     Logger.recordOutput("AutoScore/State", state.toString());
   }
 
@@ -347,7 +284,7 @@ public class AutoScore extends Command {
     superstructure.requestIdle();
 
     // Reset logging
-    desiredPoseGoal = new Pose2d();
-    lastSetpointTranslation = new Translation2d();
+    Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
+    Logger.recordOutput("AutoScore/DriveToPoseSetpoint", new Pose2d());
   }
 }
