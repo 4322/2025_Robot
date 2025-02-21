@@ -52,7 +52,7 @@ public class Superstructure extends SubsystemBase {
     Logger.recordOutput("Superstructure/State", state.toString());
     switch (state) {
       case IDLE:
-        elevator.requestHeight(0);
+        elevator.requestSetpoint(0);
         endEffector.requestIdle();
         flipper.requestIdle();
 
@@ -89,11 +89,11 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE:
         if (level == Level.L1) {
-          elevator.requestHeight(0);
+          elevator.requestSetpoint(0);
         } else if (level == Level.L2) {
-          elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L2ScoringHeight);
         } else if (level == Level.L3) {
-          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L3ScoringHeight);
         }
         flipper.requestIdle();
 
@@ -107,13 +107,13 @@ public class Superstructure extends SubsystemBase {
         break;
       case SAFE_FLIP:
         if (level == Level.L1) {
-          elevator.requestHeight(0);
+          elevator.requestSetpoint(0);
           prevLevel = level;
         } else if (level == Level.L2) {
-          elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
+          elevator.requestSetpoint(Constants.Scoring.L2SafeFlipHeight);
           prevLevel = level;
         } else if (level == Level.L3) {
-          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L3ScoringHeight);
           prevLevel = level;
         }
 
@@ -131,13 +131,13 @@ public class Superstructure extends SubsystemBase {
           break;
         }
         if (level == Level.L1) {
-          elevator.requestHeight(0);
+          elevator.requestSetpoint(0);
           prevLevel = level;
         } else if (level == Level.L2) {
-          elevator.requestHeight(Constants.Scoring.L2ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L2ScoringHeight);
           prevLevel = level;
         } else if (level == Level.L3) {
-          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L3ScoringHeight);
           prevLevel = level;
         }
 
@@ -151,11 +151,11 @@ public class Superstructure extends SubsystemBase {
         break;
       case TRANSITION_FLIP:
         if (prevLevel == Level.L1) {
-          elevator.requestHeight(0);
+          elevator.requestSetpoint(0);
         } else if (prevLevel == Level.L2) {
-          elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
+          elevator.requestSetpoint(Constants.Scoring.L2SafeFlipHeight);
         } else if (level == Level.L3) {
-          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L3ScoringHeight);
         }
 
         if (elevator.atSetpoint()) {
@@ -168,11 +168,11 @@ public class Superstructure extends SubsystemBase {
         break;
       case SAFE_RETRACT:
         if (level == Level.L1) {
-          elevator.requestHeight(0);
+          elevator.requestSetpoint(0);
         } else if (level == Level.L2) {
-          elevator.requestHeight(Constants.Scoring.L2SafeFlipHeight);
+          elevator.requestSetpoint(Constants.Scoring.L2SafeFlipHeight);
         } else if (level == Level.L3) {
-          elevator.requestHeight(Constants.Scoring.L3ScoringHeight);
+          elevator.requestSetpoint(Constants.Scoring.L3ScoringHeight);
         }
 
         if (elevator.atSetpoint()) {

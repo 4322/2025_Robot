@@ -87,6 +87,8 @@ public class Constants {
     public static final double homingVoltage = -1.0;
     public static final double homingVelocityThreshold = 0.01;
     public static final double homingThresholdSec = 0.25;
+
+    public static final double jiggleHeight = 0.05;
   }
 
   public static class EndEffector {
@@ -108,6 +110,7 @@ public class Constants {
     public static final double spitVoltage = -4;
 
     public static final double shootWaitTimerSec = 0.1;
+    public static final double pullBackOverrideTimerSec = 1.0;
   }
 
   public static class Flipper {
@@ -156,10 +159,11 @@ public class Constants {
     public static double driveMaxVelocity = Units.inchesToMeters(150.0);
     public static double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
     public static double driveMaxAcceleration = Units.inchesToMeters(95.0);
-    public static double driveTolerance = 0.08;
-    public static double driveToleranceSlow = 0.08;
+    public static double driveTolerance = 0.04;
+    public static double driveToleranceSlow = 0.06;
     public static double ffMinRadius = 0.2;
     public static double ffMaxRadius = 0.8;
+    public static double elevatorRaiseThreshold = 1;
   }
 
   public static class Vision {

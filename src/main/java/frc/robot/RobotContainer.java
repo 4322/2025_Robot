@@ -6,10 +6,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousSelector;
@@ -126,22 +128,30 @@ public class RobotContainer {
             },
             swerve));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new RightFeed(swerve, superstructure));
+        .whileTrue(new RightFeed(swerve, elevator, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whileTrue(new LeftFeed(swerve, superstructure));
+        .whileTrue(new LeftFeed(swerve, elevator, superstructure));
     new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
-        .whileTrue(new ManualScore(swerve, superstructure));
+        .whileTrue(new AutoScore(swerve, superstructure, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
-        .whileTrue(new AutoScore(swerve, superstructure, false)); // TODO: Change back to fast mode
+        .whileTrue(new ManualScore(swerve, superstructure));
+    new Trigger(() -> endEffector.coralSecured()).toggleOnTrue(new InstantCommand(() -> {driver.setRumble(RumbleType.kBothRumble, 1);}).andThen(new WaitCommand(0.5)).finallyDo(() -> {driver.setRumble(RumbleType.kBothRumble, 0);}).ignoringDisable(false));
 
-    // driver right trigger controls manual shooting of coral in ManualScore command
-
+    // driver right trigger controls manual shooting of coral in ManualScore and AutoScore command
+    
+    // operator left controller button 6 while held controls elevator jiggle when feeding
     operatorBoard.configScoringPosButtons();
     new JoystickButton(operatorBoard.getLeftController(), 5)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestEject();
+                }));
+    new JoystickButton(operatorBoard.getLeftController(), 5)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
                 }));
 
     new JoystickButton(operatorBoard.getLeftController(), 8)
@@ -183,19 +193,19 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L1);
-                }));
+                }).ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 2)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L2);
-                }));
+                }).ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 3)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L3);
-                }));
+                }).ignoringDisable(true));
   }
 
   private void configureAprilTagVision() {

@@ -10,10 +10,12 @@ import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Superstates;
+import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class LeftFeed extends Command {
   private Swerve swerve;
+  private Elevator elevator;
   private Superstructure superstructure;
 
   private PIDController turnPID =
@@ -21,8 +23,9 @@ public class LeftFeed extends Command {
 
   private double setpoint;
 
-  public LeftFeed(Swerve swerve, Superstructure superstructure) {
+  public LeftFeed(Swerve swerve, Elevator elevator, Superstructure superstructure) {
     this.swerve = swerve;
+    this.elevator = elevator;
     this.superstructure = superstructure;
 
     turnPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -73,6 +76,13 @@ public class LeftFeed extends Command {
     } else {
       dx *= -6.0;
       dy *= -6.0;
+    }
+
+    if (RobotContainer.operatorBoard.getLeftController().getRawButtonPressed(6)) {
+      elevator.requestJiggle();
+    }
+    else {
+      elevator.requestSetpoint(0);
     }
 
     // Apply swerve Requests
