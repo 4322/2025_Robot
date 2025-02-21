@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,7 +52,7 @@ public class AutoScore extends Command {
 
   private double driveVelocityScalar;
   private Translation2d driveVelocity = new Translation2d();
-  
+
   private AutoScoreStates state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
 
   private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("AutoScore/DriveKp");
@@ -179,8 +180,7 @@ public class AutoScore extends Command {
         break;
       case TARGET_TAG_VISIBLE:
         currentTranslation =
-            swerve
-                .getPose()
+            robotPose
                 .getTranslation()
                 .plus(
                     new Translation2d(
@@ -241,7 +241,8 @@ public class AutoScore extends Command {
             driveController.getSetpoint().velocity);
         driveVelocityScalar =
             driveController.getSetpoint().velocity * ffScaler
-                + driveController.calculate(driveErrorAbs, 0);
+                + driveController.calculate(
+                    driveErrorAbs, new State(0, -Constants.AutoScoring.driveMaxVelocity));
 
         // cache setpoint value for use during next iteration
         lastSetpointTranslation =
@@ -262,10 +263,14 @@ public class AutoScore extends Command {
 
         // TODO: Change to request velocity
         swerve.requestPercent(
-            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                driveVelocity.getX(),
+                driveVelocity.getY(),
+                thetaVelocity,
+                swerve.getPose().getRotation()),
+            false);
 
-        if (currentTranslation.getDistance(desiredTagPose.getTranslation())
-            < Units.inchesToMeters(12)) {
+        if (currentTranslation.getDistance(desiredTagPose.getTranslation()) < 1.5) {
           desiredPoseGoal = desiredTagPose;
           state = AutoScoreStates.DRIVE_TO_TAG;
         }
@@ -278,8 +283,7 @@ public class AutoScore extends Command {
         }
 
         currentTranslation =
-            swerve
-                .getPose()
+            robotPose
                 .getTranslation()
                 .plus(
                     new Translation2d(
@@ -329,7 +333,12 @@ public class AutoScore extends Command {
 
         // TODO: Change to request velocity
         swerve.requestPercent(
-            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                driveVelocity.getX(),
+                driveVelocity.getY(),
+                thetaVelocity,
+                swerve.getPose().getRotation()),
+            false);
         break;
     }
 

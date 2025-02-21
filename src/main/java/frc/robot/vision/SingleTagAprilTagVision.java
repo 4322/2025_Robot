@@ -198,7 +198,8 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
 
       visionPose = robotPose;
-      Logger.recordOutput("Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
+      Logger.recordOutput(
+          "Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
       Logger.recordOutput("Vision/TargetTagVisible", hasTargetTag());
     }
 
