@@ -192,19 +192,19 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L1);
-                }));
+                }).ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 2)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L2);
-                }));
+                }).ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 3)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superstructure.requestLevel(Level.L3);
-                }));
+                }).ignoringDisable(true));
   }
 
   private void configureAprilTagVision() {
