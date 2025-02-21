@@ -12,14 +12,19 @@ public class Elevator extends SubsystemBase {
   public ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
 
   private double setpoint = 0;
+  private double jiggleHeight = Constants.Elevator.jiggleHeight;
   private ElevatorStates state = ElevatorStates.STARTING_CONFIG;
+
+  private boolean requestJiggle;
+  private boolean requestSetpoint;
 
   private Timer homingTimer = new Timer();
 
   public enum ElevatorStates {
     STARTING_CONFIG,
     HOMING,
-    REQUEST_SETPOINT
+    REQUEST_SETPOINT,
+    JIGGLE
   }
 
   public Elevator(ElevatorIO elevatorIO) {
@@ -53,12 +58,31 @@ public class Elevator extends SubsystemBase {
         break;
       case REQUEST_SETPOINT:
         io.setHeight(setpoint);
+        if (requestJiggle) {
+          state = ElevatorStates.JIGGLE;
+        }
+        break;
+      case JIGGLE:
+        if (atSetpoint()) {
+          jiggleHeight *= -1;
+        }
+        io.setHeight(Math.max(0, jiggleHeight));
+        if (requestSetpoint) {
+          state = ElevatorStates.REQUEST_SETPOINT;
+        }
         break;
     }
   }
 
-  public void requestHeight(double heightMeters) {
+  public void requestSetpoint(double heightMeters) {
+    requestSetpoint = true;
+    requestJiggle = false;
     setpoint = heightMeters;
+  }
+
+  public void requestJiggle() {
+    requestJiggle = true;
+    requestSetpoint = false;
   }
 
   public double getHeight() {

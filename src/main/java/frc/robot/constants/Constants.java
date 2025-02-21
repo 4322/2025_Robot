@@ -87,6 +87,8 @@ public class Constants {
     public static final double homingVoltage = -1.0;
     public static final double homingVelocityThreshold = 0.01;
     public static final double homingThresholdSec = 0.25;
+
+    public static final double jiggleHeight = 0.05;
   }
 
   public static class EndEffector {

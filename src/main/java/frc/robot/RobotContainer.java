@@ -128,9 +128,9 @@ public class RobotContainer {
             },
             swerve));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new RightFeed(swerve, superstructure));
+        .whileTrue(new RightFeed(swerve, elevator, superstructure));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whileTrue(new LeftFeed(swerve, superstructure));
+        .whileTrue(new LeftFeed(swerve, elevator, superstructure));
     new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
         .whileTrue(new AutoScore(swerve, superstructure, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
@@ -138,7 +138,8 @@ public class RobotContainer {
     new Trigger(() -> endEffector.coralSecured()).toggleOnTrue(new InstantCommand(() -> {driver.setRumble(RumbleType.kBothRumble, 1);}).andThen(new WaitCommand(0.5)).finallyDo(() -> {driver.setRumble(RumbleType.kBothRumble, 0);}).ignoringDisable(true));
 
     // driver right trigger controls manual shooting of coral in ManualScore and AutoScore command
-
+    
+    // operator left controller button 6 while held controls elevator jiggle when feeding
     operatorBoard.configScoringPosButtons();
     new JoystickButton(operatorBoard.getLeftController(), 5)
         .onTrue(
