@@ -146,6 +146,12 @@ public class RobotContainer {
                 () -> {
                   superstructure.requestEject();
                 }));
+    new JoystickButton(operatorBoard.getLeftController(), 5)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
     new JoystickButton(operatorBoard.getLeftController(), 8)
         .onTrue(
