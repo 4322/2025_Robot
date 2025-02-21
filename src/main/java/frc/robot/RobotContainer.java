@@ -132,7 +132,7 @@ public class RobotContainer {
     new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
         .whileTrue(new ManualScore(swerve, superstructure));
     new JoystickButton(driver, XboxController.Button.kA.value)
-        .whileTrue(new AutoScore(swerve, superstructure, true)); // TODO: Change back to fast mode
+        .whileTrue(new AutoScore(swerve, superstructure, false)); // TODO: Change back to fast mode
 
     // driver right trigger controls manual shooting of coral in ManualScore command
 
