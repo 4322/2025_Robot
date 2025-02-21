@@ -18,6 +18,7 @@ public class EndEffector extends SubsystemBase {
   private EndEffectorStates state = EndEffectorStates.IDLE;
 
   private Timer shootTimer = new Timer();
+  private Timer pullBackTimer = new Timer();
 
   public enum EndEffectorStates {
     IDLE,
@@ -79,10 +80,23 @@ public class EndEffector extends SubsystemBase {
         break;
       case PULL_BACK:
         io.setVoltage(Constants.EndEffector.thirdFeedVoltage);
+        pullBackTimer.start();
 
-        if (requestSpit) {
+        if (pullBackTimer.hasElapsed(Constants.EndEffector.pullBackOverrideTimerSec)) {
+          pullBackTimer.stop();
+          pullBackTimer.reset();
+          state = EndEffectorStates.IDLE;
+          coralSecured = true;
+          unsetAllRequests(); // account for automation from sensor triggers
+        }
+        else if (requestSpit) {
+          pullBackTimer.stop();
+          pullBackTimer.reset();
           state = EndEffectorStates.SPIT;
-        } else if (inputs.backBeamBreakTriggered) {
+        } 
+        else if (inputs.backBeamBreakTriggered) {
+          pullBackTimer.stop();
+          pullBackTimer.reset();
           state = EndEffectorStates.IDLE;
           coralSecured = true;
           unsetAllRequests(); // account for automation from sensor triggers

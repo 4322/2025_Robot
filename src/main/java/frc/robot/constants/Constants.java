@@ -108,6 +108,7 @@ public class Constants {
     public static final double spitVoltage = -4;
 
     public static final double shootWaitTimerSec = 0.1;
+    public static final double pullBackOverrideTimerSec = 1.0;
   }
 
   public static class Flipper {
