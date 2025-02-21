@@ -101,8 +101,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
       // continue if there's no targets
       if (!unprocessedResult.hasTargets()) {
+        Logger.recordOutput("Vision/TargetTagDetected", false);
         continue;
       }
+      Logger.recordOutput("Vision/TargetTagDetected", true);
 
       PhotonTrackedTarget target = unprocessedResult.getBestTarget();
       // Continue if the camera doesn't have the right target we're looking for
@@ -196,7 +198,6 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       Logger.recordOutput(
           "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
       Logger.recordOutput("Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
-      Logger.recordOutput("Vision/TargetTagVisible", hasTargetTag());
     }
     
     // Apply all vision updates to pose estimator
