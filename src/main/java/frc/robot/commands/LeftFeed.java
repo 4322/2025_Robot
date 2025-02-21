@@ -30,7 +30,7 @@ public class LeftFeed extends Command {
 
     turnPID.enableContinuousInput(-Math.PI, Math.PI);
 
-    addRequirements(superstructure, swerve);
+    addRequirements(superstructure, swerve, elevator);
   }
 
   @Override
