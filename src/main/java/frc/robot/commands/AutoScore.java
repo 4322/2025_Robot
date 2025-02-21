@@ -210,7 +210,7 @@ public class AutoScore extends Command {
                     .rotateBy(
                         desiredPoseGoal
                             .getTranslation()
-                            .minus(swerve.getPose().getTranslation())
+                            .minus(robotPose.getTranslation())
                             .getAngle()
                             .unaryMinus())
                     .getX()));
@@ -218,8 +218,7 @@ public class AutoScore extends Command {
         break;
       case DRIVE_TO_TAG_OFFSET:
         currentTranslation =
-            swerve
-                .getPose()
+            robotPose
                 .getTranslation()
                 .plus(
                     new Translation2d(
