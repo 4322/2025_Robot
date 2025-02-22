@@ -192,14 +192,15 @@ public class SingleTagAprilTagVision extends SubsystemBase {
               VecBuilder.fill(
                   Constants.Vision.xPosVisionStandardDev * xyStdDev,
                   Constants.Vision.yPosVisionStandardDev * xyStdDev,
-                  Constants.Vision.thetaVisionStandardDev * thetaStdDev)));
+                  4322)));
       Logger.recordOutput("Vision/XPosStandDev", Constants.Vision.xPosVisionStandardDev * xyStdDev);
       Logger.recordOutput("Vision/YPosStandDev", Constants.Vision.yPosVisionStandardDev * xyStdDev);
       Logger.recordOutput(
           "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
-      Logger.recordOutput("Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
+      Logger.recordOutput(
+          "Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
     }
-    
+
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
   }
