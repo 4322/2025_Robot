@@ -158,7 +158,7 @@ public class Constants {
     public static double drivekD = 0.0;
     public static double driveMaxVelocity = Units.inchesToMeters(150.0);
     public static double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
-    public static double driveMaxAcceleration = Units.inchesToMeters(95.0);
+    public static double driveMaxAcceleration = 4.0;
     public static double driveTolerance = 0.08;
     public static double driveToleranceSlow = 0.06;
     public static double ffMinRadius = 0.2;
