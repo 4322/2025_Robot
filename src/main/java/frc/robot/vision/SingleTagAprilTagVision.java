@@ -110,9 +110,15 @@ public class SingleTagAprilTagVision extends SubsystemBase {
         continue;
       }
 
-      PhotonTrackedTarget target = unprocessedResult.getBestTarget();
+      PhotonTrackedTarget target = null;
+      for (PhotonTrackedTarget trackedTarget : unprocessedResult.getTargets()) {
+        if (trackedTarget.fiducialId == targetTagID) {
+          target = trackedTarget;
+        }
+      }
+      
       // Continue if the camera doesn't have the right target we're looking for
-      if (target.fiducialId != targetTagID) {
+      if (target == null) {
         continue;
       }
 
