@@ -116,7 +116,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           target = trackedTarget;
         }
       }
-      
+
       // Continue if the camera doesn't have the right target we're looking for
       if (target == null) {
         continue;
