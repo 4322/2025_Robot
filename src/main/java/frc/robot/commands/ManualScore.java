@@ -74,7 +74,7 @@ public class ManualScore extends Command {
 
     if (swerve.atAngularSetpoint(setpoint)) {
       if (RobotContainer.operatorBoard.getFlipRequested()) {
-        superstructure.requestPreScoreFlip();
+        superstructure.requestPreScoreFlip(false);
       } else {
         superstructure.requestPreScore();
       }

@@ -14,6 +14,7 @@ public class Superstructure extends SubsystemBase {
   private boolean requestPreScore;
   private boolean requestPreScoreFlip;
   private boolean requestScore;
+  private boolean overrideSafeFlip;
 
   private Superstates state = Superstates.IDLE;
   private Elevator elevator;
@@ -29,6 +30,7 @@ public class Superstructure extends SubsystemBase {
     EJECT,
     PRE_SCORE,
     SAFE_FLIP,
+    OVERRIDE_SAFE_FLIP,
     SAFE_RETRACT,
     PRE_SCORE_FLIP,
     TRANSITION_FLIP,
@@ -63,7 +65,12 @@ public class Superstructure extends SubsystemBase {
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
         } else if (requestPreScoreFlip) {
-          state = Superstates.SAFE_FLIP;
+          if (overrideSafeFlip) {
+            state = Superstates.OVERRIDE_SAFE_FLIP;
+          }
+          else {
+            state = Superstates.SAFE_FLIP;
+          }
         }
         break;
       case FEEDING:
@@ -124,6 +131,11 @@ public class Superstructure extends SubsystemBase {
         if (flipper.atDeploySetpoint() || level == Level.L1) {
           state = Superstates.PRE_SCORE_FLIP;
         }
+        break;
+      case OVERRIDE_SAFE_FLIP:
+        flipper.requestDescore();
+        prevLevel = level;
+        state = Superstates.PRE_SCORE_FLIP;
         break;
       case PRE_SCORE_FLIP:
         if (prevLevel != level) {
@@ -221,8 +233,9 @@ public class Superstructure extends SubsystemBase {
     requestPreScore = true;
   }
 
-  public void requestPreScoreFlip() {
+  public void requestPreScoreFlip(boolean overrideSafeFlip) {
     unsetAllRequests();
+    this.overrideSafeFlip = overrideSafeFlip;
     requestPreScoreFlip = true;
   }
 
