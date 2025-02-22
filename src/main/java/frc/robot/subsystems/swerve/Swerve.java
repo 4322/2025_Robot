@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.constants.Constants.Swerve.*;
 
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -194,7 +195,9 @@ public class Swerve extends SubsystemBase {
   public void addVisionData(List<TimestampedVisionUpdate> visionUpdates) {
     for (TimestampedVisionUpdate visionUpdate : visionUpdates) {
       drivetrain.addVisionMeasurement(
-          visionUpdate.pose(), visionUpdate.timestamp(), visionUpdate.stdDevs());
+          visionUpdate.pose(),
+          Utils.fpgaToCurrentTime(visionUpdate.timestamp()),
+          visionUpdate.stdDevs());
     }
   }
 
