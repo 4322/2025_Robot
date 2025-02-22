@@ -101,16 +101,16 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
       // continue if there's no targets
       if (!unprocessedResult.hasTargets()) {
-        Logger.recordOutput("Vision/TargetTagDetected", false);
         continue;
       }
-      Logger.recordOutput("Vision/TargetTagDetected", true);
 
       PhotonTrackedTarget target = unprocessedResult.getBestTarget();
       // Continue if the camera doesn't have the right target we're looking for
       if (target.fiducialId != targetTagID) {
+        Logger.recordOutput("Vision/TargetTagDetected", false);
         continue;
       }
+      Logger.recordOutput("Vision/TargetTagDetected", true);
 
       Pose3d tagPos = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
       double timestamp = unprocessedResult.getTimestampSeconds();
