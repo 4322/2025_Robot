@@ -67,8 +67,7 @@ public class Superstructure extends SubsystemBase {
         } else if (requestPreScoreFlip) {
           if (overrideSafeFlip) {
             state = Superstates.OVERRIDE_SAFE_FLIP;
-          }
-          else {
+          } else {
             state = Superstates.SAFE_FLIP;
           }
         }

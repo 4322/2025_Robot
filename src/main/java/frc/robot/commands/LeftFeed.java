@@ -80,8 +80,7 @@ public class LeftFeed extends Command {
 
     if (RobotContainer.operatorBoard.getLeftController().getRawButtonPressed(6)) {
       elevator.requestJiggle();
-    }
-    else {
+    } else {
       elevator.requestSetpoint(0);
     }
 

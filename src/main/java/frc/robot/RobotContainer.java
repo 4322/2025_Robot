@@ -135,10 +135,21 @@ public class RobotContainer {
         .whileTrue(new AutoScore(swerve, superstructure, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new ManualScore(swerve, superstructure));
-    new Trigger(() -> endEffector.coralSecured()).toggleOnTrue(new InstantCommand(() -> {driver.setRumble(RumbleType.kBothRumble, 1);}).andThen(new WaitCommand(0.5)).finallyDo(() -> {driver.setRumble(RumbleType.kBothRumble, 0);}).ignoringDisable(false));
+    new Trigger(() -> endEffector.coralSecured())
+        .toggleOnTrue(
+            new InstantCommand(
+                    () -> {
+                      driver.setRumble(RumbleType.kBothRumble, 1);
+                    })
+                .andThen(new WaitCommand(0.5))
+                .finallyDo(
+                    () -> {
+                      driver.setRumble(RumbleType.kBothRumble, 0);
+                    })
+                .ignoringDisable(true));
 
     // driver right trigger controls manual shooting of coral in ManualScore and AutoScore command
-    
+
     // operator left controller button 6 while held controls elevator jiggle when feeding
     operatorBoard.configScoringPosButtons();
     new JoystickButton(operatorBoard.getLeftController(), 5)
@@ -191,21 +202,24 @@ public class RobotContainer {
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  superstructure.requestLevel(Level.L1);
-                }).ignoringDisable(true));
+                    () -> {
+                      superstructure.requestLevel(Level.L1);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 2)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  superstructure.requestLevel(Level.L2);
-                }).ignoringDisable(true));
+                    () -> {
+                      superstructure.requestLevel(Level.L2);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 3)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  superstructure.requestLevel(Level.L3);
-                }).ignoringDisable(true));
+                    () -> {
+                      superstructure.requestLevel(Level.L3);
+                    })
+                .ignoringDisable(true));
   }
 
   private void configureAprilTagVision() {

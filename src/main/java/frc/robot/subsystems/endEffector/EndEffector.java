@@ -88,13 +88,11 @@ public class EndEffector extends SubsystemBase {
           state = EndEffectorStates.IDLE;
           coralSecured = true;
           unsetAllRequests(); // account for automation from sensor triggers
-        }
-        else if (requestSpit) {
+        } else if (requestSpit) {
           pullBackTimer.stop();
           pullBackTimer.reset();
           state = EndEffectorStates.SPIT;
-        } 
-        else if (inputs.backBeamBreakTriggered) {
+        } else if (inputs.backBeamBreakTriggered) {
           pullBackTimer.stop();
           pullBackTimer.reset();
           state = EndEffectorStates.IDLE;

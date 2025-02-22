@@ -82,79 +82,91 @@ public class ScoringManager {
     new JoystickButton(rightController, 5)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(0, false);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(0, false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(rightController, 6)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(0, true);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(0, true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(rightController, 7)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(1, false);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(1, false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(rightController, 8)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(1, true);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(1, true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(rightController, 9)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(2, false);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(2, false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(rightController, 10)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(2, true);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(2, true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(rightController, 11)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(3, false);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(3, false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(rightController, 12)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(3, true);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(3, true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(leftController, 1)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(4, false);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(4, false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(leftController, 2)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(4, true);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(4, true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(leftController, 3)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(5, false);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(5, false);
+                    })
+                .ignoringDisable(true));
     new JoystickButton(leftController, 4)
         .onTrue(
             new InstantCommand(
-                () -> {
-                  setScoringPosition(5, true);
-                }).ignoringDisable(true));
+                    () -> {
+                      setScoringPosition(5, true);
+                    })
+                .ignoringDisable(true));
   }
 }

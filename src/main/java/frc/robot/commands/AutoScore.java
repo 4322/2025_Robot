@@ -185,7 +185,8 @@ public class AutoScore extends Command {
         // reset controller after determining initial desired pose to account for initial robot
         // velocity from regular driving.
         // Resets velocity to magnitude of current robot velocity in direction of goal pose.
-        // Negative sign used because negative error(goal > current) requires negative velocity input.
+        // Negative sign used because negative error(goal > current) requires negative velocity
+        // input.
         driveController.reset(
             currentTranslation.getDistance(desiredTagPose.getTranslation()),
             Math.min(
@@ -203,7 +204,7 @@ public class AutoScore extends Command {
         lastSetpointTranslation = currentTranslation;
         state = AutoScoreStates.DRIVE_TO_TAG;
         break;
-      case DRIVE_TO_TAG:  
+      case DRIVE_TO_TAG:
         currentTranslation =
             robotPose
                 .getTranslation()
@@ -238,14 +239,15 @@ public class AutoScore extends Command {
                 .transformBy(
                     GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
                 .getTranslation();
-        
+
         if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
           if (RobotContainer.operatorBoard.getFlipRequested()) {
-            superstructure.requestPreScoreFlip(currentDistance > Constants.AutoScoring.flipOverrideThreshold);
+            superstructure.requestPreScoreFlip(
+                currentDistance > Constants.AutoScoring.flipOverrideThreshold);
           } else {
             superstructure.requestPreScore();
           }
-        } 
+        }
 
         // check if at scoring position
         if (currentDistance < driveController.getPositionTolerance()) {

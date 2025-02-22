@@ -89,23 +89,27 @@ public class SingleTagAprilTagVision extends SubsystemBase {
             ? Constants.Vision.frontLeftCamera3dPos
             : Constants.Vision.frontRightCamera3dPos;
 
+    Logger.recordOutput("Vision/Frame Count", unprocessedResults.size());
+
     // skip loop if camera hasn't processed a new frame since last check
     if (unprocessedResults.isEmpty()) {
       return;
     }
 
     // Cache latest result for use in helper methods
-    latestResult = unprocessedResults.get(unprocessedResults.size() - 1);
 
     // Filter through each unread pipeline result and add to pose estimator with corresponding
     // timestamp
     for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
+      // Make sure to get latest frame
+      if (unprocessedResult.getTimestampSeconds() > latestResult.getTimestampSeconds()) {
+        latestResult = unprocessedResult;
+      }
+
       // continue if there's no targets
       if (!unprocessedResult.hasTargets()) {
-        Logger.recordOutput("Vision/TargetTagDetected", false);
         continue;
       }
-      Logger.recordOutput("Vision/TargetTagDetected", true);
 
       PhotonTrackedTarget target = unprocessedResult.getBestTarget();
       // Continue if the camera doesn't have the right target we're looking for
@@ -186,6 +190,13 @@ public class SingleTagAprilTagVision extends SubsystemBase {
         thetaStdDev = 0.00001;
       }
 
+      double latencyMs = RobotController.getTime() / 1000.0 - timestamp * 1000;
+
+      // TODO: Fix timesync server so we don't have to do this
+      if (latencyMs < 0) {
+        timestamp += ((25 - latencyMs) / 1000);
+      }
+
       visionUpdates.add(
           new TimestampedVisionUpdate(
               robotPose,
@@ -193,17 +204,16 @@ public class SingleTagAprilTagVision extends SubsystemBase {
               VecBuilder.fill(
                   Constants.Vision.xPosVisionStandardDev * xyStdDev,
                   Constants.Vision.yPosVisionStandardDev * xyStdDev,
-                  Constants.Vision.thetaVisionStandardDev * thetaStdDev)));
+                  4322)));
+      Logger.recordOutput("Vision/LatencyMs", latencyMs);
       Logger.recordOutput("Vision/XPosStandDev", Constants.Vision.xPosVisionStandardDev * xyStdDev);
       Logger.recordOutput("Vision/YPosStandDev", Constants.Vision.yPosVisionStandardDev * xyStdDev);
       Logger.recordOutput(
           "Vision/ThetaStandDev", Constants.Vision.thetaVisionStandardDev * thetaStdDev);
-
-      visionPose = robotPose;
-      Logger.recordOutput(
-          "Vision/LatencyMs", RobotController.getTime() / 1000.0 - timestamp * 1000);
-      Logger.recordOutput("Vision/TargetTagVisible", hasTargetTag());
+      Logger.recordOutput("Vision/LatencyMs", latencyMs);
     }
+
+    Logger.recordOutput("Vision/hasTargetTag", hasTargetTag());
 
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
