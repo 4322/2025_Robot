@@ -18,7 +18,7 @@ public class Constants {
   public static final boolean flipperEnabled = true;
 
   public static final boolean pseudoAutoRotateEnabled = false;
-  public static final boolean tuningMode = false;
+  public static final boolean tuningMode = true;
   public static final boolean visionEnabled = true;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
@@ -202,7 +202,13 @@ public class Constants {
         new RobotConfig(
             mass,
             momentOfInertia,
-            new ModuleConfig(Units.inchesToMeters(2), TunerConstants.kSpeedAt12VoltsMps, 1.2, DCMotor.getKrakenX60(1), 40, 4),
+            new ModuleConfig(
+                Units.inchesToMeters(2),
+                TunerConstants.kSpeedAt12VoltsMps,
+                1.2,
+                DCMotor.getKrakenX60(1),
+                40,
+                4),
             10.375);
 
     {
