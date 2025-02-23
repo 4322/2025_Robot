@@ -96,5 +96,6 @@ public class RightFeed extends Command {
   @Override
   public void end(boolean interrupted) {
     superstructure.requestIdle();
+    System.gc(); // run Java garbage collector before we start aligning
   }
 }
