@@ -1,10 +1,12 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 
 public class Constants {
@@ -194,9 +196,9 @@ public class Constants {
     public static final double rotkP = 0;
     public static final double rotkD = 0;
 
-    public static final double mass = 50;
+    public static final double mass = Units.lbsToKilograms(110);
     public static final double momentOfInertia = 50;
-    public static RobotConfig robotConfig;
+    public static RobotConfig robotConfig = new RobotConfig(mass, momentOfInertia, new ModuleConfig(2, 3, 1.2, DCMotor.getKrakenX60( 1), 60, 4), Units.inchesToMeters(26));
 
     {
       try {
