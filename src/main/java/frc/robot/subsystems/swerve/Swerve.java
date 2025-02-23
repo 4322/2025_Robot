@@ -89,12 +89,15 @@ public class Swerve extends SubsystemBase {
     Pose2d pose = getPose();
     SwerveModuleState[] targets = drivetrain.getState().ModuleTargets;
     SwerveModuleState[] states = drivetrain.getState().ModuleStates;
+    ChassisSpeeds actualSpeeds = drivetrain.getState().Speeds;
     Logger.recordOutput("Odometry/PoseEstimatorEstimate", pose);
     Logger.recordOutput("Swerve/Targets", targets);
     Logger.recordOutput("Swerve/Achieved", states);
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
     Logger.recordOutput("Swerve/SwerveState", systemState.toString());
+    Logger.recordOutput("Swerve/RequestedSpeedsMag", Math.hypot(desired.vxMetersPerSecond, desired.vyMetersPerSecond));
+    Logger.recordOutput("Swerve/ActualSpeedsMag", Math.hypot(actualSpeeds.vxMetersPerSecond, actualSpeeds.vyMetersPerSecond));
     for (int i = 0; i < 4; i++) {
       Logger.recordOutput(
           "Swerve/Drive Motor/Supply Current/" + i,
