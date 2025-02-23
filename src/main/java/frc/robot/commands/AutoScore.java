@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -177,7 +178,7 @@ public class AutoScore extends Command {
                 .getTranslation()
                 .plus(
                     new Translation2d(
-                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth,
+                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth + Units.inchesToMeters(0.25),
                             useLeftCam
                                 ? Constants.Vision.frontLeftCamera3dPos.getY()
                                 : Constants.Vision.frontRightCamera3dPos.getY())
@@ -212,7 +213,7 @@ public class AutoScore extends Command {
                 .getTranslation()
                 .plus(
                     new Translation2d(
-                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth,
+                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth + Units.inchesToMeters(0.25),
                             useLeftCam
                                 ? Constants.Vision.frontLeftCamera3dPos.getY()
                                 : Constants.Vision.frontRightCamera3dPos.getY())
