@@ -66,7 +66,7 @@ public class AutoScore extends Command {
   private static final LoggedTunableNumber ffMinRadius =
       new LoggedTunableNumber("AutoScore/FFMinRadius");
   private static final LoggedTunableNumber ffMaxRadius =
-      new LoggedTunableNumber("AutoScore/FFMinRadius");
+      new LoggedTunableNumber("AutoScore/FFMaxRadius");
 
   static {
     driveKp.initDefault(Constants.AutoScoring.drivekP);
@@ -135,7 +135,9 @@ public class AutoScore extends Command {
               .getTagPose(desiredTag)
               .get()
               .toPose2d()
-              .transformBy(GeomUtil.translationToTransform(new Translation2d(0.5, 0)));
+              .transformBy(
+                  GeomUtil.translationToTransform(
+                      new Translation2d(Units.inchesToMeters(14.125), 0)));
     } else {
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     }
@@ -281,8 +283,7 @@ public class AutoScore extends Command {
                 .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
                 .getTranslation();
 
-        // TODO: Change to request velocity
-        swerve.requestPercent(
+        swerve.requestVelocity(
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
     }
