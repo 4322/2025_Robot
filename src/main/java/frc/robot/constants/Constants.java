@@ -30,7 +30,7 @@ public class Constants {
 
   /* Constants pertaining to the swerve drive */
   public static class Swerve {
-    public static final double autoRotatekP = 6;
+    public static final double autoRotatekP = 5;
     public static final double autoRotatekD = 0;
 
     public static final double SWERVE_COAST_TRESHOLD_MPS = 0.05;
