@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.TimestampedVisionUpdate;
@@ -72,8 +73,10 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
+    long startLoopMs = RobotController.getTime();
     handleTelemetry();
     handleStatemachineLogic();
+    Logger.recordOutput("Loop/SwerveMs", (RobotController.getTime() - startLoopMs) / 1000.0);
   }
 
   /* Telemetry function */

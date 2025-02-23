@@ -66,6 +66,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    long startLoopMs = RobotController.getTime();
     boolean useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     targetTagID = RobotContainer.operatorBoard.getAprilTag();
 
@@ -221,6 +222,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
+
+    Logger.recordOutput(
+        "Loop/SingleTagAprilTagVisionMs", (RobotController.getTime() - startLoopMs) / 1000.0);
   }
 
   public boolean hasTargetTag() {

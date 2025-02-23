@@ -24,6 +24,8 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private long lastRobotPeriodicUsec;
+  private long currentRobotPeriodicUsec;
   public static Alliance alliance = DriverStation.Alliance.Red;
 
   // private CANdle leds = new CANdle(31, "Clockwork");
@@ -115,16 +117,23 @@ public class Robot extends LoggedRobot {
     Logger.start();
     Logger.disableConsoleCapture();
     m_robotContainer.configureAutonomousSelector();
+    lastRobotPeriodicUsec = RobotController.getTime();
   }
 
   @Override
   public void robotPeriodic() {
+    currentRobotPeriodicUsec = RobotController.getTime();
+    Logger.recordOutput(
+        "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
     CommandScheduler.getInstance().run();
 
     Optional<Alliance> allianceOptional = DriverStation.getAlliance();
     if (allianceOptional.isPresent()) {
       alliance = allianceOptional.get();
     }
+    Logger.recordOutput(
+        "Loop/RobotPeriodicMs", (RobotController.getTime() - currentRobotPeriodicUsec) / 1000.0);
+    lastRobotPeriodicUsec = currentRobotPeriodicUsec;
   }
 
   @Override

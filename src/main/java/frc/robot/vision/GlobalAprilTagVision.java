@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.GeomUtil;
@@ -102,6 +103,7 @@ public class GlobalAprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    long startLoopMs = RobotController.getTime();
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
 
@@ -271,5 +273,8 @@ public class GlobalAprilTagVision extends SubsystemBase {
 
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
+
+    Logger.recordOutput(
+        "Loop/GlobalAprilTagVisionMs", (RobotController.getTime() - startLoopMs) / 1000.0);
   }
 }
