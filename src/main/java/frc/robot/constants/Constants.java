@@ -18,7 +18,7 @@ public class Constants {
   public static final boolean flipperEnabled = true;
 
   public static final boolean pseudoAutoRotateEnabled = false;
-  public static final boolean tuningMode = true;
+  public static final boolean tuningMode = false;
   public static final boolean visionEnabled = true;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
