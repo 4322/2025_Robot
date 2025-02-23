@@ -107,7 +107,7 @@ public class AutoScore extends Command {
 
   @Override
   public void execute() {
-    long startLoopMs = RobotController.getTime();
+    long startLoopMs = RobotController.getFPGATime();
 
     // Update from tunable numbers
     if (driveMaxVelocity.hasChanged(hashCode())
@@ -178,7 +178,9 @@ public class AutoScore extends Command {
                 .getTranslation()
                 .plus(
                     new Translation2d(
-                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth + Units.inchesToMeters(0.25),
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
                             useLeftCam
                                 ? Constants.Vision.frontLeftCamera3dPos.getY()
                                 : Constants.Vision.frontRightCamera3dPos.getY())
@@ -213,7 +215,9 @@ public class AutoScore extends Command {
                 .getTranslation()
                 .plus(
                     new Translation2d(
-                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth + Units.inchesToMeters(0.25),
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
                             useLeftCam
                                 ? Constants.Vision.frontLeftCamera3dPos.getY()
                                 : Constants.Vision.frontRightCamera3dPos.getY())
@@ -282,7 +286,7 @@ public class AutoScore extends Command {
         new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
     Logger.recordOutput("AutoScore/DesiredPoseGoal", desiredTagPose);
     Logger.recordOutput("AutoScore/State", state.toString());
-    Logger.recordOutput("Loop/AutoScoreMs", (RobotController.getTime() - startLoopMs) / 1000.0);
+    Logger.recordOutput("Loop/AutoScoreMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 
   @Override

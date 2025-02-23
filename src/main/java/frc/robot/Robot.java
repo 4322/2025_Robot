@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -13,15 +14,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import com.pathplanner.lib.path.PathPlannerPath;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -68,7 +66,8 @@ public class Robot extends LoggedRobot {
       // delete all garbage hoot files and wpilogs not connected to ds before good wpilogs
       if (files != null) {
         for (File file : files) {
-          if (file.getName().endsWith(".hoot") || (!file.getName().contains("-") && file.getName().endsWith(".wpilog"))) {
+          if (file.getName().endsWith(".hoot")
+              || (!file.getName().contains("-") && file.getName().endsWith(".wpilog"))) {
             file.delete();
             DriverStation.reportWarning("Deleted " + file.getName() + " to free up space", false);
           }
@@ -124,7 +123,7 @@ public class Robot extends LoggedRobot {
 
     Logger.start();
     Logger.disableConsoleCapture();
-    
+
     try {
       ThreeCoralStartToI = PathPlannerPath.fromPathFile("Start To I");
       ThreeCoralIToFeed = PathPlannerPath.fromPathFile("I To Feed");
@@ -135,13 +134,15 @@ public class Robot extends LoggedRobot {
       e.printStackTrace();
     }
 
-
     m_robotContainer.configureAutonomousSelector();
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 
   @Override
   public void robotPeriodic() {
+    // can't use a Timer or RobotController.getTime() to measure intra-loop times because those
+    // times only
+    // update between loops when AdvantageKit logging or replay is in use!
     currentRobotPeriodicUsec = RobotController.getFPGATime();
     Logger.recordOutput(
         "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
