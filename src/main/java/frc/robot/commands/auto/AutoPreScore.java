@@ -88,18 +88,20 @@ public class AutoPreScore extends Command {
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-    
+
     currentTranslation =
-            swerve
-                .getPose()
-                .getTranslation()
-                .plus(
-                    new Translation2d(
-                            (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth + Units.inchesToMeters(0.25),
-                            useLeftCam
-                                ? Constants.Vision.frontLeftCamera3dPos.getY()
-                                : Constants.Vision.frontRightCamera3dPos.getY())
-                        .rotateBy(swerve.getPose().getRotation()));
+        swerve
+            .getPose()
+            .getTranslation()
+            .plus(
+                new Translation2d(
+                        (Constants.robotFrameLength / 2)
+                            + Constants.bumperEdgeWidth
+                            + Units.inchesToMeters(0.25),
+                        useLeftCam
+                            ? Constants.Vision.frontLeftCamera3dPos.getY()
+                            : Constants.Vision.frontRightCamera3dPos.getY())
+                    .rotateBy(swerve.getPose().getRotation()));
 
     // reset controller after determining initial desired pose to account for initial robot
     // velocity from regular driving.
@@ -111,8 +113,7 @@ public class AutoPreScore extends Command {
         Math.min(
             0.0,
             -new Translation2d(
-                    swerve.getFieldRelativeSpeeds().getX(),
-                    swerve.getFieldRelativeSpeeds().getY())
+                    swerve.getFieldRelativeSpeeds().getX(), swerve.getFieldRelativeSpeeds().getY())
                 .rotateBy(
                     desiredTagPose
                         .getTranslation()
@@ -156,7 +157,9 @@ public class AutoPreScore extends Command {
             .getTranslation()
             .plus(
                 new Translation2d(
-                        (Constants.robotFrameLength / 2) + Constants.bumperEdgeWidth + Units.inchesToMeters(0.25),
+                        (Constants.robotFrameLength / 2)
+                            + Constants.bumperEdgeWidth
+                            + Units.inchesToMeters(0.25),
                         useLeftCam
                             ? Constants.Vision.frontLeftCamera3dPos.getY()
                             : Constants.Vision.frontRightCamera3dPos.getY())

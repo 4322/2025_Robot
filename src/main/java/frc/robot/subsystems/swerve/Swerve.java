@@ -16,7 +16,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -292,17 +291,18 @@ public class Swerve extends SubsystemBase {
 
   public void configureAutoBuilder() {
     AutoBuilder.configure(
-            this::getPose,
-            this::resetPose,
-            this::getRobotRelativeSpeeds,
-            (speeds) -> requestVelocity(speeds, false),
-            new PPHolonomicDriveController(new PIDConstants(Constants.PathPlanner.drivekP, Constants.PathPlanner.drivekD), new PIDConstants(Constants.PathPlanner.rotkP, Constants.PathPlanner.rotkD)), 
-            Constants.PathPlanner.robotConfig, 
-            () -> {
-              return Robot.alliance == DriverStation.Alliance.Red;
-            },
-            this
-    );
+        this::getPose,
+        this::resetPose,
+        this::getRobotRelativeSpeeds,
+        (speeds) -> requestVelocity(speeds, false),
+        new PPHolonomicDriveController(
+            new PIDConstants(Constants.PathPlanner.drivekP, Constants.PathPlanner.drivekD),
+            new PIDConstants(Constants.PathPlanner.rotkP, Constants.PathPlanner.rotkD)),
+        Constants.PathPlanner.robotConfig,
+        () -> {
+          return Robot.alliance == DriverStation.Alliance.Red;
+        },
+        this);
   }
 
   /* Swerve State */
