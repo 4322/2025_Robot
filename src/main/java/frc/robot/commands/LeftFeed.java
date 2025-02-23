@@ -8,6 +8,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
+import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Superstates;
 import frc.robot.subsystems.elevator.Elevator;
@@ -70,12 +71,12 @@ public class LeftFeed extends Command {
     double dy = driveMag * Math.sin(driveTheta);
 
     if (Robot.alliance == DriverStation.Alliance.Blue) {
-      dx *= 6.0;
-      dy *= 6.0;
+      dx *= TunerConstants.kSpeedAt12VoltsMps;
+      dy *= TunerConstants.kSpeedAt12VoltsMps;
 
     } else {
-      dx *= -6.0;
-      dy *= -6.0;
+      dx *= -TunerConstants.kSpeedAt12VoltsMps;
+      dy *= -TunerConstants.kSpeedAt12VoltsMps;
     }
 
     if (RobotContainer.operatorBoard.getLeftController().getRawButtonPressed(6)) {
