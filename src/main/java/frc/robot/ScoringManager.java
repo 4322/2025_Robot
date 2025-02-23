@@ -87,8 +87,7 @@ public class ScoringManager {
                       setScoringPosition(0, false);
                       if (RobotContainer.superstructure.getLevel() == Level.L3) {
                         flipRequested = true;
-                      }
-                      else {
+                      } else {
                         flipRequested = false;
                       }
                     })
@@ -109,8 +108,7 @@ public class ScoringManager {
                       setScoringPosition(1, false);
                       if (RobotContainer.superstructure.getLevel() == Level.L2) {
                         flipRequested = true;
-                      }
-                      else {
+                      } else {
                         flipRequested = false;
                       }
                     })
@@ -131,8 +129,7 @@ public class ScoringManager {
                       setScoringPosition(2, false);
                       if (RobotContainer.superstructure.getLevel() == Level.L3) {
                         flipRequested = true;
-                      }
-                      else {
+                      } else {
                         flipRequested = false;
                       }
                     })
@@ -153,8 +150,7 @@ public class ScoringManager {
                       setScoringPosition(3, false);
                       if (RobotContainer.superstructure.getLevel() == Level.L2) {
                         flipRequested = true;
-                      }
-                      else {
+                      } else {
                         flipRequested = false;
                       }
                     })
@@ -175,8 +171,7 @@ public class ScoringManager {
                       setScoringPosition(4, false);
                       if (RobotContainer.superstructure.getLevel() == Level.L3) {
                         flipRequested = true;
-                      }
-                      else {
+                      } else {
                         flipRequested = false;
                       }
                     })
@@ -197,8 +192,7 @@ public class ScoringManager {
                       setScoringPosition(5, false);
                       if (RobotContainer.superstructure.getLevel() == Level.L2) {
                         flipRequested = true;
-                      }
-                      else {
+                      } else {
                         flipRequested = false;
                       }
                     })

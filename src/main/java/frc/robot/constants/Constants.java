@@ -198,7 +198,12 @@ public class Constants {
 
     public static final double mass = Units.lbsToKilograms(110);
     public static final double momentOfInertia = 50;
-    public static RobotConfig robotConfig = new RobotConfig(mass, momentOfInertia, new ModuleConfig(2, 3, 1.2, DCMotor.getKrakenX60( 1), 60, 4), Units.inchesToMeters(26));
+    public static RobotConfig robotConfig =
+        new RobotConfig(
+            mass,
+            momentOfInertia,
+            new ModuleConfig(2, 3, 1.2, DCMotor.getKrakenX60(1), 60, 4),
+            Units.inchesToMeters(26));
 
     {
       try {
