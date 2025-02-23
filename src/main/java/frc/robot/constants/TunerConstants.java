@@ -37,7 +37,7 @@ public class TunerConstants {
   private static final Slot0Configs steerGains =
       new Slot0Configs().withKP(65).withKI(0).withKD(0.2).withKS(0).withKV(0).withKA(0);
   private static final Slot0Configs driveGains =
-      new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+      new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0.315).withKV(2.3).withKA(0);
 
   private static final ClosedLoopOutputType steerClosedLoopOutput = ClosedLoopOutputType.Voltage;
   private static final ClosedLoopOutputType driveClosedLoopOutput = ClosedLoopOutputType.Voltage;
