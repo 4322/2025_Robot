@@ -197,13 +197,13 @@ public class Constants {
     public static final double rotkD = 0;
 
     public static final double mass = Units.lbsToKilograms(110);
-    public static final double momentOfInertia = 50;
+    public static final double momentOfInertia = 3.9912818;
     public static RobotConfig robotConfig =
         new RobotConfig(
             mass,
             momentOfInertia,
-            new ModuleConfig(2, 3, 1.2, DCMotor.getKrakenX60(1), 60, 4),
-            Units.inchesToMeters(26));
+            new ModuleConfig(Units.inchesToMeters(2), TunerConstants.kSpeedAt12VoltsMps, 1.2, DCMotor.getKrakenX60(1), 40, 4),
+            10.375);
 
     {
       try {
