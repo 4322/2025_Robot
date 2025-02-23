@@ -30,11 +30,11 @@ public class Robot extends LoggedRobot {
   public static Alliance alliance = DriverStation.Alliance.Blue;
   // private CANdle leds = new CANdle(31, "Clockwork");
 
-  public static PathPlannerPath ThreeCoralStartToI;
-  public static PathPlannerPath ThreeCoralIToFeed;
-  public static PathPlannerPath ThreeCoralFeedToJ;
-  public static PathPlannerPath ThreeCoralJToFeed;
-  public static PathPlannerPath ThreeCoralFeedToK;
+  public static PathPlannerPath ThreeCoralStartToEcho;
+  public static PathPlannerPath ThreeCoralEchoToFeed;
+  public static PathPlannerPath ThreeCoralFeedToFoxtrot;
+  public static PathPlannerPath ThreeCoralFoxtrotToFeed;
+  public static PathPlannerPath ThreeCoralFeedToAlpha;
 
   @Override
   public void robotInit() {
@@ -125,11 +125,11 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
-      ThreeCoralStartToI = PathPlannerPath.fromPathFile("Start To I");
-      ThreeCoralIToFeed = PathPlannerPath.fromPathFile("I To Feed");
-      ThreeCoralFeedToJ = PathPlannerPath.fromPathFile("Feed To J");
-      ThreeCoralJToFeed = PathPlannerPath.fromPathFile("J Too Feed");
-      ThreeCoralFeedToK = PathPlannerPath.fromPathFile("Feed To K");
+      ThreeCoralStartToEcho = PathPlannerPath.fromPathFile("Start To Echo");
+      ThreeCoralEchoToFeed = PathPlannerPath.fromPathFile("Echo To Feed");
+      ThreeCoralFeedToFoxtrot = PathPlannerPath.fromPathFile("Feed To Foxtrot");
+      ThreeCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Foxtrot To Feed");
+      ThreeCoralFeedToAlpha = PathPlannerPath.fromPathFile("Feed To Alpha");
     } catch (Exception e) {
       e.printStackTrace();
     }

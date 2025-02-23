@@ -13,24 +13,24 @@ import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class ThreeCoralLeft extends SequentialCommandGroup {
-  public ThreeCoralLeft(Swerve swerve, Superstructure superstructure) {
+public class ThreeCoralRight extends SequentialCommandGroup {
+  public ThreeCoralRight(Swerve swerve, Superstructure superstructure) {
     setName("THREE_CORAL_LEFT");
     addRequirements(swerve, superstructure);
     addCommands(
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.ThreeCoralStartToI;
+              PathPlannerPath path = Robot.ThreeCoralStartToEcho;
               if (AutoBuilder.shouldFlip()) {
                 path = path.flipPath();
               }
 
               AutoBuilder.resetOdom(path.getStartingHolonomicPose().get());
             }),
-        AutoBuilder.followPath(Robot.ThreeCoralStartToI),
+        AutoBuilder.followPath(Robot.ThreeCoralStartToEcho),
         new InstantCommand(
             () -> {
-              RobotContainer.operatorBoard.setScoringPosition(4, false);
+              RobotContainer.operatorBoard.setScoringPosition(2, false);
               superstructure.requestLevel(Level.L3);
             }),
         new AutoPreScore(swerve, superstructure, false),
@@ -43,16 +43,16 @@ public class ThreeCoralLeft extends SequentialCommandGroup {
             () -> {
               superstructure.requestIdle();
             }),
-        AutoBuilder.followPath(Robot.ThreeCoralIToFeed),
+        AutoBuilder.followPath(Robot.ThreeCoralEchoToFeed),
         new InstantCommand(
             () -> {
               superstructure.requestFeed();
             }),
         new WaitUntilCommand(() -> superstructure.pieceSecured()),
-        AutoBuilder.followPath(Robot.ThreeCoralFeedToJ),
+        AutoBuilder.followPath(Robot.ThreeCoralFeedToFoxtrot),
         new InstantCommand(
             () -> {
-              RobotContainer.operatorBoard.setScoringPosition(4, true);
+              RobotContainer.operatorBoard.setScoringPosition(2, true);
               superstructure.requestLevel(Level.L3);
             }),
         new AutoPreScore(swerve, superstructure, false),
@@ -64,23 +64,20 @@ public class ThreeCoralLeft extends SequentialCommandGroup {
             () -> {
               superstructure.requestIdle();
             }),
-        AutoBuilder.followPath(Robot.ThreeCoralJToFeed),
+        AutoBuilder.followPath(Robot.ThreeCoralFoxtrotToFeed),
         new InstantCommand(
             () -> {
               superstructure.requestFeed();
             }),
         new WaitUntilCommand(() -> superstructure.pieceSecured()),
-        AutoBuilder.followPath(Robot.ThreeCoralFeedToK),
+        AutoBuilder.followPath(Robot.ThreeCoralFeedToAlpha),
         new InstantCommand(
             () -> {
-              superstructure.requestLevel(Level.L2);
+              RobotContainer.operatorBoard.setScoringPosition(0, false);
+              superstructure.requestLevel(Level.L3);
             }),
         new AutoPreScore(swerve, superstructure, false),
         new WaitCommand(2),
-        new InstantCommand(
-            () -> {
-              superstructure.requestLevel(Level.L3);
-            }),
         new InstantCommand(
             () -> {
               superstructure.requestScore();
