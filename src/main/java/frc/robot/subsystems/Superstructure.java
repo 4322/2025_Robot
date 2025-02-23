@@ -256,6 +256,10 @@ public class Superstructure extends SubsystemBase {
     this.level = level;
   }
 
+  public Level getLevel() {
+    return level;
+  }
+
   public boolean pieceSecured() {
     return endEffector.coralSecured();
   }
