@@ -34,7 +34,7 @@ public class ScoringManager {
   private double autoRotatePosition = 0;
   private int aprilTag = 1;
 
-  private boolean flipReqested = false;
+  private boolean flipRequested = false;
 
   // scoring face enumerated from 0 - 5 counterclockwise starting at reef face
   // closest to middle driver station for blue and red
@@ -51,7 +51,7 @@ public class ScoringManager {
   }
 
   public void setFlipRequest(boolean requestFlip) {
-    flipReqested = requestFlip;
+    flipRequested = requestFlip;
   }
 
   public GenericHID getRightController() {
@@ -75,7 +75,7 @@ public class ScoringManager {
   }
 
   public boolean getFlipRequested() {
-    return flipReqested;
+    return flipRequested;
   }
 
   public void configScoringPosButtons() {
@@ -84,6 +84,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(0, false);
+                      flipRequested = true;
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 6)
@@ -91,6 +92,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(0, true);
+                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -99,6 +101,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(1, false);
+                      flipRequested = true;
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 8)
@@ -106,6 +109,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(1, true);
+                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -114,6 +118,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(2, false);
+                      flipRequested = true;
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 10)
@@ -121,6 +126,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(2, true);
+                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -129,6 +135,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(3, false);
+                      flipRequested = true;
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 12)
@@ -136,6 +143,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(3, true);
+                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -144,6 +152,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(4, false);
+                      flipRequested = true;
                     })
                 .ignoringDisable(true));
     new JoystickButton(leftController, 2)
@@ -151,6 +160,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(4, true);
+                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -159,6 +169,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(5, false);
+                      flipRequested = true;
                     })
                 .ignoringDisable(true));
     new JoystickButton(leftController, 4)
@@ -166,6 +177,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(5, true);
+                      flipRequested = false;
                     })
                 .ignoringDisable(true));
   }
