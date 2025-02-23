@@ -145,12 +145,14 @@ public class Robot extends LoggedRobot {
         echo "vm.vfs_cache_pressure=1000" >> /etc/sysctl.conf
         echo "vm.swappiness=100" >> /etc/sysctl.conf
         sync
+        power cycle the RIO
 
       To restiore default settings:
         echo "vm.overcommit_memory=2" >> /etc/sysctl.conf
         echo "vm.vfs_cache_pressure=100" >> /etc/sysctl.conf
         echo "vm.swappiness=60" >> /etc/sysctl.conf
         sync
+        power cycle the RIO
 
       To stop the web server to save memory:
       /etc/init.d/systemWebServer stop; update-rc.d -f systemWebServer remove; sync
