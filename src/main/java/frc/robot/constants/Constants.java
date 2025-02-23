@@ -1,6 +1,8 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -184,5 +186,27 @@ public class Constants {
     public static final double xPosVisionStandardDev = 0.2;
     public static final double yPosVisionStandardDev = 0.2;
     public static final double thetaVisionStandardDev = 0.2;
+  }
+
+  public static class PathPlanner {
+    public static final double drivekP = 0;
+    public static final double drivekD = 0;
+
+    public static final double rotkP = 0;
+    public static final double rotkD = 0;
+
+    public static final double mass = 50;
+    public static final double momentOfInertia = 50;
+    public static RobotConfig robotConfig;
+    
+    {
+      try {
+        robotConfig = RobotConfig.fromGUISettings();
+      } catch (Exception e) {
+        // Handle exception as needed
+        e.printStackTrace();
+      }
+    };
+    
   }
 }

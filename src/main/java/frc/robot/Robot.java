@@ -26,7 +26,7 @@ public class Robot extends LoggedRobot {
   private RobotContainer m_robotContainer;
   private long lastRobotPeriodicUsec;
   private long currentRobotPeriodicUsec;
-  public static Alliance alliance = DriverStation.Alliance.Red;
+  public static Alliance alliance = DriverStation.Alliance.Blue;
 
   // private CANdle leds = new CANdle(31, "Clockwork");
 

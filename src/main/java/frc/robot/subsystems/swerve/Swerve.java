@@ -13,6 +13,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.commons.TimestampedVisionUpdate;
 import frc.robot.constants.Constants;
 import java.util.List;
@@ -66,6 +71,7 @@ public class Swerve extends SubsystemBase {
             moduleConstants);
 
     drivetrain.configNeutralMode(NeutralModeValue.Brake);
+    configureAutoBuilder();
 
     lastMovementTimer.start();
     gyroInitWaitTimer.start();
@@ -282,6 +288,21 @@ public class Swerve extends SubsystemBase {
     }
 
     return desired.omegaRadiansPerSecond;
+  }
+
+  public void configureAutoBuilder() {
+    AutoBuilder.configure(
+            this::getPose,
+            this::resetPose,
+            this::getRobotRelativeSpeeds,
+            (speeds) -> requestVelocity(speeds, false),
+            new PPHolonomicDriveController(new PIDConstants(Constants.PathPlanner.drivekP, Constants.PathPlanner.drivekD), new PIDConstants(Constants.PathPlanner.rotkP, Constants.PathPlanner.rotkD)), 
+            Constants.PathPlanner.robotConfig, 
+            () -> {
+              return Robot.alliance == DriverStation.Alliance.Red;
+            },
+            this
+    );
   }
 
   /* Swerve State */
