@@ -106,7 +106,7 @@ public class Constants {
     public static final double secondFeedVoltage = 1;
     public static final double thirdFeedVoltage = -0.75;
 
-    public static final double shootVoltage = 7;
+    public static final double shootVoltage = 5;
     public static final double spitVoltage = -4;
 
     public static final double shootWaitTimerSec = 0.1;
