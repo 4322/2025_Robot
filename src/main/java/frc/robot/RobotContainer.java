@@ -231,6 +231,6 @@ public class RobotContainer {
   }
 
   public void configureAutonomousSelector() {
-    autonomousSelector = new AutonomousSelector(swerve);
+    autonomousSelector = new AutonomousSelector(swerve, superstructure);
   }
 }

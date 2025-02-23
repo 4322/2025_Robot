@@ -13,12 +13,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
+import com.pathplanner.lib.path.PathPlannerPath;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -27,8 +30,13 @@ public class Robot extends LoggedRobot {
   private long lastRobotPeriodicUsec;
   private long currentRobotPeriodicUsec;
   public static Alliance alliance = DriverStation.Alliance.Blue;
-
   // private CANdle leds = new CANdle(31, "Clockwork");
+
+  public static PathPlannerPath ThreeCoralStartToI;
+  public static PathPlannerPath ThreeCoralIToFeed;
+  public static PathPlannerPath ThreeCoralFeedToJ;
+  public static PathPlannerPath ThreeCoralJToFeed;
+  public static PathPlannerPath ThreeCoralFeedToK;
 
   @Override
   public void robotInit() {
@@ -116,6 +124,18 @@ public class Robot extends LoggedRobot {
 
     Logger.start();
     Logger.disableConsoleCapture();
+    
+    try {
+      ThreeCoralStartToI = PathPlannerPath.fromPathFile("Start To I");
+      ThreeCoralIToFeed = PathPlannerPath.fromPathFile("I To Feed");
+      ThreeCoralFeedToJ = PathPlannerPath.fromPathFile("Feed To J");
+      ThreeCoralJToFeed = PathPlannerPath.fromPathFile("J Too Feed");
+      ThreeCoralFeedToK = PathPlannerPath.fromPathFile("Feed To K");
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+
     m_robotContainer.configureAutonomousSelector();
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
