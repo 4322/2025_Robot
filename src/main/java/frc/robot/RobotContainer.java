@@ -108,12 +108,12 @@ public class RobotContainer {
               double dy = driveMag * Math.sin(driveTheta);
 
               if (Robot.alliance == DriverStation.Alliance.Blue) {
-                dx *= 6.0;
-                dy *= 6.0;
+                dx *= TunerConstants.kSpeedAt12VoltsMps;
+                dy *= TunerConstants.kSpeedAt12VoltsMps;
 
               } else {
-                dx *= -6.0;
-                dy *= -6.0;
+                dx *= -TunerConstants.kSpeedAt12VoltsMps;
+                dy *= -TunerConstants.kSpeedAt12VoltsMps;
               }
               double rot = omega * omega * omega * 12.0;
               swerve.requestPercent(new ChassisSpeeds(dx, dy, rot), true);
