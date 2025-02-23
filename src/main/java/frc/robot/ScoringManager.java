@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.Superstructure.Level;
 
 public class ScoringManager {
   private GenericHID rightController;
@@ -84,7 +85,12 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(0, false);
-                      flipRequested = true;
+                      if (RobotContainer.superstructure.getLevel() == Level.L3) {
+                        flipRequested = true;
+                      }
+                      else {
+                        flipRequested = false;
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 6)
@@ -101,7 +107,12 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(1, false);
-                      flipRequested = true;
+                      if (RobotContainer.superstructure.getLevel() == Level.L2) {
+                        flipRequested = true;
+                      }
+                      else {
+                        flipRequested = false;
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 8)
@@ -118,7 +129,12 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(2, false);
-                      flipRequested = true;
+                      if (RobotContainer.superstructure.getLevel() == Level.L3) {
+                        flipRequested = true;
+                      }
+                      else {
+                        flipRequested = false;
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 10)
@@ -135,7 +151,12 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(3, false);
-                      flipRequested = true;
+                      if (RobotContainer.superstructure.getLevel() == Level.L2) {
+                        flipRequested = true;
+                      }
+                      else {
+                        flipRequested = false;
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 12)
@@ -152,7 +173,12 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(4, false);
-                      flipRequested = true;
+                      if (RobotContainer.superstructure.getLevel() == Level.L3) {
+                        flipRequested = true;
+                      }
+                      else {
+                        flipRequested = false;
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(leftController, 2)
@@ -169,7 +195,12 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringPosition(5, false);
-                      flipRequested = true;
+                      if (RobotContainer.superstructure.getLevel() == Level.L2) {
+                        flipRequested = true;
+                      }
+                      else {
+                        flipRequested = false;
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(leftController, 4)
