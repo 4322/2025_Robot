@@ -165,21 +165,6 @@ public class RobotContainer {
                   superstructure.requestIdle();
                 }));
 
-    new JoystickButton(operatorBoard.getLeftController(), 8)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      operatorBoard.setFlipRequest(true);
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(operatorBoard.getLeftController(), 8)
-        .onFalse(
-            new InstantCommand(
-                    () -> {
-                      operatorBoard.setFlipRequest(false);
-                    })
-                .ignoringDisable(true));
-
     new JoystickButton(operatorBoard.getLeftController(), 12)
         .onTrue(
             new InstantCommand(
