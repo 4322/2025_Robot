@@ -117,12 +117,12 @@ public class Robot extends LoggedRobot {
     Logger.start();
     Logger.disableConsoleCapture();
     m_robotContainer.configureAutonomousSelector();
-    lastRobotPeriodicUsec = RobotController.getTime();
+    lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 
   @Override
   public void robotPeriodic() {
-    currentRobotPeriodicUsec = RobotController.getTime();
+    currentRobotPeriodicUsec = RobotController.getFPGATime();
     Logger.recordOutput(
         "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
     CommandScheduler.getInstance().run();
@@ -132,7 +132,8 @@ public class Robot extends LoggedRobot {
       alliance = allianceOptional.get();
     }
     Logger.recordOutput(
-        "Loop/RobotPeriodicMs", (RobotController.getTime() - currentRobotPeriodicUsec) / 1000.0);
+        "Loop/RobotPeriodicMs",
+        (RobotController.getFPGATime() - currentRobotPeriodicUsec) / 1000.0);
     lastRobotPeriodicUsec = currentRobotPeriodicUsec;
   }
 

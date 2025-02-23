@@ -73,10 +73,10 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    long startLoopMs = RobotController.getTime();
+    long startLoopMs = RobotController.getFPGATime();
     handleTelemetry();
     handleStatemachineLogic();
-    Logger.recordOutput("Loop/SwerveMs", (RobotController.getTime() - startLoopMs) / 1000.0);
+    Logger.recordOutput("Loop/SwerveMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 
   /* Telemetry function */

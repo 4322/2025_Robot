@@ -66,7 +66,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    long startLoopMs = RobotController.getTime();
+    long startLoopMs = RobotController.getFPGATime();
     boolean useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     targetTagID = RobotContainer.operatorBoard.getAprilTag();
 
@@ -224,7 +224,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     visionConsumer.accept(visionUpdates);
 
     Logger.recordOutput(
-        "Loop/SingleTagAprilTagVisionMs", (RobotController.getTime() - startLoopMs) / 1000.0);
+        "Loop/SingleTagAprilTagVisionMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 
   public boolean hasTargetTag() {

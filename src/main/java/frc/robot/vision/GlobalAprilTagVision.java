@@ -103,7 +103,7 @@ public class GlobalAprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    long startLoopMs = RobotController.getTime();
+    long startLoopMs = RobotController.getFPGATime();
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
 
@@ -275,6 +275,6 @@ public class GlobalAprilTagVision extends SubsystemBase {
     visionConsumer.accept(visionUpdates);
 
     Logger.recordOutput(
-        "Loop/GlobalAprilTagVisionMs", (RobotController.getTime() - startLoopMs) / 1000.0);
+        "Loop/GlobalAprilTagVisionMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 }
