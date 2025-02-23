@@ -130,9 +130,13 @@ public class AutoScore extends Command {
     autoRotateSetpoint = RobotContainer.operatorBoard.getAutoRotatePosition();
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     if (Constants.tuningMode) {
-      desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d().transformBy(GeomUtil.translationToTransform(new Translation2d(0.5, 0)));
-    }
-    else {
+      desiredTagPose =
+          FieldConstants.aprilTagFieldLayout
+              .getTagPose(desiredTag)
+              .get()
+              .toPose2d()
+              .transformBy(GeomUtil.translationToTransform(new Translation2d(0.5, 0)));
+    } else {
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     }
 

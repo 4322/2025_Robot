@@ -202,7 +202,13 @@ public class Constants {
         new RobotConfig(
             mass,
             momentOfInertia,
-            new ModuleConfig(Units.inchesToMeters(2), TunerConstants.kSpeedAt12VoltsMps, 1.2, DCMotor.getKrakenX60(1), 40, 4),
+            new ModuleConfig(
+                Units.inchesToMeters(2),
+                TunerConstants.kSpeedAt12VoltsMps,
+                1.2,
+                DCMotor.getKrakenX60(1),
+                40,
+                4),
             10.375);
 
     {
