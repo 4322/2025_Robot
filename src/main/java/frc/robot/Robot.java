@@ -140,9 +140,29 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
+    /* roboRIO settings to optimize Java memory use:
+        echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
+        echo "vm.vfs_cache_pressure=1000" >> /etc/sysctl.conf
+        echo "vm.swappiness=100" >> /etc/sysctl.conf
+        sync
+
+      To restiore default settings:
+        echo "vm.overcommit_memory=2" >> /etc/sysctl.conf
+        echo "vm.vfs_cache_pressure=100" >> /etc/sysctl.conf
+        echo "vm.swappiness=60" >> /etc/sysctl.conf
+        sync
+
+      To stop the web server to save memory:
+      /etc/init.d/systemWebServer stop; update-rc.d -f systemWebServer remove; sync
+      chmod a-x /usr/local/natinst/etc/init.d/systemWebServer; sync
+
+      To restart the web server in order to image the RIO:
+      chmod a+x /usr/local/natinst/etc/init.d/systemWebServer; sync
+      power cycle the RIO
+    */
+
     // can't use a Timer or RobotController.getTime() to measure intra-loop times because those
-    // times only
-    // update between loops when AdvantageKit logging or replay is in use!
+    // times only update between loops when AdvantageKit logging or replay is in use!
     currentRobotPeriodicUsec = RobotController.getFPGATime();
     Logger.recordOutput(
         "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
