@@ -57,10 +57,10 @@ public class Robot extends LoggedRobot {
       }
       var files = directory.listFiles();
 
-      // delete all hoot files first before deleting wpilogs
+      // delete all garbage hoot files and wpilogs not connected to ds before good wpilogs
       if (files != null) {
         for (File file : files) {
-          if (file.getName().endsWith(".hoot")) {
+          if (file.getName().endsWith(".hoot") || (!file.getName().contains("-") && file.getName().endsWith(".wpilog"))) {
             file.delete();
             DriverStation.reportWarning("Deleted " + file.getName() + " to free up space", false);
           }
