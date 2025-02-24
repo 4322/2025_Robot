@@ -308,6 +308,6 @@ public class AutoScore extends Command {
     // Reset logging
     Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
     Logger.recordOutput("AutoScore/DriveToPoseSetpoint", new Pose2d());
-    Logger.recordOutput("Loop/AutoScoreMs", 0);
+    Logger.recordOutput("Loop/AutoScoreMs", 0.0);
   }
 }
