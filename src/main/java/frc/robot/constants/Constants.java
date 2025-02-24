@@ -106,8 +106,8 @@ public class Constants {
     public static final double proximityDetectionThreshold = 0.075;
 
     public static final double feedVoltage = 4;
-    public static final double secondFeedVoltage = 1;
-    public static final double thirdFeedVoltage = -0.75;
+    public static final double secondFeedVoltage = 1.25;
+    public static final double thirdFeedVoltage = -1.0;
 
     public static final double shootVoltage = 4;
     public static final double spitVoltage = -4;
