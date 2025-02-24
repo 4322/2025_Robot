@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
   public static final String logPath = "/home/lvuser/logs";
@@ -198,25 +199,30 @@ public class Constants {
 
     public static final double mass = Units.lbsToKilograms(138);
     public static final double momentOfInertia = 3.9912818;
+    public static final double wheelRadius = Units.inchesToMeters(2.0);
+    public static final double wheelCOF = 1.13;
+
+
     public static RobotConfig robotConfig =
         new RobotConfig(
             mass,
             momentOfInertia,
             new ModuleConfig(
-                Units.inchesToMeters(2),
+                wheelRadius,
                 TunerConstants.kSpeedAt12VoltsMps,
-                1.2,
-                DCMotor.getKrakenX60(1),
+                wheelCOF,
+                DCMotor.getKrakenX60Foc(1),
                 40,
-                4),
-            Units.inchesToMeters(10.375));
+                1),
+            Units.inchesToMeters(20.75));
 
     {
       try {
         robotConfig = RobotConfig.fromGUISettings();
       } catch (Exception e) {
         // Handle exception as needed
-        e.printStackTrace();
+        DriverStation.reportError("Failed to load PathPlanner robot config", true);
+        
       }
     }
     ;
