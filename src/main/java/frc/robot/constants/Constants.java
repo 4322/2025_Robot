@@ -196,7 +196,7 @@ public class Constants {
     public static final double rotkP = 0;
     public static final double rotkD = 0;
 
-    public static final double mass = Units.lbsToKilograms(110);
+    public static final double mass = Units.lbsToKilograms(138);
     public static final double momentOfInertia = 3.9912818;
     public static RobotConfig robotConfig =
         new RobotConfig(
