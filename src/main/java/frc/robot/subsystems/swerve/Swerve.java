@@ -104,13 +104,13 @@ public class Swerve extends SubsystemBase {
           drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
       Logger.recordOutput(
           "Swerve/Drive Motor/Stator Current/" + i,
-          drivetrain.getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+          drivetrain.getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
       Logger.recordOutput(
           "Swerve/Steer Motor/Supply Current/" + i,
           drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
       Logger.recordOutput(
           "Swerve/Steer Motor/Stator Current/" + i,
-          drivetrain.getModule(i).getSteerMotor().getSupplyCurrent().getValueAsDouble());
+          drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
     }
   }
 
