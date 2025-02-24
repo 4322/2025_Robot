@@ -209,7 +209,7 @@ public class Constants {
                 DCMotor.getKrakenX60(1),
                 40,
                 4),
-            10.375);
+            Units.inchesToMeters(10.375));
 
     {
       try {
