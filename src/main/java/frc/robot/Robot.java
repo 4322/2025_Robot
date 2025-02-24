@@ -35,6 +35,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralFeedToFoxtrot;
   public static PathPlannerPath ThreeCoralFoxtrotToFeed;
   public static PathPlannerPath ThreeCoralFeedToAlpha;
+  public static PathPlannerPath Leave;
 
   @Override
   public void robotInit() {
@@ -130,6 +131,7 @@ public class Robot extends LoggedRobot {
       ThreeCoralFeedToFoxtrot = PathPlannerPath.fromPathFile("Feed To Foxtrot");
       ThreeCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Foxtrot To Feed");
       ThreeCoralFeedToAlpha = PathPlannerPath.fromPathFile("Feed To Alpha");
+      Leave = PathPlannerPath.fromPathFile("Leave");
     } catch (Exception e) {
       e.printStackTrace();
     }
