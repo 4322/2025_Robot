@@ -43,8 +43,8 @@ public class Robot extends LoggedRobot {
   Timer gcTimer2 = new Timer();
 
   // create some blocks for garbage collection to always scan
-  List<byte[]> list1 = allocate(1000, 100);
-  List<byte[]> list2 = allocate(100, 1000);
+  List<byte[]> list1 = allocate(100, 100);
+  List<byte[]> list2 = allocate(10, 1000);
   List<byte[]> list3;
 
   @Override
@@ -161,15 +161,12 @@ public class Robot extends LoggedRobot {
 
     Logger.recordOutput("Garbage/Timer1", gcTimer1.get());
     if (gcTimer1.hasElapsed(60)) {
-      list3 = null;
-      System.gc(); // clean-up last big block
-
       // blow-up memory until we crash
       list3 = allocate(1, (int) (gcTimer1.get() - 58) * 100000);
       list3.get(0)[0] = 'a'; // force memory to be mapped
     } else {
       // consistent allocations at the start
-      list3 = allocate(100, 50);
+      list3 = allocate(1000, 500);
       if (gcTimer1.hasElapsed(30)) {
         // start manually invoking the garbage collector
         gcTimer2.start();
