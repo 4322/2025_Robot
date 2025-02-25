@@ -1,24 +1,12 @@
 package frc.robot.vision;
 
-import static frc.robot.constants.FieldConstants.aprilTagFieldLayout;
-
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
-import frc.robot.commons.GeomUtil;
 import frc.robot.commons.PolynomialRegression;
 import frc.robot.commons.TimestampedVisionUpdate;
-import frc.robot.constants.Constants;
-import frc.robot.constants.FieldConstants;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -65,8 +53,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 
   public boolean hasTargetTag() {
     if (latestResult.hasTargets()) {

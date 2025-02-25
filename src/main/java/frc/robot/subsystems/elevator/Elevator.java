@@ -1,11 +1,9 @@
 package frc.robot.subsystems.elevator;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
-import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   public ElevatorIO io;
@@ -32,8 +30,7 @@ public class Elevator extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 
   public void requestSetpoint(double heightMeters) {
     requestSetpoint = true;

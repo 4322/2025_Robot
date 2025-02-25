@@ -24,7 +24,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -77,8 +76,7 @@ public class Swerve extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 
   /* Telemetry function */
   private void handleTelemetry() {
@@ -92,8 +90,12 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/yawAngleDeg", drivetrain.getState().RawHeading.getDegrees());
     Logger.recordOutput("Swerve/SwerveState", systemState.toString());
-    Logger.recordOutput("Swerve/RequestedSpeedsMag", Math.hypot(desired.vxMetersPerSecond, desired.vyMetersPerSecond));
-    Logger.recordOutput("Swerve/ActualSpeedsMag", Math.hypot(actualSpeeds.vxMetersPerSecond, actualSpeeds.vyMetersPerSecond));
+    Logger.recordOutput(
+        "Swerve/RequestedSpeedsMag",
+        Math.hypot(desired.vxMetersPerSecond, desired.vyMetersPerSecond));
+    Logger.recordOutput(
+        "Swerve/ActualSpeedsMag",
+        Math.hypot(actualSpeeds.vxMetersPerSecond, actualSpeeds.vyMetersPerSecond));
     for (int i = 0; i < 4; i++) {
       Logger.recordOutput(
           "Swerve/Drive Motor/Supply Current/" + i,

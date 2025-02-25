@@ -202,7 +202,6 @@ public class Constants {
     public static final double wheelRadius = Units.inchesToMeters(2.0);
     public static final double wheelCOF = 1.13;
 
-
     public static RobotConfig robotConfig =
         new RobotConfig(
             mass,
@@ -222,7 +221,6 @@ public class Constants {
       } catch (Exception e) {
         // Handle exception as needed
         DriverStation.reportError("Failed to load PathPlanner robot config", true);
-        
       }
     }
     ;

@@ -3,7 +3,6 @@ package frc.robot.subsystems.flipper;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
-import org.littletonrobotics.junction.Logger;
 
 public class Flipper extends SubsystemBase {
   private FlipperIO io;
@@ -26,8 +25,7 @@ public class Flipper extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-  }
+  public void periodic() {}
 
   public boolean atDeploySetpoint() {
     return Util.atReference(
