@@ -166,7 +166,7 @@ public class Robot extends LoggedRobot {
       list3.get(0)[0] = 'a'; // force memory to be mapped
     } else {
       // consistent allocations at the start
-      list3 = allocate(1000, 500);
+      list3 = allocate(10, 500);
       if (gcTimer1.hasElapsed(30)) {
         // start manually invoking the garbage collector
         gcTimer2.start();
