@@ -154,43 +154,29 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-    /* roboRIO settings to optimize Java memory use:
-        echo "vm.overcommit_memory=1" >> /etc/sysctl.conf
-        echo "vm.vfs_cache_pressure=1000" >> /etc/sysctl.conf
-        echo "vm.swappiness=100" >> /etc/sysctl.conf
-        sync
-        power cycle the RIO
-
-      To restiore default settings, edit /etc/sysctl.conf to set the
-      following values:
-        vm.overcommit_memory=2
-        vm.vfs_cache_pressure=100
-        vm.swappiness=60
-        power cycle the RIO
-
-      To stop the web server to save memory:
-      /etc/init.d/systemWebServer stop; update-rc.d -f systemWebServer remove; sync
-      chmod a-x /usr/local/natinst/etc/init.d/systemWebServer; sync
-
-      To restart the web server in order to image the RIO:
-      chmod a+x /usr/local/natinst/etc/init.d/systemWebServer; sync
-      power cycle the RIO
-    */
-
-    // can't use a Timer or RobotController.getTime() to measure intra-loop times because those
-    // times only update between loops when AdvantageKit logging or replay is in use!
     currentRobotPeriodicUsec = RobotController.getFPGATime();
     Logger.recordOutput(
         "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
     CommandScheduler.getInstance().run();
 
-    list3 = allocate(100, 50);
+    Logger.recordOutput("Garbage/Timer1", gcTimer1.get());
+    if (gcTimer1.hasElapsed(60)) {
+      list3 = null;
+      System.gc(); // clean-up last big block
 
-    if (gcTimer1.hasElapsed(30)) {
-      gcTimer2.start();
-      if (gcTimer2.hasElapsed(1.0)) {
-        gcTimer2.restart();
-        System.gc();
+      // blow-up memory until we crash
+      list3 = allocate(1, (int) (gcTimer1.get() - 58) * 100000);
+      list3.get(0)[0] = 'a'; // force memory to be mapped
+    } else {
+      // consistent allocations at the start
+      list3 = allocate(100, 50);
+      if (gcTimer1.hasElapsed(30)) {
+        // start manually invoking the garbage collector
+        gcTimer2.start();
+        if (gcTimer2.hasElapsed(1.0)) {
+          gcTimer2.restart();
+          System.gc();
+        }
       }
     }
 
