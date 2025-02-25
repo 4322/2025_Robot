@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -172,14 +173,16 @@ public class Robot extends LoggedRobot {
         "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
     CommandScheduler.getInstance().run();
 
-    Optional<Alliance> allianceOptional = DriverStation.getAlliance();
-    if (allianceOptional.isPresent()) {
-      alliance = allianceOptional.get();
-    }
+
+
     Logger.recordOutput(
         "Loop/RobotPeriodicMs",
         (RobotController.getFPGATime() - currentRobotPeriodicUsec) / 1000.0);
     lastRobotPeriodicUsec = currentRobotPeriodicUsec;
+  }
+
+  private List<byte[]> allocate(int blocks, int size) {
+    List<byte[]> list = new List<byte[]>();
   }
 
   @Override

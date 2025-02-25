@@ -33,45 +33,6 @@ public class Elevator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Elevator", inputs);
-    Logger.recordOutput("Elevator/Setpoint", setpoint);
-    Logger.recordOutput("Elevator/atSetpoint", atSetpoint());
-
-    switch (state) {
-      case STARTING_CONFIG:
-        if (DriverStation.isEnabled()) {
-          state = ElevatorStates.HOMING;
-        }
-        break;
-      case HOMING:
-        homingTimer.start();
-        io.setVoltage(Constants.Elevator.homingVoltage);
-        if (homingTimer.hasElapsed(Constants.Elevator.homingThresholdSec)
-            && Math.abs(inputs.velMetersPerSecond) < Constants.Elevator.homingVelocityThreshold) {
-          io.setVoltage(0);
-          io.seedPosition(0);
-          homingTimer.stop();
-          homingTimer.reset();
-          state = ElevatorStates.REQUEST_SETPOINT;
-        }
-        break;
-      case REQUEST_SETPOINT:
-        io.setHeight(setpoint);
-        if (requestJiggle) {
-          state = ElevatorStates.JIGGLE;
-        }
-        break;
-      case JIGGLE:
-        if (atSetpoint()) {
-          jiggleHeight *= -1;
-        }
-        io.setHeight(Math.max(0, jiggleHeight));
-        if (requestSetpoint) {
-          state = ElevatorStates.REQUEST_SETPOINT;
-        }
-        break;
-    }
   }
 
   public void requestSetpoint(double heightMeters) {

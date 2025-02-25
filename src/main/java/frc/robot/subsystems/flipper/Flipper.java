@@ -27,39 +27,6 @@ public class Flipper extends SubsystemBase {
 
   @Override
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Flipper", inputs);
-    Logger.recordOutput("Flipper/State", state.toString());
-
-    switch (state) {
-      case SEED_POSITION:
-        io.seedPivotPosition(inputs.pivotPosAbsMechanismRotations);
-        state = FlipperStates.IDLE;
-        break;
-      case IDLE:
-        io.setPivotPosition(Constants.Flipper.Pivot.stowedSetpointMechanismRotations);
-        io.setRollerVoltage(0);
-
-        if (requestDescore) {
-          state = FlipperStates.FLIP;
-        }
-        break;
-      case FLIP:
-        io.setPivotPosition(Constants.Flipper.Pivot.deployedSetpointMechanismRotations);
-        if (requestIdle) {
-          state = FlipperStates.IDLE;
-        }
-        if (atDeploySetpoint()) {
-          state = FlipperStates.SPIN;
-        }
-        break;
-      case SPIN:
-        io.setRollerVoltage(Constants.Flipper.Roller.descoreVoltage);
-        if (requestIdle) {
-          state = FlipperStates.IDLE;
-        }
-        break;
-    }
   }
 
   public boolean atDeploySetpoint() {
