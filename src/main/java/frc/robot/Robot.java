@@ -6,15 +6,16 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -38,8 +39,18 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralFeedToAlpha;
   public static PathPlannerPath Leave;
 
+  Timer gcTimer1 = new Timer();
+  Timer gcTimer2 = new Timer();
+
+  // create some blocks for garbage collection to always scan
+  List<byte[]> list1 = allocate(1000, 100);
+  List<byte[]> list2 = allocate(100, 1000);
+  List<byte[]> list3;
+
   @Override
   public void robotInit() {
+    gcTimer1.start();
+
     m_robotContainer = new RobotContainer();
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
@@ -173,7 +184,15 @@ public class Robot extends LoggedRobot {
         "Loop/CallIntervalMs", (currentRobotPeriodicUsec - lastRobotPeriodicUsec) / 1000.0);
     CommandScheduler.getInstance().run();
 
+    list3 = allocate(100, 50);
 
+    if (gcTimer1.hasElapsed(30)) {
+      gcTimer2.start();
+      if (gcTimer2.hasElapsed(1.0)) {
+        gcTimer2.restart();
+        System.gc();
+      }
+    }
 
     Logger.recordOutput(
         "Loop/RobotPeriodicMs",
@@ -182,7 +201,11 @@ public class Robot extends LoggedRobot {
   }
 
   private List<byte[]> allocate(int blocks, int size) {
-    List<byte[]> list = new List<byte[]>();
+    List<byte[]> list = new ArrayList<>();
+    for (int i = 1; i <= blocks; i++) {
+      list.add(new byte[size]);
+    }
+    return list;
   }
 
   @Override
