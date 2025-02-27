@@ -133,7 +133,7 @@ public class Robot extends LoggedRobot {
       ThreeCoralFeedToAlpha = PathPlannerPath.fromPathFile("Feed To Alpha");
       Leave = PathPlannerPath.fromPathFile("Leave");
     } catch (Exception e) {
-      e.printStackTrace();
+      DriverStation.reportError("Failed to load PathPlanner paths", true);
     }
 
     m_robotContainer.configureAutonomousSelector();

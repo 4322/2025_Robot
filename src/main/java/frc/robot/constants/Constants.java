@@ -5,6 +5,7 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -202,7 +203,7 @@ public class Constants {
     public static final double wheelRadius = Units.inchesToMeters(2.0);
     public static final double wheelCOF = 1.13;
 
-
+    // Default config in case of load from GUI failure in Swerve.java
     public static RobotConfig robotConfig =
         new RobotConfig(
             mass,
@@ -212,11 +213,14 @@ public class Constants {
                 TunerConstants.kSpeedAt12VoltsMps,
                 wheelCOF,
                 DCMotor.getKrakenX60Foc(1),
-                40,
+                60,
                 1),
-            Units.inchesToMeters(20.75));
-
-    {
+            new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+            new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+            new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+            new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY));
+    
+    static {
       try {
         robotConfig = RobotConfig.fromGUISettings();
       } catch (Exception e) {
@@ -225,6 +229,5 @@ public class Constants {
         
       }
     }
-    ;
   }
 }
