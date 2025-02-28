@@ -97,9 +97,11 @@ public class Constants {
   }
 
   public static class EndEffector {
-    public static final int motorID = 4;
+    public static final int feederMotorID = 4;
+    public static final int kickerMotorID = 10;
     public static final int frontBeamBreakID = 8;
     public static final int backBeamBreakID = 9;
+    public static final int kickerBeamBreakID = 11;
 
     public static final double supplyCurrentLimit = 40;
     public static final double statorCurrentLimit = 100;

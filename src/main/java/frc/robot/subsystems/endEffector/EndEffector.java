@@ -43,12 +43,8 @@ public class EndEffector extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        io.stop();
-
-        // reset coral secured in cases where coral is removed manually from robot
-        if (!hasCoral()) {
-          coralSecured = false;
-        }
+        io.stopFeeder();
+        io.stopKicker();
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
@@ -59,7 +55,8 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case FEED:
-        io.setVoltage(Constants.EndEffector.feedVoltage);
+        io.setKickerVoltage(Constants.EndEffector.feedVoltage);
+        io.setFeederVoltage(Constants.EndEffector.feedVoltage);
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
@@ -70,7 +67,8 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case SECURING_CORAL:
-        io.setVoltage(Constants.EndEffector.secondFeedVoltage);
+        io.setFeederVoltage(Constants.EndEffector.secondFeedVoltage);
+        io.setKickerVoltage(Constants.EndEffector.secondFeedVoltage);
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
@@ -79,7 +77,8 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case PULL_BACK:
-        io.setVoltage(Constants.EndEffector.thirdFeedVoltage);
+        io.setFeederVoltage(Constants.EndEffector.thirdFeedVoltage);
+        io.stopKicker();
         pullBackTimer.start();
 
         if (pullBackTimer.hasElapsed(Constants.EndEffector.pullBackOverrideTimerSec)) {
@@ -101,7 +100,7 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case SHOOT:
-        io.setVoltage(Constants.EndEffector.shootVoltage);
+        io.setFeederVoltage(Constants.EndEffector.shootVoltage);
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
@@ -117,7 +116,8 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case SPIT:
-        io.setVoltage(Constants.EndEffector.spitVoltage);
+        io.setFeederVoltage(Constants.EndEffector.spitVoltage);
+        io.setKickerVoltage(Constants.EndEffector.spitVoltage);
         coralSecured = false;
         if (requestIdle) {
           state = EndEffectorStates.IDLE;
@@ -127,7 +127,9 @@ public class EndEffector extends SubsystemBase {
   }
 
   public boolean hasCoral() {
-    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
+    return inputs.frontBeamBreakTriggered
+        || inputs.backBeamBreakTriggered
+        || inputs.kickerBeamBreakTriggered;
   }
 
   public boolean coralSecured() {
