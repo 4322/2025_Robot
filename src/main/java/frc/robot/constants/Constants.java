@@ -215,18 +215,20 @@ public class Constants {
                 DCMotor.getKrakenX60Foc(1),
                 60,
                 1),
-            new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
-            new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+            new Translation2d(
+                TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+            new Translation2d(
+                TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
             new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
-            new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY));
-    
+            new Translation2d(
+                TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY));
+
     static {
       try {
         robotConfig = RobotConfig.fromGUISettings();
       } catch (Exception e) {
         // Handle exception as needed
         DriverStation.reportError("Failed to load PathPlanner robot config", true);
-        
       }
     }
   }
