@@ -75,15 +75,11 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
 
-    // Need to continuously call getUnprocessedResults for all cameras
-    List<PhotonPipelineResult> frontLeftCamUnprocessedResults =
-        frontLeftCamera.getAllUnreadResults();
-    List<PhotonPipelineResult> frontRightCamUnprocessedResults =
-        frontRightCamera.getAllUnreadResults();
-
-    // Values of camera being used
+    // Only call one camera result at a time in order to reduce garbage
     List<PhotonPipelineResult> unprocessedResults =
-        useFrontLeftCam ? frontLeftCamUnprocessedResults : frontRightCamUnprocessedResults;
+        useFrontLeftCam
+            ? frontLeftCamera.getAllUnreadResults()
+            : frontRightCamera.getAllUnreadResults();
     Pose3d robotToCameraPose =
         useFrontLeftCam
             ? Constants.Vision.frontLeftCamera3dPos
@@ -92,16 +88,15 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     Logger.recordOutput("Vision/Frame Count", unprocessedResults.size());
 
     // skip loop if camera hasn't processed a new frame since last check
-    if (unprocessedResults.isEmpty()) {
+    // Assume max frames(20) in FIFO queue to be switching camera so discard initial results
+    if (unprocessedResults.isEmpty() || unprocessedResults.size() == 20) {
       return;
     }
-
-    // Cache latest result for use in helper methods
 
     // Filter through each unread pipeline result and add to pose estimator with corresponding
     // timestamp
     for (PhotonPipelineResult unprocessedResult : unprocessedResults) {
-      // Make sure to get latest frame
+      // // Cache latest result for use in helper methods. Make sure to get latest frame
       if (unprocessedResult.getTimestampSeconds() > latestResult.getTimestampSeconds()) {
         latestResult = unprocessedResult;
       }
