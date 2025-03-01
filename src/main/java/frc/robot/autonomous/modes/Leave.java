@@ -16,7 +16,7 @@ public class Leave extends SequentialCommandGroup {
     addCommands(
         new InstantCommand(
             () -> {
-              PathPlannerPath path = Robot.ThreeCoralStartToEcho;
+              PathPlannerPath path = Robot.Leave;
               Rotation2d rotation = swerve.getPose().getRotation();
               if (AutoBuilder.shouldFlip()) {
                 path = path.flipPath();
