@@ -175,7 +175,7 @@ public class Constants {
     public static double ffMinRadius = 0.1;
     public static double ffMaxRadius = 0.8;
     public static double elevatorRaiseThreshold = 1.5;
-    public static double flipOverrideThreshold = 1.5;
+    public static double flipOverrideThreshold = 1.0;
   }
 
   public static class Vision {
