@@ -12,7 +12,8 @@ public class EndEffector extends SubsystemBase {
   private boolean requestIdle;
   private boolean requestFeed;
   private boolean requestSpit;
-  private boolean requestShoot;
+  private boolean requestL1Shoot;
+  private boolean requestL23Shoot;
 
   private boolean coralSecured;
   private EndEffectorStates state = EndEffectorStates.IDLE;
@@ -54,7 +55,7 @@ public class EndEffector extends SubsystemBase {
           state = EndEffectorStates.SPIT;
         } else if (requestFeed && !coralSecured()) {
           state = EndEffectorStates.FEED;
-        } else if (requestShoot && coralSecured) {
+        } else if ((requestL1Shoot || requestL23Shoot) && coralSecured) {
           state = EndEffectorStates.SHOOT;
         }
         break;
@@ -96,7 +97,11 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case SHOOT:
-        io.setVoltage(Constants.EndEffector.shootVoltage);
+        if (requestL1Shoot) {
+          io.setVoltage(Constants.EndEffector.shootL1Voltage);
+        } else {
+          io.setVoltage(Constants.EndEffector.shootL23Voltage);
+        }
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
@@ -145,9 +150,14 @@ public class EndEffector extends SubsystemBase {
     requestFeed = true;
   }
 
-  public void requestShoot() {
+  public void requestL1Shoot() {
     unsetAllRequests();
-    requestShoot = true;
+    requestL1Shoot = true;
+  }
+
+  public void requestL23Shoot() {
+    unsetAllRequests();
+    requestL23Shoot = true;
   }
 
   public void requestSpit() {
@@ -158,7 +168,8 @@ public class EndEffector extends SubsystemBase {
   private void unsetAllRequests() {
     requestFeed = false;
     requestIdle = false;
-    requestShoot = false;
+    requestL1Shoot = false;
+    requestL23Shoot = false;
     requestSpit = false;
   }
 

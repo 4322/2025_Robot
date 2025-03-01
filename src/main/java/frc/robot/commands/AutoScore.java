@@ -5,7 +5,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -152,7 +151,8 @@ public class AutoScore extends Command {
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
       desiredOffsetPose =
           desiredTagPose
-              .transformBy(new Transform2d(new Translation2d(Units.inchesToMeters(8), 0), desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_90deg)));
+              .rotateBy(Rotation2d.kCW_Pi_2)
+              .transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(8), 0));
     }
 
     double thetaVelocity =
