@@ -136,8 +136,7 @@ public class Constants {
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
       public static final double stowedSetpointMechanismRotations = 0;
-      public static final double deployedSetpointMechanismRotations =
-          0.3372 + 0.014;
+      public static final double deployedSetpointMechanismRotations = 0.3372 + 0.014;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
