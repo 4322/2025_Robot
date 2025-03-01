@@ -17,8 +17,7 @@ public class Flipper extends SubsystemBase {
   public enum FlipperStates {
     SEED_POSITION,
     IDLE,
-    FLIP,
-    SPIN
+    FLIP
   }
 
   public Flipper(FlipperIO io) {
@@ -46,14 +45,6 @@ public class Flipper extends SubsystemBase {
         break;
       case FLIP:
         io.setPivotPosition(Constants.Flipper.Pivot.deployedSetpointMechanismRotations);
-        if (requestIdle) {
-          state = FlipperStates.IDLE;
-        }
-        if (atDeploySetpoint()) {
-          state = FlipperStates.SPIN;
-        }
-        break;
-      case SPIN:
         io.setRollerVoltage(Constants.Flipper.Roller.descoreVoltage);
         if (requestIdle) {
           state = FlipperStates.IDLE;

@@ -137,7 +137,7 @@ public class Constants {
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
       public static final double stowedSetpointMechanismRotations = 0;
       public static final double deployedSetpointMechanismRotations =
-          0.3372 + 0.014 + Units.degreesToRadians(3.5);
+          0.3372 + 0.014 + Units.degreesToRotations(8.5);
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
@@ -148,7 +148,7 @@ public class Constants {
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
-      public static final double descoreVoltage = -4;
+      public static final double descoreVoltage = -8;
     }
   }
 
@@ -172,7 +172,7 @@ public class Constants {
     public static double driveToleranceSlow = 0.06;
     public static double ffMinRadius = 0.1;
     public static double ffMaxRadius = 0.8;
-    public static double elevatorRaiseThreshold = 1;
+    public static double elevatorRaiseThreshold = 1.5;
     public static double flipOverrideThreshold = 1.5;
   }
 
