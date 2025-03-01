@@ -81,7 +81,8 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case PULL_BACK:
-        if (inputs.backBeamBreakTriggered || pullBackTimer.hasElapsed(Constants.EndEffector.pullBackOverrideTimerSec)) {
+        if (inputs.backBeamBreakTriggered
+            || pullBackTimer.hasElapsed(Constants.EndEffector.pullBackOverrideTimerSec)) {
           io.stop(); // stop feeder immediately without next loop delay
           pullBackTimer.stop();
           pullBackTimer.reset();
