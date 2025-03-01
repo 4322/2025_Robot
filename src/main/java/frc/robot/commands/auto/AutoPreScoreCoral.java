@@ -17,7 +17,7 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class AutoPreScore extends Command {
+public class AutoPreScoreCoral extends Command {
   private final Swerve swerve;
   private Superstructure superstructure;
 
@@ -73,7 +73,7 @@ public class AutoPreScore extends Command {
   }
 
   /** Drives to the specified pose under full software control. */
-  public AutoPreScore(Swerve swerve, Superstructure superstructure, boolean slowMode) {
+  public AutoPreScoreCoral(Swerve swerve, Superstructure superstructure, boolean slowMode) {
     this.swerve = swerve;
     this.superstructure = superstructure;
     this.slowMode = slowMode;

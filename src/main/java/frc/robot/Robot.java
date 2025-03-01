@@ -1,6 +1,9 @@
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -29,6 +32,9 @@ public class Robot extends LoggedRobot {
   private long currentRobotPeriodicUsec;
   public static Alliance alliance = DriverStation.Alliance.Blue;
   // private CANdle leds = new CANdle(31, "Clockwork");
+  // DIO Buttons on RIO
+  DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
+  DigitalInput zeroButton = new DigitalInput(Constants.dioZeroButton);
 
   public static PathPlannerPath ThreeCoralStartToEcho;
   public static PathPlannerPath ThreeCoralEchoToFeed;
@@ -137,6 +143,7 @@ public class Robot extends LoggedRobot {
     }
 
     m_robotContainer.configureAutonomousSelector();
+    FollowPathCommand.warmupCommand();
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 
@@ -188,6 +195,15 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledPeriodic() {
     RobotContainer.swerve.clearPseudoAutoRotateHeadingLock(); // don't rotate when re-enabling
+
+    if (!zeroButton.get()) {
+      RobotContainer.swerve.resetPose(new Pose2d());
+    }
+    if (!coastButton.get()) {
+      RobotContainer.elevator.enableBrakeMode(false);
+      RobotContainer.endEffector.enableBrakeMode(false);
+      RobotContainer.flipper.enableBrakeMode(false);
+    }
   }
 
   @Override
