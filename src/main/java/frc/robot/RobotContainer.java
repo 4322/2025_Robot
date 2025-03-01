@@ -165,6 +165,24 @@ public class RobotContainer {
                 () -> {
                   superstructure.requestIdle();
                 }));
+                new JoystickButton(operatorBoard.getLeftController(), 12)
+                .onTrue(
+                    new InstantCommand(
+                            () -> {
+                              flipper.enableBrakeMode(false);
+                              elevator.enableBrakeMode(false);
+                              endEffector.enableBrakeMode(false);
+                            })
+                        .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 12)
+        .onFalse(
+            new InstantCommand(
+                    () -> {
+                      flipper.enableBrakeMode(true);
+                      elevator.enableBrakeMode(true);
+                      endEffector.enableBrakeMode(true);
+                    })
+                .ignoringDisable(true));
 
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(

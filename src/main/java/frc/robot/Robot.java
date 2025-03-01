@@ -204,6 +204,8 @@ public class Robot extends LoggedRobot {
       RobotContainer.endEffector.enableBrakeMode(false);
       RobotContainer.flipper.enableBrakeMode(false);
     }
+    Logger.recordOutput("RobotButton/CoastButton", !coastButton.get());
+    Logger.recordOutput("RobotButton/ZeroButton", !zeroButton.get());
   }
 
   @Override
