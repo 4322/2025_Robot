@@ -221,6 +221,20 @@ public class RobotContainer {
                       }
                     })
                 .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 8)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      operatorBoard.setFlipRequest(true);
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 8)
+        .onFalse(
+            new InstantCommand(
+                    () -> {
+                      operatorBoard.setFlipRequest(false);
+                    })
+                .ignoringDisable(true));
   }
 
   private void configureAprilTagVision() {
