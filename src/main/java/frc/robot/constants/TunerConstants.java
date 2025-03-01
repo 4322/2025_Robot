@@ -19,7 +19,7 @@ public class TunerConstants {
 
   static {
     driveInitialConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
-    driveInitialConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
+    driveInitialConfigs.CurrentLimits.SupplyCurrentLimit = 60.0;
     driveInitialConfigs.CurrentLimits.SupplyCurrentLowerTime =
         0; // Ignore supply current lower limit
     driveInitialConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
@@ -35,7 +35,7 @@ public class TunerConstants {
     steerInitialConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
   }
   // AKA stator current limit
-  private static final double kSlipCurrentA = 100.0;
+  private static final double kSlipCurrentA = 107.0;
 
   private static final Slot0Configs steerGains =
       new Slot0Configs().withKP(65).withKI(0).withKD(0.2).withKS(0).withKV(0).withKA(0);
