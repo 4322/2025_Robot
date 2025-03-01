@@ -18,14 +18,15 @@ public class TunerConstants {
   private static TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration();
 
   static {
-    // TODO: Potentially add SupplyLowerCurrentLimit thresholds and ramp rate configs
     driveInitialConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     driveInitialConfigs.CurrentLimits.SupplyCurrentLimit = 40.0;
+    driveInitialConfigs.CurrentLimits.SupplyCurrentLowerTime = 0; // Ignore supply current lower limit
     driveInitialConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     driveInitialConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     steerInitialConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     steerInitialConfigs.CurrentLimits.SupplyCurrentLimit = 20.0;
+    steerInitialConfigs.CurrentLimits.SupplyCurrentLowerTime = 0; // Ignore supply current lower limit
     steerInitialConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     steerInitialConfigs.CurrentLimits.StatorCurrentLimit = 60.0;
     steerInitialConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
