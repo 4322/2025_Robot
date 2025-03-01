@@ -60,7 +60,7 @@ public class Superstructure extends SubsystemBase {
 
         if (requestEject) {
           state = Superstates.EJECT;
-        } else if (requestFeed && !endEffector.hasCoral() && elevator.atSetpoint()) {
+        } else if (requestFeed && !endEffector.coralSecured() && elevator.atSetpoint()) {
           state = Superstates.FEEDING;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
