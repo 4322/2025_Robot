@@ -153,6 +153,7 @@ public class Constants {
   }
 
   public static class Scoring {
+    public static final double L1ScoringHeight = 0.1;
     public static final double L2ScoringHeight = 0.300 + Units.inchesToMeters(0.125);
     public static final double L3ScoringHeight = 0.685;
 
@@ -168,7 +169,7 @@ public class Constants {
     public static double driveMaxVelocity = Units.inchesToMeters(150.0);
     public static double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
     public static double driveMaxAcceleration = 4.0;
-    public static double driveTolerance = 0.08;
+    public static double driveTolerance = 0.06;
     public static double driveToleranceSlow = 0.06;
     public static double ffMinRadius = 0.1;
     public static double ffMaxRadius = 0.8;
