@@ -112,7 +112,8 @@ public class ElevatorIOTalonFX implements ElevatorIO {
 
   @Override
   public void setHeight(double heightMeters) {
-    if (heightMeters == Constants.Scoring.L2ScoringHeight) {
+    if (heightMeters == Constants.Scoring.L1ScoringHeight
+        || heightMeters == Constants.Scoring.L2ScoringHeight) {
       leader.setControl(
           new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(1).withEnableFOC(true));
     } else if (heightMeters == Constants.Scoring.L3ScoringHeight) {

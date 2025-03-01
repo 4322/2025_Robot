@@ -95,7 +95,7 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE:
         if (level == Level.L1) {
-          elevator.requestSetpoint(0);
+          elevator.requestSetpoint(Constants.Scoring.L1ScoringHeight);
         } else if (level == Level.L2) {
           elevator.requestSetpoint(Constants.Scoring.L2ScoringHeight);
         } else if (level == Level.L3) {
@@ -113,7 +113,7 @@ public class Superstructure extends SubsystemBase {
         break;
       case SAFE_FLIP:
         if (level == Level.L1) {
-          elevator.requestSetpoint(0);
+          elevator.requestSetpoint(Constants.Scoring.L1ScoringHeight);
           prevLevel = level;
         } else if (level == Level.L2) {
           elevator.requestSetpoint(Constants.Scoring.L2SafeFlipHeight);
@@ -142,7 +142,7 @@ public class Superstructure extends SubsystemBase {
           break;
         }
         if (level == Level.L1) {
-          elevator.requestSetpoint(0);
+          elevator.requestSetpoint(Constants.Scoring.L1ScoringHeight);
           prevLevel = level;
         } else if (level == Level.L2) {
           elevator.requestSetpoint(Constants.Scoring.L2ScoringHeight);
@@ -162,7 +162,7 @@ public class Superstructure extends SubsystemBase {
         break;
       case TRANSITION_FLIP:
         if (prevLevel == Level.L1) {
-          elevator.requestSetpoint(0);
+          elevator.requestSetpoint(Constants.Scoring.L1ScoringHeight);
         } else if (prevLevel == Level.L2) {
           elevator.requestSetpoint(Constants.Scoring.L2SafeFlipHeight);
         } else if (level == Level.L3) {
@@ -179,7 +179,7 @@ public class Superstructure extends SubsystemBase {
         break;
       case SAFE_RETRACT:
         if (level == Level.L1) {
-          elevator.requestSetpoint(0);
+          elevator.requestSetpoint(Constants.Scoring.L1ScoringHeight);
         } else if (level == Level.L2) {
           elevator.requestSetpoint(Constants.Scoring.L2SafeFlipHeight);
         } else if (level == Level.L3) {
