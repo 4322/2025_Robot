@@ -15,6 +15,29 @@ public class ScoringManager {
     leftController = new GenericHID(leftPort);
   }
 
+  public enum ScoringLocation {
+    A(0, false),
+    B(0, true),
+    C(1, false),
+    D(1, true),
+    E(2, false),
+    F(2, true),
+    G(3, false),
+    H(3, true),
+    I(4, false),
+    J(4, true),
+    K(5, false),
+    L(5, true);
+
+    public int reefFace;
+    public boolean useLeftCam;
+
+    ScoringLocation(int reefFace, boolean useLeftCam) {
+      this.reefFace = reefFace;
+      this.useLeftCam = useLeftCam;
+    }
+  }
+
   private double[] autoRotateBlue = {
     0, Math.PI / 3, 2 * Math.PI / 3, Math.PI, -2 * Math.PI / 3, -Math.PI / 3,
   };
@@ -34,21 +57,21 @@ public class ScoringManager {
   private boolean useLeftCamera = false;
   private double autoRotatePosition = 0;
   private int aprilTag = 1;
-
   private boolean flipRequested = false;
+  private ScoringLocation scoringLocation = ScoringLocation.A;
 
   // scoring face enumerated from 0 - 5 counterclockwise starting at reef face
   // closest to middle driver station for blue and red
-  public void setScoringPosition(int scoringFace, boolean useLeftCamera) {
+  public void setScoringLocation(ScoringLocation scoringLocation) {
+    this.scoringLocation = scoringLocation;
+    this.useLeftCamera = scoringLocation.useLeftCam;
     if (Robot.alliance == DriverStation.Alliance.Blue) {
-      this.autoRotatePosition = autoRotateBlue[scoringFace];
-      this.aprilTag = aprilTagBlue[scoringFace];
+      this.autoRotatePosition = autoRotateBlue[scoringLocation.reefFace];
+      this.aprilTag = aprilTagBlue[scoringLocation.reefFace];
     } else {
-      this.autoRotatePosition = autoRotateRed[scoringFace];
-      this.aprilTag = aprilTagRed[scoringFace];
+      this.autoRotatePosition = autoRotateRed[scoringLocation.reefFace];
+      this.aprilTag = aprilTagRed[scoringLocation.reefFace];
     }
-
-    this.useLeftCamera = useLeftCamera;
   }
 
   public void setFlipRequest(boolean requestFlip) {
@@ -79,12 +102,16 @@ public class ScoringManager {
     return flipRequested;
   }
 
+  public ScoringLocation getScoringLocation() {
+    return scoringLocation;
+  }
+
   public void configScoringPosButtons() {
     new JoystickButton(rightController, 5)
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(0, false);
+                      setScoringLocation(ScoringLocation.A);
                       if (RobotContainer.superstructure.getLevel() == Level.L3) {
                         flipRequested = true;
                       } else {
@@ -96,7 +123,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(0, true);
+                      setScoringLocation(ScoringLocation.B);
                       flipRequested = false;
                     })
                 .ignoringDisable(true));
@@ -105,7 +132,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(1, false);
+                      setScoringLocation(ScoringLocation.C);
                       if (RobotContainer.superstructure.getLevel() == Level.L2) {
                         flipRequested = true;
                       } else {
@@ -117,7 +144,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(1, true);
+                      setScoringLocation(ScoringLocation.D);
                       flipRequested = false;
                     })
                 .ignoringDisable(true));
@@ -126,7 +153,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(2, false);
+                      setScoringLocation(ScoringLocation.E);
                       if (RobotContainer.superstructure.getLevel() == Level.L3) {
                         flipRequested = true;
                       } else {
@@ -138,7 +165,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(2, true);
+                      setScoringLocation(ScoringLocation.F);
                       flipRequested = false;
                     })
                 .ignoringDisable(true));
@@ -147,7 +174,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(3, false);
+                      setScoringLocation(ScoringLocation.G);
                       if (RobotContainer.superstructure.getLevel() == Level.L2) {
                         flipRequested = true;
                       } else {
@@ -159,7 +186,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(3, true);
+                      setScoringLocation(ScoringLocation.H);
                       flipRequested = false;
                     })
                 .ignoringDisable(true));
@@ -168,7 +195,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(4, false);
+                      setScoringLocation(ScoringLocation.I);
                       if (RobotContainer.superstructure.getLevel() == Level.L3) {
                         flipRequested = true;
                       } else {
@@ -180,7 +207,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(4, true);
+                      setScoringLocation(ScoringLocation.J);
                       flipRequested = false;
                     })
                 .ignoringDisable(true));
@@ -189,7 +216,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(5, false);
+                      setScoringLocation(ScoringLocation.K);
                       if (RobotContainer.superstructure.getLevel() == Level.L2) {
                         flipRequested = true;
                       } else {
@@ -201,7 +228,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      setScoringPosition(5, true);
+                      setScoringLocation(ScoringLocation.L);
                       flipRequested = false;
                     })
                 .ignoringDisable(true));

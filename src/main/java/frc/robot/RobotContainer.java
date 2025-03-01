@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.ScoringManager.ScoringLocation;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoScore;
 import frc.robot.commands.LeftFeed;
@@ -189,6 +190,7 @@ public class RobotContainer {
             new InstantCommand(
                     () -> {
                       superstructure.requestLevel(Level.L1);
+                      operatorBoard.setFlipRequest(false);
                     })
                 .ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 2)
@@ -196,6 +198,13 @@ public class RobotContainer {
             new InstantCommand(
                     () -> {
                       superstructure.requestLevel(Level.L2);
+                      if (operatorBoard.getScoringLocation() == ScoringLocation.C
+                          || operatorBoard.getScoringLocation() == ScoringLocation.G
+                          || operatorBoard.getScoringLocation() == ScoringLocation.K) {
+                        operatorBoard.setFlipRequest(true);
+                      } else {
+                        operatorBoard.setFlipRequest(false);
+                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(operatorBoard.getRightController(), 3)
@@ -203,6 +212,13 @@ public class RobotContainer {
             new InstantCommand(
                     () -> {
                       superstructure.requestLevel(Level.L3);
+                      if (operatorBoard.getScoringLocation() == ScoringLocation.A
+                          || operatorBoard.getScoringLocation() == ScoringLocation.E
+                          || operatorBoard.getScoringLocation() == ScoringLocation.I) {
+                        operatorBoard.setFlipRequest(true);
+                      } else {
+                        operatorBoard.setFlipRequest(false);
+                      }
                     })
                 .ignoringDisable(true));
   }
