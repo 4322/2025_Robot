@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -190,7 +191,12 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    RobotContainer.swerve.requestPercent(new ChassisSpeeds(), true);
+    RobotContainer.endEffector.requestIdle();
+    RobotContainer.elevator.requestSetpoint(0);
+    RobotContainer.flipper.requestIdle();
+  }
 
   @Override
   public void disabledPeriodic() {
