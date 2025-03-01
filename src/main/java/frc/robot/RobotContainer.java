@@ -202,18 +202,19 @@ public class RobotContainer {
                       }
                     })
                 .ignoringDisable(true));
+    // Override toggle for flip
     new JoystickButton(operatorBoard.getLeftController(), 8)
         .onTrue(
             new InstantCommand(
                     () -> {
-                      operatorBoard.setFlipRequest(true);
+                      operatorBoard.setOverrideFlipRequest(true);
                     })
                 .ignoringDisable(true));
     new JoystickButton(operatorBoard.getLeftController(), 8)
         .onFalse(
             new InstantCommand(
                     () -> {
-                      operatorBoard.setFlipRequest(false);
+                      operatorBoard.setOverrideFlipRequest(false);
                     })
                 .ignoringDisable(true));
   }
