@@ -61,27 +61,27 @@ public class EndEffector extends SubsystemBase {
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
         } else if (inputs.frontBeamBreakTriggered) {
+          // Begin automated sequence without next loop delay
+          io.setFeederVoltage(Constants.EndEffector.secondFeedVoltage);
+          io.setKickerVoltage(Constants.EndEffector.secondFeedVoltage);
           state = EndEffectorStates.SECURING_CORAL;
         } else if (requestIdle) {
           state = EndEffectorStates.IDLE;
         }
         break;
       case SECURING_CORAL:
-        io.setFeederVoltage(Constants.EndEffector.secondFeedVoltage);
-        io.setKickerVoltage(Constants.EndEffector.secondFeedVoltage);
-
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
         } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
+          io.setFeederVoltage(Constants.EndEffector.thirdFeedVoltage);
+          io.stopKicker();
+          pullBackTimer.start();
           state = EndEffectorStates.PULL_BACK;
         }
         break;
       case PULL_BACK:
-        io.setFeederVoltage(Constants.EndEffector.thirdFeedVoltage);
-        io.stopKicker();
-        pullBackTimer.start();
-
-        if (pullBackTimer.hasElapsed(Constants.EndEffector.pullBackOverrideTimerSec)) {
+        if (inputs.backBeamBreakTriggered || pullBackTimer.hasElapsed(Constants.EndEffector.pullBackOverrideTimerSec)) {
+          io.stopFeeder(); // stop feeder immediately without next loop delay
           pullBackTimer.stop();
           pullBackTimer.reset();
           state = EndEffectorStates.IDLE;
@@ -91,12 +91,6 @@ public class EndEffector extends SubsystemBase {
           pullBackTimer.stop();
           pullBackTimer.reset();
           state = EndEffectorStates.SPIT;
-        } else if (inputs.backBeamBreakTriggered) {
-          pullBackTimer.stop();
-          pullBackTimer.reset();
-          state = EndEffectorStates.IDLE;
-          coralSecured = true;
-          unsetAllRequests(); // account for automation from sensor triggers
         }
         break;
       case SHOOT:
