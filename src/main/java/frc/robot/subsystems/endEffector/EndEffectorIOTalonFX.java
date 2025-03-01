@@ -9,17 +9,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 
 public class EndEffectorIOTalonFX implements EndEffectorIO {
-  private TalonFX feederMotor;
-  private TalonFX kickerMotor;
+  private TalonFX motor;
   private Canandcolor frontBeamBreak;
   private Canandcolor backBeamBreak;
-  private Canandcolor kickerBeamBreak;
 
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
   public EndEffectorIOTalonFX() {
-    feederMotor = new TalonFX(Constants.EndEffector.feederMotorID);
-    kickerMotor = new TalonFX(Constants.EndEffector.kickerMotorID);
+    motor = new TalonFX(Constants.EndEffector.motorID);
 
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.EndEffector.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.EndEffector.supplyCurrentLimit;
@@ -30,77 +27,48 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
-    StatusCode feederConfigStatus = feederMotor.getConfigurator().apply(motorConfigs);
-    StatusCode kickerConfigStatus = kickerMotor.getConfigurator().apply(motorConfigs);
+    StatusCode configStatus = motor.getConfigurator().apply(motorConfigs);
 
-    if (feederConfigStatus != StatusCode.OK) {
+    if (configStatus != StatusCode.OK) {
       DriverStation.reportError(
           "Talon "
-              + feederMotor.getDeviceID()
+              + motor.getDeviceID()
               + " error (End Effector): "
-              + feederConfigStatus.getDescription(),
-          false);
-    }
-
-    if (kickerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + kickerMotor.getDeviceID()
-              + " error (End Effector): "
-              + kickerConfigStatus.getDescription(),
+              + configStatus.getDescription(),
           false);
     }
 
     frontBeamBreak = new Canandcolor(Constants.EndEffector.frontBeamBreakID);
     backBeamBreak = new Canandcolor(Constants.EndEffector.backBeamBreakID);
-    kickerBeamBreak = new Canandcolor(Constants.EndEffector.kickerBeamBreakID);
+
+    // TODO: Set up config to use near-zero latency described in Redux docs
   }
 
   @Override
   public void updateInputs(EndEffectorIOInputs inputs) {
-    inputs.feederAppliedVoltage = feederMotor.getMotorVoltage().getValueAsDouble();
-    inputs.feederSpeedRotationsPerSec = feederMotor.getVelocity().getValueAsDouble();
-    inputs.feederStatorCurrentAmps = feederMotor.getStatorCurrent().getValueAsDouble();
-    inputs.feederSupplyCurrentAmps = feederMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.feederTempCelcius = feederMotor.getDeviceTemp().getValueAsDouble();
-
-    inputs.kickerAppliedVoltage = kickerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.kickerSpeedRotationsPerSec = kickerMotor.getVelocity().getValueAsDouble();
-    inputs.kickerStatorCurrentAmps = kickerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.kickerSupplyCurrentAmps = kickerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.kickerTempCelcius = kickerMotor.getDeviceTemp().getValueAsDouble();
-
+    inputs.appliedVoltage = motor.getMotorVoltage().getValueAsDouble();
+    inputs.speedRotationsPerSec = motor.getVelocity().getValueAsDouble();
+    inputs.statorCurrentAmps = motor.getStatorCurrent().getValueAsDouble();
+    inputs.supplyCurrentAmps = motor.getSupplyCurrent().getValueAsDouble();
+    inputs.tempCelcius = motor.getDeviceTemp().getValueAsDouble();
     inputs.frontBeamBreakTriggered =
         frontBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
     inputs.backBeamBreakTriggered =
         backBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
-    inputs.kickerBeamBreakTriggered =
-        kickerBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
   }
 
   @Override
-  public void setFeederVoltage(double voltage) {
-    feederMotor.setVoltage(voltage);
+  public void setVoltage(double voltage) {
+    motor.setVoltage(voltage);
   }
 
   @Override
-  public void setKickerVoltage(double voltage) {
-    kickerMotor.setVoltage(voltage);
-  }
-
-  @Override
-  public void stopFeeder() {
-    feederMotor.stopMotor();
-  }
-
-  @Override
-  public void stopKicker() {
-    kickerMotor.stopMotor();
+  public void stop() {
+    motor.stopMotor();
   }
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    feederMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-    kickerMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }
