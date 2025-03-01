@@ -153,6 +153,7 @@ public class Constants {
   }
 
   public static class Scoring {
+    public static final double L1ScoringHeight = 0.1;
     public static final double L2ScoringHeight = 0.300 + Units.inchesToMeters(0.125);
     public static final double L3ScoringHeight = 0.685;
 
