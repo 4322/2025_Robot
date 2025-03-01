@@ -39,6 +39,7 @@ public class AutoScore extends Command {
   private double currentDistance;
   private double ffScaler;
   private Pose2d desiredTagPose;
+  private Pose2d desiredOffsetPose;
 
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private Translation2d lastSetpointTranslation = new Translation2d();
@@ -84,7 +85,9 @@ public class AutoScore extends Command {
   public enum AutoScoreStates {
     TARGET_TAG_NOT_VISIBLE,
     TARGET_TAG_VISIBLE,
+    DRIVE_TO_TAG_OFFSET,
     DRIVE_TO_TAG
+
   }
 
   /** Drives to the specified pose under full software control. */
@@ -103,6 +106,7 @@ public class AutoScore extends Command {
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+    desiredOffsetPose = desiredTagPose.rotateBy(Rotation2d.kCW_Pi_2).transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(8),0));
     state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
   }
 
@@ -141,6 +145,7 @@ public class AutoScore extends Command {
                       new Translation2d(Units.inchesToMeters(14.125), 0)));
     } else {
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+      desiredOffsetPose = desiredTagPose.rotateBy(Rotation2d.kCW_Pi_2).transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(8),0));
     }
 
     double thetaVelocity =
@@ -218,9 +223,14 @@ public class AutoScore extends Command {
                             .unaryMinus())
                     .getX()));
         lastSetpointTranslation = currentTranslation;
-        state = AutoScoreStates.DRIVE_TO_TAG;
+        if (RobotContainer.operatorBoard.isAlgaePeg()) {
+          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET;
+        }
+        else {
+          state = AutoScoreStates.DRIVE_TO_TAG;
+        }
         break;
-      case DRIVE_TO_TAG:
+      case DRIVE_TO_TAG_OFFSET:
         currentTranslation =
             swerve
                 .getPose()
@@ -236,7 +246,7 @@ public class AutoScore extends Command {
                         .rotateBy(swerve.getPose().getRotation()));
 
         // Calculate drive speed
-        currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
+        currentDistance = currentTranslation.getDistance(desiredOffsetPose.getTranslation());
         ffScaler =
             MathUtil.clamp(
                 (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
@@ -268,12 +278,9 @@ public class AutoScore extends Command {
           }
         }
 
-        // check if at scoring position
-        if (currentDistance < driveController.getPositionTolerance()) {
-          if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
-            superstructure.requestScore();
-          }
+        if (currentDistance < 0.1) {
           driveVelocityScalar = 0;
+          state = AutoScoreStates.DRIVE_TO_TAG;
         }
 
         // Command speeds
@@ -287,6 +294,73 @@ public class AutoScore extends Command {
         swerve.requestVelocity(
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
+      case DRIVE_TO_TAG:
+        currentTranslation =
+        swerve
+            .getPose()
+            .getTranslation()
+            .plus(
+                new Translation2d(
+                        (Constants.robotFrameLength / 2)
+                            + Constants.bumperEdgeWidth
+                            + Units.inchesToMeters(0.25),
+                        useLeftCam
+                            ? Constants.Vision.frontLeftCamera3dPos.getY()
+                            : Constants.Vision.frontRightCamera3dPos.getY())
+                    .rotateBy(swerve.getPose().getRotation()));
+
+      // Calculate drive speed
+      currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
+      ffScaler =
+          MathUtil.clamp(
+              (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
+              0.0,
+              1.0);
+      driveErrorAbs = currentDistance;
+      driveController.reset(
+          lastSetpointTranslation.getDistance(desiredTagPose.getTranslation()),
+          driveController.getSetpoint().velocity);
+      driveVelocityScalar =
+          driveController.getSetpoint().velocity * ffScaler
+              + driveController.calculate(driveErrorAbs, 0.0);
+
+      // cache setpoint value for logging and use during next iteration
+      lastSetpointTranslation =
+          new Pose2d(
+                  desiredTagPose.getTranslation(),
+                  currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
+              .transformBy(
+                  GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
+              .getTranslation();
+
+      if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
+        if (RobotContainer.operatorBoard.getFlipRequested()) {
+          superstructure.requestPreScoreFlip(
+              currentDistance > Constants.AutoScoring.flipOverrideThreshold);
+        } else {
+          superstructure.requestPreScore();
+        }
+      }
+
+      // check if at scoring position
+      if (currentDistance < driveController.getPositionTolerance()) {
+        if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
+          superstructure.requestScore();
+        }
+        driveVelocityScalar = 0;
+      }
+
+      // Command speeds
+      driveVelocity =
+          new Pose2d(
+                  new Translation2d(),
+                  currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
+              .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+              .getTranslation();
+
+      swerve.requestVelocity(
+          new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+      break;
     }
 
     // Log data

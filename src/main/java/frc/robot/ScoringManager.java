@@ -75,6 +75,16 @@ public class ScoringManager {
     }
   }
 
+  public boolean isAlgaePeg() {
+    if (RobotContainer.superstructure.getLevel() == Level.L3) {
+      return scoringLocation == ScoringLocation.A || scoringLocation == ScoringLocation.E || scoringLocation == ScoringLocation.I;
+    }
+    else if (RobotContainer.superstructure.getLevel() == Level.L2) {
+      return scoringLocation == ScoringLocation.C || scoringLocation == ScoringLocation.G || scoringLocation == ScoringLocation.K;
+    }
+    return false;
+  }
+
   public void setFlipRequest(boolean requestFlip) {
     flipRequested = requestFlip;
   }
