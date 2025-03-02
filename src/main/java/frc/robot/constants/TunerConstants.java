@@ -24,6 +24,10 @@ public class TunerConstants {
         0; // Ignore supply current lower limit
     driveInitialConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
     driveInitialConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
+    driveInitialConfigs.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.08;
+    driveInitialConfigs.OpenLoopRamps.TorqueOpenLoopRampPeriod = 0.08;
+    driveInitialConfigs.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.08;
+    driveInitialConfigs.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.08;
 
     steerInitialConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     steerInitialConfigs.CurrentLimits.SupplyCurrentLimit = 20.0;
