@@ -4,10 +4,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.commons.GeomUtil;
@@ -16,6 +18,7 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
+import org.littletonrobotics.junction.Logger;
 
 public class AutoPreScoreCoral extends Command {
   private final Swerve swerve;
@@ -32,6 +35,8 @@ public class AutoPreScoreCoral extends Command {
   private double currentDistance;
   private double ffScaler;
   private Pose2d desiredTagPose;
+  private Pose2d desiredOffsetPose;
+  private Pose2d desiredPose;
 
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private Translation2d lastSetpointTranslation = new Translation2d();
@@ -42,6 +47,8 @@ public class AutoPreScoreCoral extends Command {
 
   private double driveVelocityScalar;
   private Translation2d driveVelocity = new Translation2d();
+
+  private AutoScoreStates state = AutoScoreStates.TARGET_TAG_VISIBLE;
 
   private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("AutoScore/DriveKp");
   private static final LoggedTunableNumber driveKd = new LoggedTunableNumber("AutoScore/DriveKd");
@@ -58,7 +65,7 @@ public class AutoPreScoreCoral extends Command {
   private static final LoggedTunableNumber ffMinRadius =
       new LoggedTunableNumber("AutoScore/FFMinRadius");
   private static final LoggedTunableNumber ffMaxRadius =
-      new LoggedTunableNumber("AutoScore/FFMinRadius");
+      new LoggedTunableNumber("AutoScore/FFMaxRadius");
 
   static {
     driveKp.initDefault(Constants.AutoScoring.drivekP);
@@ -70,6 +77,13 @@ public class AutoPreScoreCoral extends Command {
     driveToleranceSlow.initDefault(Constants.AutoScoring.driveToleranceSlow);
     ffMinRadius.initDefault(Constants.AutoScoring.ffMinRadius);
     ffMaxRadius.initDefault(Constants.AutoScoring.ffMaxRadius);
+  }
+
+  public enum AutoScoreStates {
+    TARGET_TAG_VISIBLE,
+    DRIVE_TO_TAG_OFFSET,
+    DRIVE_TO_TAG_OFFSET2,
+    DRIVE_TO_TAG
   }
 
   /** Drives to the specified pose under full software control. */
@@ -88,44 +102,21 @@ public class AutoPreScoreCoral extends Command {
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-
-    currentTranslation =
-        swerve
-            .getPose()
-            .getTranslation()
-            .plus(
-                new Translation2d(
-                        (Constants.robotFrameLength / 2)
-                            + Constants.bumperEdgeWidth
-                            + Units.inchesToMeters(0.25),
-                        useLeftCam
-                            ? Constants.Vision.frontLeftCamera3dPos.getY()
-                            : Constants.Vision.frontRightCamera3dPos.getY())
-                    .rotateBy(swerve.getPose().getRotation()));
-
-    // reset controller after determining initial desired pose to account for initial robot
-    // velocity from regular driving.
-    // Resets velocity to magnitude of current robot velocity in direction of goal pose.
-    // Negative sign used because negative error(goal > current) requires negative velocity
-    // input.
-    driveController.reset(
-        currentTranslation.getDistance(desiredTagPose.getTranslation()),
-        Math.min(
-            0.0,
-            -new Translation2d(
-                    swerve.getFieldRelativeSpeeds().getX(), swerve.getFieldRelativeSpeeds().getY())
-                .rotateBy(
-                    desiredTagPose
-                        .getTranslation()
-                        .minus(swerve.getPose().getTranslation())
-                        .getAngle()
-                        .unaryMinus())
-                .getX()));
-    lastSetpointTranslation = currentTranslation;
+    desiredOffsetPose =
+        new Pose2d(
+                desiredTagPose.getTranslation(),
+                desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
+            .transformBy(
+                GeomUtil.translationToTransform(
+                    new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(2))));
+    desiredPose = RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetPose : desiredTagPose;
+    state = AutoScoreStates.TARGET_TAG_VISIBLE;
   }
 
   @Override
   public void execute() {
+    long startLoopMs = RobotController.getFPGATime();
+
     // Update from tunable numbers
     if (driveMaxVelocity.hasChanged(hashCode())
         || driveMaxVelocitySlow.hasChanged(hashCode())
@@ -146,82 +137,282 @@ public class AutoPreScoreCoral extends Command {
     // update operator board values
     autoRotateSetpoint = RobotContainer.operatorBoard.getAutoRotatePosition();
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
-    desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+    if (Constants.tuningMode) {
+      desiredTagPose =
+          FieldConstants.aprilTagFieldLayout
+              .getTagPose(desiredTag)
+              .get()
+              .toPose2d()
+              .transformBy(
+                  GeomUtil.translationToTransform(
+                      new Translation2d(Units.inchesToMeters(14.125), 0)));
+    } else {
+      desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+      desiredOffsetPose =
+          new Pose2d(
+                  desiredTagPose.getTranslation(),
+                  desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
+              .transformBy(
+                  GeomUtil.translationToTransform(
+                      new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(2))));
+    }
 
     double thetaVelocity =
         thetaController.calculate(swerve.getPose().getRotation().getRadians(), autoRotateSetpoint);
 
-    currentTranslation =
-        swerve
-            .getPose()
-            .getTranslation()
-            .plus(
-                new Translation2d(
-                        (Constants.robotFrameLength / 2)
-                            + Constants.bumperEdgeWidth
-                            + Units.inchesToMeters(0.25),
-                        useLeftCam
-                            ? Constants.Vision.frontLeftCamera3dPos.getY()
-                            : Constants.Vision.frontRightCamera3dPos.getY())
-                    .rotateBy(swerve.getPose().getRotation()));
+    switch (state) {
+      case TARGET_TAG_VISIBLE:
+        currentTranslation =
+            swerve
+                .getPose()
+                .getTranslation()
+                .plus(
+                    new Translation2d(
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
+                            useLeftCam
+                                ? Constants.Vision.frontLeftCamera3dPos.getY()
+                                : Constants.Vision.frontRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
 
-    // Calculate drive speed
-    currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
-    ffScaler =
-        MathUtil.clamp(
-            (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
-            0.0,
-            1.0);
-    driveErrorAbs = currentDistance;
-    driveController.reset(
-        lastSetpointTranslation.getDistance(desiredTagPose.getTranslation()),
-        driveController.getSetpoint().velocity);
-    driveVelocityScalar =
-        driveController.getSetpoint().velocity * ffScaler
-            + driveController.calculate(driveErrorAbs, 0.0);
+        // reset controller after determining initial desired pose to account for initial robot
+        // velocity from regular driving.
+        // Resets velocity to magnitude of current robot velocity in direction of goal pose.
+        // Negative sign used because negative error(goal > current) requires negative velocity
+        // input.
+        lastSetpointTranslation = currentTranslation;
+        if (RobotContainer.operatorBoard.isAlgaePeg()) {
+          desiredPose = desiredOffsetPose;
+          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET;
+        } else {
+          desiredPose = desiredTagPose;
+          state = AutoScoreStates.DRIVE_TO_TAG;
+        }
+        driveController.reset(
+            currentTranslation.getDistance(desiredPose.getTranslation()),
+            Math.min(
+                0.0,
+                -new Translation2d(
+                        swerve.getFieldRelativeSpeeds().getX(),
+                        swerve.getFieldRelativeSpeeds().getY())
+                    .rotateBy(
+                        desiredPose
+                            .getTranslation()
+                            .minus(swerve.getPose().getTranslation())
+                            .getAngle()
+                            .unaryMinus())
+                    .getX()));
+        break;
+      case DRIVE_TO_TAG_OFFSET:
+        currentTranslation =
+            swerve
+                .getPose()
+                .getTranslation()
+                .plus(
+                    new Translation2d(
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
+                            useLeftCam
+                                ? Constants.Vision.frontLeftCamera3dPos.getY()
+                                : Constants.Vision.frontRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
 
-    // cache setpoint value for logging and use during next iteration
-    lastSetpointTranslation =
-        new Pose2d(
-                desiredTagPose.getTranslation(),
-                currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
-            .transformBy(
-                GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
-            .getTranslation();
+        // Calculate drive speed
+        currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
+        ffScaler =
+            MathUtil.clamp(
+                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
+                0.0,
+                1.0);
+        driveErrorAbs = currentDistance;
+        driveController.reset(
+            lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
+            driveController.getSetpoint().velocity);
+        driveVelocityScalar =
+            driveController.getSetpoint().velocity * ffScaler
+                + driveController.calculate(driveErrorAbs, 0.0);
 
-    if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
-      if (RobotContainer.operatorBoard.getFlipRequested()) {
-        superstructure.requestPreScoreFlip(
-            currentDistance > Constants.AutoScoring.flipOverrideThreshold);
-      } else {
-        superstructure.requestPreScore();
-      }
+        // cache setpoint value for logging and use during next iteration
+        lastSetpointTranslation =
+            new Pose2d(
+                    desiredPose.getTranslation(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(
+                    GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
+                .getTranslation();
+
+        if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
+          if (RobotContainer.operatorBoard.getFlipRequested()) {
+            superstructure.requestPreScoreFlip(
+                currentDistance > Constants.AutoScoring.flipOverrideThreshold);
+          } else {
+            superstructure.requestPreScore();
+          }
+        }
+
+        if (currentDistance < 0.1) {
+          driveVelocityScalar = 0;
+          desiredPose =
+              desiredTagPose.transformBy(
+                  GeomUtil.translationToTransform(Units.inchesToMeters(2), 0));
+          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET2;
+        }
+
+        // Command speeds
+        driveVelocity =
+            new Pose2d(
+                    new Translation2d(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+                .getTranslation();
+
+        swerve.requestVelocity(
+            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+        break;
+      case DRIVE_TO_TAG_OFFSET2:
+        currentTranslation =
+            swerve
+                .getPose()
+                .getTranslation()
+                .plus(
+                    new Translation2d(
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
+                            useLeftCam
+                                ? Constants.Vision.frontLeftCamera3dPos.getY()
+                                : Constants.Vision.frontRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
+
+        // Calculate drive speed
+        currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
+        ffScaler = MathUtil.clamp((currentDistance - 0.005) / (0.2 - 0.005), 0.0, 1.0);
+        driveErrorAbs = currentDistance;
+        driveController.reset(
+            lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
+            driveController.getSetpoint().velocity);
+        driveVelocityScalar =
+            driveController.getSetpoint().velocity * ffScaler
+                + driveController.calculate(driveErrorAbs, 0.0);
+
+        // cache setpoint value for logging and use during next iteration
+        lastSetpointTranslation =
+            new Pose2d(
+                    desiredPose.getTranslation(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(
+                    GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
+                .getTranslation();
+
+        if (currentDistance < 0.02) {
+          driveVelocityScalar = 0;
+          desiredPose = desiredTagPose;
+          state = AutoScoreStates.DRIVE_TO_TAG;
+        }
+
+        // Command speeds
+        driveVelocity =
+            new Pose2d(
+                    new Translation2d(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+                .getTranslation();
+
+        swerve.requestVelocity(
+            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+        break;
+      case DRIVE_TO_TAG:
+        currentTranslation =
+            swerve
+                .getPose()
+                .getTranslation()
+                .plus(
+                    new Translation2d(
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
+                            useLeftCam
+                                ? Constants.Vision.frontLeftCamera3dPos.getY()
+                                : Constants.Vision.frontRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
+
+        // Calculate drive speed
+        currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
+        ffScaler =
+            MathUtil.clamp(
+                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
+                0.0,
+                1.0);
+        driveErrorAbs = currentDistance;
+        driveController.reset(
+            lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
+            driveController.getSetpoint().velocity);
+        driveVelocityScalar =
+            driveController.getSetpoint().velocity * ffScaler
+                + driveController.calculate(driveErrorAbs, 0.0);
+
+        // cache setpoint value for logging and use during next iteration
+        lastSetpointTranslation =
+            new Pose2d(
+                    desiredPose.getTranslation(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(
+                    GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
+                .getTranslation();
+
+        if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
+          if (RobotContainer.operatorBoard.getFlipRequested()) {
+            superstructure.requestPreScoreFlip(
+                currentDistance > Constants.AutoScoring.flipOverrideThreshold);
+          } else {
+            superstructure.requestPreScore();
+          }
+        }
+
+        // check if at scoring position
+        if (currentDistance < driveController.getPositionTolerance()) {
+          driveVelocityScalar = 0;
+        }
+
+        // Command speeds
+        driveVelocity =
+            new Pose2d(
+                    new Translation2d(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+                .getTranslation();
+
+        swerve.requestVelocity(
+            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+        break;
     }
 
-    // check if at scoring position
-    if (currentDistance < driveController.getPositionTolerance()) {
-      driveVelocityScalar = 0;
-    }
-
-    // Command speeds
-    driveVelocity =
-        new Pose2d(
-                new Translation2d(),
-                currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
-            .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
-            .getTranslation();
-
-    swerve.requestVelocity(
-        new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+    // Log data
+    Logger.recordOutput("AutoScore/DistanceMeasured", currentDistance);
+    Logger.recordOutput("AutoScore/DistanceSetpoint", driveController.getSetpoint().position);
+    Logger.recordOutput(
+        "AutoScore/DriveToPoseSetpoint",
+        new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
+    Logger.recordOutput("AutoScore/DesiredPoseGoal", desiredPose);
+    Logger.recordOutput("AutoScore/State", state.toString());
+    Logger.recordOutput("Loop/AutoScoreMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 
   @Override
   public boolean isFinished() {
-    return currentDistance < driveController.getPositionTolerance();
+    return state == AutoScoreStates.DRIVE_TO_TAG && driveController.atGoal();
   }
 
   @Override
   public void end(boolean interrupted) {
-    swerve.requestVelocity(new ChassisSpeeds(), false);
+    swerve.requestPercent(new ChassisSpeeds(), true);
+    superstructure.requestIdle();
+
+    // Reset logging
+    Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
+    Logger.recordOutput("AutoScore/DriveToPoseSetpoint", new Pose2d());
+    Logger.recordOutput("Loop/AutoScoreMs", 0.0);
   }
 }
