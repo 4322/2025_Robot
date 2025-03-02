@@ -113,7 +113,7 @@ public class AutoScore extends Command {
                 desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
             .transformBy(
                 GeomUtil.translationToTransform(
-                    new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(1))));
+                    new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(2))));
     desiredPose = RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetPose : desiredTagPose;
     state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
   }
@@ -159,7 +159,7 @@ public class AutoScore extends Command {
                   desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
               .transformBy(
                   GeomUtil.translationToTransform(
-                      new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(1))));
+                      new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(2))));
     }
 
     double thetaVelocity =
@@ -297,7 +297,7 @@ public class AutoScore extends Command {
           driveVelocityScalar = 0;
           desiredPose =
               desiredTagPose.transformBy(
-                  GeomUtil.translationToTransform(Units.inchesToMeters(1), 0));
+                  GeomUtil.translationToTransform(Units.inchesToMeters(2), 0));
           state = AutoScoreStates.DRIVE_TO_TAG_OFFSET2;
         }
 
@@ -329,11 +329,7 @@ public class AutoScore extends Command {
 
         // Calculate drive speed
         currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
-        ffScaler =
-            MathUtil.clamp(
-                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
-                0.0,
-                1.0);
+        ffScaler = MathUtil.clamp((currentDistance - 0.005) / (0.2 - 0.005), 0.0, 1.0);
         driveErrorAbs = currentDistance;
         driveController.reset(
             lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
@@ -351,7 +347,7 @@ public class AutoScore extends Command {
                     GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
                 .getTranslation();
 
-        if (currentDistance < 0.05) {
+        if (currentDistance < 0.02) {
           driveVelocityScalar = 0;
           desiredPose = desiredTagPose;
           state = AutoScoreStates.DRIVE_TO_TAG;

@@ -152,7 +152,7 @@ public class Constants {
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
-      public static final double descoreVoltage = -8;
+      public static final double descoreVoltage = -4;
     }
   }
 
