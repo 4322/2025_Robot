@@ -114,8 +114,8 @@ public class AutoScore extends Command {
                 desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
             .transformBy(
                 GeomUtil.translationToTransform(
-                        Constants.AutoScoring.offsetTagSideSwipeX,
-                        Constants.AutoScoring.offsetTagSideSwipeY));
+                    Constants.AutoScoring.offsetTagSideSwipeX,
+                    Constants.AutoScoring.offsetTagSideSwipeY));
     desiredSideSwipePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
@@ -166,8 +166,8 @@ public class AutoScore extends Command {
                 desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
             .transformBy(
                 GeomUtil.translationToTransform(
-                        Constants.AutoScoring.offsetTagSideSwipeX,
-                        Constants.AutoScoring.offsetTagSideSwipeY));
+                    Constants.AutoScoring.offsetTagSideSwipeX,
+                    Constants.AutoScoring.offsetTagSideSwipeY));
     desiredSideSwipePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
