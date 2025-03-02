@@ -3,7 +3,6 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
@@ -24,16 +23,10 @@ public class ThreeCoralRight extends SequentialCommandGroup {
         new InstantCommand(
             () -> {
               PathPlannerPath path = Robot.ThreeCoralStartToEcho;
-              Rotation2d rotation = swerve.getPose().getRotation();
-              if (AutoBuilder.shouldFlip()) {
-                path = path.flipPath();
-                // If on Red alliance, rotate current robot rotation to be absolute blue origin
-                // since robot zeroing is alliance perspective relative for drive team.
-                rotation = rotation.rotateBy(Rotation2d.kPi);
-              }
-
               AutoBuilder.resetOdom(
-                  new Pose2d(path.getStartingHolonomicPose().get().getTranslation(), rotation));
+                  new Pose2d(
+                      path.getStartingHolonomicPose().get().getTranslation(),
+                      swerve.getPose().getRotation()));
             }),
         AutoBuilder.followPath(Robot.ThreeCoralStartToEcho),
         new InstantCommand(

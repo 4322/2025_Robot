@@ -2,7 +2,6 @@ package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,14 +21,8 @@ public class PreloadOnlyG3 extends SequentialCommandGroup {
     addCommands(
         new InstantCommand(
             () -> {
-              Rotation2d rotation = swerve.getPose().getRotation();
-              if (AutoBuilder.shouldFlip()) {
-                // If on Red alliance, rotate current robot rotation to be absolute blue origin
-                // since robot zeroing is alliance perspective relative for drive team.
-                rotation = rotation.rotateBy(Rotation2d.kPi);
-              }
-              // Only rotation matters because vision pose will fix translation
-              AutoBuilder.resetOdom(new Pose2d(new Translation2d(), rotation));
+              AutoBuilder.resetOdom(
+                  new Pose2d(new Translation2d(), swerve.getPose().getRotation()));
             }),
         new InstantCommand(
             () -> {
