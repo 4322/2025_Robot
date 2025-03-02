@@ -14,6 +14,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
   private Canandcolor frontBeamBreak;
   private Canandcolor backBeamBreak;
   private Canandcolor kickerBeamBreak;
+  private StatusCode kickerConfigStatus;
 
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
@@ -33,7 +34,9 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
     StatusCode feederConfigStatus = feederMotor.getConfigurator().apply(motorConfigs);
-    StatusCode kickerConfigStatus = kickerMotor.getConfigurator().apply(motorConfigs);
+    if (Constants.kickerEnabled) {
+      kickerConfigStatus = kickerMotor.getConfigurator().apply(motorConfigs);
+    }
 
     if (feederConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
