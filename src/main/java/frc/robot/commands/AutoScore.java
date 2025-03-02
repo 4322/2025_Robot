@@ -113,9 +113,11 @@ public class AutoScore extends Command {
   private void updateTagPoses() {
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     desiredOffsetPose =
-        desiredTagPose
-            .transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(-4), 0))
-            .rotateBy(new Rotation2d(Units.degreesToRadians(14)));
+        new Pose2d(
+                desiredTagPose.getTranslation(),
+                desiredTagPose.getRotation().rotateBy(new Rotation2d(Units.degreesToRadians(14))))
+            .transformBy(
+                GeomUtil.translationToTransform(new Translation2d(Units.inchesToMeters(4), 0)));
   }
 
   @Override
