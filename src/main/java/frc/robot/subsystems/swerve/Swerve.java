@@ -220,6 +220,7 @@ public class Swerve extends SubsystemBase {
   public void resetPose(Pose2d newPose) {
     pseudoAutoRotateAngle = null;
     drivetrain.resetPose(newPose);
+    Logger.recordOutput("Odometry/PoseReset", newPose);
   }
 
   /* Returns the current pose estimate of the robot */
