@@ -105,7 +105,6 @@ public class AutoScore extends Command {
     autoRotateSetpoint = RobotContainer.operatorBoard.getAutoRotatePosition();
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
-    desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     updateTagPoses();
     state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
   }
@@ -115,7 +114,9 @@ public class AutoScore extends Command {
     desiredOffsetPose =
         new Pose2d(
                 desiredTagPose.getTranslation(),
-                desiredTagPose.getRotation().rotateBy(new Rotation2d(Units.degreesToRadians(14))))
+                desiredTagPose
+                    .getRotation()
+                    .rotateBy(new Rotation2d(Constants.AutoScoring.algaeRemoveRotation)))
             .transformBy(
                 GeomUtil.translationToTransform(new Translation2d(Units.inchesToMeters(4), 0)));
   }
@@ -293,6 +294,11 @@ public class AutoScore extends Command {
           desiredPose = desiredTagPose;
           state = AutoScoreStates.DRIVE_TO_TAG;
         }
+
+        thetaVelocity =
+            thetaController.calculate(
+                swerve.getPose().getRotation().getRadians(),
+                autoRotateSetpoint + Constants.AutoScoring.algaeRemoveRotation);
 
         // Command speeds
         driveVelocity =

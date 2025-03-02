@@ -179,6 +179,7 @@ public class Constants {
     public static double ffMaxRadius = 0.8;
     public static double elevatorRaiseThreshold = 1.5;
     public static double flipOverrideThreshold = 1.0;
+    public static double algaeRemoveRotation = Units.degreesToRadians(14);
   }
 
   public static class Vision {
