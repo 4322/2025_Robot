@@ -106,12 +106,16 @@ public class AutoScore extends Command {
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+    updateTagPoses();
+    state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
+  }
+
+  private void updateTagPoses() {
+    desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     desiredOffsetPose =
         desiredTagPose
-            .rotateBy(Rotation2d.kCW_Pi_2)
-            .transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(8), 0));
-    desiredPose = RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetPose : desiredTagPose;
-    state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
+            .transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(-4), 0))
+            .rotateBy(new Rotation2d(Units.degreesToRadians(14)));
   }
 
   @Override
@@ -148,11 +152,7 @@ public class AutoScore extends Command {
                   GeomUtil.translationToTransform(
                       new Translation2d(Units.inchesToMeters(14.125), 0)));
     } else {
-      desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-      desiredOffsetPose =
-          desiredTagPose
-              .rotateBy(Rotation2d.kCW_Pi_2)
-              .transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(8), 0));
+      updateTagPoses();
     }
 
     double thetaVelocity =
