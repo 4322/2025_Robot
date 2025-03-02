@@ -18,6 +18,7 @@ public class Constants {
   public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = true;
   public static final boolean flipperEnabled = true;
+  public static final boolean kickerEnabled = false;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
