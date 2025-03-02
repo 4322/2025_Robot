@@ -144,7 +144,7 @@ public class Robot extends LoggedRobot {
     }
 
     m_robotContainer.configureAutonomousSelector();
-    FollowPathCommand.warmupCommand();
+    FollowPathCommand.warmupCommand().schedule(); // avoid delay when auto starts
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 
