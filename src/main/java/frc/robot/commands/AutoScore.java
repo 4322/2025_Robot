@@ -118,7 +118,8 @@ public class AutoScore extends Command {
                     .getRotation()
                     .rotateBy(new Rotation2d(Constants.AutoScoring.algaeRemoveRotation)))
             .transformBy(
-                GeomUtil.translationToTransform(new Translation2d(Units.inchesToMeters(4), 0)));
+                GeomUtil.translationToTransform(
+                    new Translation2d(Units.inchesToMeters(2.5), Units.inchesToMeters(-6))));
   }
 
   @Override
