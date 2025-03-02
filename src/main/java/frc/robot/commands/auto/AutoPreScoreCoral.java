@@ -407,9 +407,6 @@ public class AutoPreScoreCoral extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    swerve.requestPercent(new ChassisSpeeds(), true);
-    superstructure.requestIdle();
-
     // Reset logging
     Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
     Logger.recordOutput("AutoScore/DriveToPoseSetpoint", new Pose2d());
