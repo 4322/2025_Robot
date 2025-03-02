@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.ScoringManager.ScoringLocation;
@@ -39,22 +38,17 @@ public class ThreeCoralRight extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.ThreeCoralStartToEcho),
         new InstantCommand(
             () -> {
-              // Always request level in auto before setting scoring location so flipper automation
-              // works
-              superstructure.requestLevel(Level.L3);
+              RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.E);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new WaitCommand(2),
         new AutoScoreCoral(superstructure),
         AutoBuilder.followPath(Robot.ThreeCoralEchoToFeed),
         new AutoFeedCoral(superstructure),
         AutoBuilder.followPath(Robot.ThreeCoralFeedToFoxtrot),
         new InstantCommand(
             () -> {
-              // Always request level in auto before setting scoring location so flipper automation
-              // works
-              superstructure.requestLevel(Level.L3);
+              RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.F);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
@@ -64,13 +58,10 @@ public class ThreeCoralRight extends SequentialCommandGroup {
         AutoBuilder.followPath(Robot.ThreeCoralFeedToAlpha),
         new InstantCommand(
             () -> {
-              // Always request level in auto before setting scoring location so flipper automation
-              // works
-              superstructure.requestLevel(Level.L3);
+              RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.A);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new WaitCommand(2),
         new AutoScoreCoral(superstructure));
   }
 }

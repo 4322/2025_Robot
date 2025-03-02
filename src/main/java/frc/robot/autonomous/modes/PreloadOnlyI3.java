@@ -33,9 +33,7 @@ public class PreloadOnlyI3 extends SequentialCommandGroup {
             }),
         new InstantCommand(
             () -> {
-              // Always request level in auto before setting scoring location so flipper automation
-              // works
-              superstructure.requestLevel(Level.L3);
+              RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.I);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),

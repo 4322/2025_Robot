@@ -73,6 +73,12 @@ public class ScoringManager {
       this.autoRotatePosition = autoRotateRed[scoringLocation.reefFace];
       this.aprilTag = aprilTagRed[scoringLocation.reefFace];
     }
+    flipRequested = isAlgaePeg();
+  }
+
+  public void setScoringLevel(Level level) {
+    RobotContainer.superstructure.requestLevel(level);
+    flipRequested = isAlgaePeg();
   }
 
   public boolean isAlgaePeg() {
@@ -130,11 +136,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.A);
-                      if (RobotContainer.superstructure.getLevel() == Level.L3) {
-                        flipRequested = true;
-                      } else {
-                        flipRequested = false;
-                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 6)
@@ -142,7 +143,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.B);
-                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -151,11 +151,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.C);
-                      if (RobotContainer.superstructure.getLevel() == Level.L2) {
-                        flipRequested = true;
-                      } else {
-                        flipRequested = false;
-                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 8)
@@ -163,7 +158,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.D);
-                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -172,11 +166,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.E);
-                      if (RobotContainer.superstructure.getLevel() == Level.L3) {
-                        flipRequested = true;
-                      } else {
-                        flipRequested = false;
-                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 10)
@@ -184,7 +173,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.F);
-                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -193,11 +181,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.G);
-                      if (RobotContainer.superstructure.getLevel() == Level.L2) {
-                        flipRequested = true;
-                      } else {
-                        flipRequested = false;
-                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 12)
@@ -205,7 +188,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.H);
-                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -214,11 +196,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.I);
-                      if (RobotContainer.superstructure.getLevel() == Level.L3) {
-                        flipRequested = true;
-                      } else {
-                        flipRequested = false;
-                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(leftController, 2)
@@ -226,7 +203,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.J);
-                      flipRequested = false;
                     })
                 .ignoringDisable(true));
 
@@ -235,11 +211,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.K);
-                      if (RobotContainer.superstructure.getLevel() == Level.L2) {
-                        flipRequested = true;
-                      } else {
-                        flipRequested = false;
-                      }
                     })
                 .ignoringDisable(true));
     new JoystickButton(leftController, 4)
@@ -247,7 +218,6 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       setScoringLocation(ScoringLocation.L);
-                      flipRequested = false;
                     })
                 .ignoringDisable(true));
   }
