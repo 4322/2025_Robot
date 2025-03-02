@@ -5,7 +5,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -88,6 +87,7 @@ public class AutoScore extends Command {
     TARGET_TAG_NOT_VISIBLE,
     TARGET_TAG_VISIBLE,
     DRIVE_TO_TAG_OFFSET,
+    DRIVE_TO_TAG_OFFSET2,
     DRIVE_TO_TAG
   }
 
@@ -108,9 +108,12 @@ public class AutoScore extends Command {
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     desiredOffsetPose =
-        desiredTagPose
-            .rotateBy(Rotation2d.kCW_Pi_2)
-            .transformBy(GeomUtil.translationToTransform(Units.inchesToMeters(8), 0));
+        new Pose2d(
+                desiredTagPose.getTranslation(),
+                desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
+            .transformBy(
+                GeomUtil.translationToTransform(
+                    new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(1))));
     desiredPose = RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetPose : desiredTagPose;
     state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
   }
@@ -151,8 +154,12 @@ public class AutoScore extends Command {
     } else {
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
       desiredOffsetPose =
-          desiredTagPose
-              .transformBy(new Transform2d(new Translation2d(Units.inchesToMeters(8), 0), desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_90deg)));
+          new Pose2d(
+                  desiredTagPose.getTranslation(),
+                  desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
+              .transformBy(
+                  GeomUtil.translationToTransform(
+                      new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(1))));
     }
 
     double thetaVelocity =
@@ -287,6 +294,64 @@ public class AutoScore extends Command {
         }
 
         if (currentDistance < 0.1) {
+          driveVelocityScalar = 0;
+          desiredPose =
+              desiredTagPose.transformBy(
+                  GeomUtil.translationToTransform(Units.inchesToMeters(1), 0));
+          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET2;
+        }
+
+        // Command speeds
+        driveVelocity =
+            new Pose2d(
+                    new Translation2d(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+                .getTranslation();
+
+        swerve.requestVelocity(
+            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+        break;
+      case DRIVE_TO_TAG_OFFSET2:
+        currentTranslation =
+            swerve
+                .getPose()
+                .getTranslation()
+                .plus(
+                    new Translation2d(
+                            (Constants.robotFrameLength / 2)
+                                + Constants.bumperEdgeWidth
+                                + Units.inchesToMeters(0.25),
+                            useLeftCam
+                                ? Constants.Vision.frontLeftCamera3dPos.getY()
+                                : Constants.Vision.frontRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
+
+        // Calculate drive speed
+        currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
+        ffScaler =
+            MathUtil.clamp(
+                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
+                0.0,
+                1.0);
+        driveErrorAbs = currentDistance;
+        driveController.reset(
+            lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
+            driveController.getSetpoint().velocity);
+        driveVelocityScalar =
+            driveController.getSetpoint().velocity * ffScaler
+                + driveController.calculate(driveErrorAbs, 0.0);
+
+        // cache setpoint value for logging and use during next iteration
+        lastSetpointTranslation =
+            new Pose2d(
+                    desiredPose.getTranslation(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                .transformBy(
+                    GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
+                .getTranslation();
+
+        if (currentDistance < 0.05) {
           driveVelocityScalar = 0;
           desiredPose = desiredTagPose;
           state = AutoScoreStates.DRIVE_TO_TAG;
