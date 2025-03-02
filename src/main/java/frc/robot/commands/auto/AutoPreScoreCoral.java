@@ -35,7 +35,8 @@ public class AutoPreScoreCoral extends Command {
   private double currentDistance;
   private double ffScaler;
   private Pose2d desiredTagPose;
-  private Pose2d desiredOffsetPose;
+  private Pose2d desiredOffsetSideSwipePose;
+  private Pose2d desiredSideSwipePose;
   private Pose2d desiredPose;
 
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
@@ -81,9 +82,9 @@ public class AutoPreScoreCoral extends Command {
 
   public enum AutoScoreStates {
     TARGET_TAG_VISIBLE,
-    DRIVE_TO_TAG_OFFSET,
-    DRIVE_TO_TAG_OFFSET2,
-    DRIVE_TO_TAG
+    SIDE_SWIPE_OFFSET,
+    SIDE_SWIPE,
+    SCORING_POSITION
   }
 
   /** Drives to the specified pose under full software control. */
@@ -102,14 +103,19 @@ public class AutoPreScoreCoral extends Command {
     desiredTag = RobotContainer.operatorBoard.getAprilTag();
     useLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-    desiredOffsetPose =
+    desiredOffsetSideSwipePose =
         new Pose2d(
                 desiredTagPose.getTranslation(),
                 desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
             .transformBy(
                 GeomUtil.translationToTransform(
-                    new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(2))));
-    desiredPose = RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetPose : desiredTagPose;
+                        Constants.AutoScoring.offsetTagSideSwipeX,
+                        Constants.AutoScoring.offsetTagSideSwipeY));
+    desiredSideSwipePose =
+        desiredTagPose.transformBy(
+            GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
+    desiredPose =
+        RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetSideSwipePose : desiredTagPose;
     state = AutoScoreStates.TARGET_TAG_VISIBLE;
   }
 
@@ -148,14 +154,16 @@ public class AutoPreScoreCoral extends Command {
                       new Translation2d(Units.inchesToMeters(14.125), 0)));
     } else {
       desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
-      desiredOffsetPose =
-          new Pose2d(
-                  desiredTagPose.getTranslation(),
-                  desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
-              .transformBy(
-                  GeomUtil.translationToTransform(
-                      new Translation2d(Units.inchesToMeters(8), Units.inchesToMeters(2))));
     }
+    desiredOffsetSideSwipePose =
+        new Pose2d(
+                desiredTagPose.getTranslation(),
+                desiredTagPose.getRotation().rotateBy(Rotation2d.kCW_Pi_2))
+            .transformBy(
+                GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeX, Constants.AutoScoring.offsetTagSideSwipeY));
+    desiredSideSwipePose =
+        desiredTagPose.transformBy(
+            GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
 
     double thetaVelocity =
         thetaController.calculate(swerve.getPose().getRotation().getRadians(), autoRotateSetpoint);
@@ -175,20 +183,20 @@ public class AutoPreScoreCoral extends Command {
                                 ? Constants.Vision.frontLeftCamera3dPos.getY()
                                 : Constants.Vision.frontRightCamera3dPos.getY())
                         .rotateBy(swerve.getPose().getRotation()));
+        lastSetpointTranslation = currentTranslation;
+        if (RobotContainer.operatorBoard.isAlgaePeg()) {
+          desiredPose = desiredOffsetSideSwipePose;
+          state = AutoScoreStates.SIDE_SWIPE_OFFSET;
+        } else {
+          desiredPose = desiredTagPose;
+          state = AutoScoreStates.SCORING_POSITION;
+        }
 
         // reset controller after determining initial desired pose to account for initial robot
         // velocity from regular driving.
         // Resets velocity to magnitude of current robot velocity in direction of goal pose.
         // Negative sign used because negative error(goal > current) requires negative velocity
         // input.
-        lastSetpointTranslation = currentTranslation;
-        if (RobotContainer.operatorBoard.isAlgaePeg()) {
-          desiredPose = desiredOffsetPose;
-          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET;
-        } else {
-          desiredPose = desiredTagPose;
-          state = AutoScoreStates.DRIVE_TO_TAG;
-        }
         driveController.reset(
             currentTranslation.getDistance(desiredPose.getTranslation()),
             Math.min(
@@ -204,7 +212,7 @@ public class AutoPreScoreCoral extends Command {
                             .unaryMinus())
                     .getX()));
         break;
-      case DRIVE_TO_TAG_OFFSET:
+      case SIDE_SWIPE_OFFSET:
         currentTranslation =
             swerve
                 .getPose()
@@ -252,12 +260,10 @@ public class AutoPreScoreCoral extends Command {
           }
         }
 
-        if (currentDistance < 0.1) {
+        if (currentDistance < Constants.AutoScoring.sideSwipeOffsetTolerance) {
           driveVelocityScalar = 0;
-          desiredPose =
-              desiredTagPose.transformBy(
-                  GeomUtil.translationToTransform(Units.inchesToMeters(2), 0));
-          state = AutoScoreStates.DRIVE_TO_TAG_OFFSET2;
+          desiredPose = desiredSideSwipePose;
+          state = AutoScoreStates.SIDE_SWIPE;
         }
 
         // Command speeds
@@ -271,7 +277,7 @@ public class AutoPreScoreCoral extends Command {
         swerve.requestVelocity(
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
-      case DRIVE_TO_TAG_OFFSET2:
+      case SIDE_SWIPE:
         currentTranslation =
             swerve
                 .getPose()
@@ -288,7 +294,13 @@ public class AutoPreScoreCoral extends Command {
 
         // Calculate drive speed
         currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
-        ffScaler = MathUtil.clamp((currentDistance - 0.005) / (0.2 - 0.005), 0.0, 1.0);
+        ffScaler =
+            MathUtil.clamp(
+                (currentDistance - Constants.AutoScoring.sideSwipeFFMinRadius)
+                    / (Constants.AutoScoring.sideSwipeFFMaxRadius
+                        - Constants.AutoScoring.sideSwipeFFMinRadius),
+                0.0,
+                1.0);
         driveErrorAbs = currentDistance;
         driveController.reset(
             lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
@@ -306,10 +318,10 @@ public class AutoPreScoreCoral extends Command {
                     GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
                 .getTranslation();
 
-        if (currentDistance < 0.02) {
+        if (currentDistance < Constants.AutoScoring.sideSwipeTolerance) {
           driveVelocityScalar = 0;
           desiredPose = desiredTagPose;
-          state = AutoScoreStates.DRIVE_TO_TAG;
+          state = AutoScoreStates.SCORING_POSITION;
         }
 
         // Command speeds
@@ -323,7 +335,7 @@ public class AutoPreScoreCoral extends Command {
         swerve.requestVelocity(
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
-      case DRIVE_TO_TAG:
+      case SCORING_POSITION:
         currentTranslation =
             swerve
                 .getPose()
@@ -402,7 +414,7 @@ public class AutoPreScoreCoral extends Command {
 
   @Override
   public boolean isFinished() {
-    return state == AutoScoreStates.DRIVE_TO_TAG && driveController.atGoal();
+    return state == AutoScoreStates.SCORING_POSITION && driveController.atGoal();
   }
 
   @Override

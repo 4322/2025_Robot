@@ -168,17 +168,24 @@ public class Constants {
   }
 
   public static class AutoScoring {
-    public static double drivekP = 2.0;
-    public static double drivekD = 0.0;
-    public static double driveMaxVelocity = 3.0;
-    public static double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
-    public static double driveMaxAcceleration = 4;
-    public static double driveTolerance = 0.06;
-    public static double driveToleranceSlow = 0.06;
-    public static double ffMinRadius = 0.1;
-    public static double ffMaxRadius = 0.8;
-    public static double elevatorRaiseThreshold = 1.5;
-    public static double flipOverrideThreshold = 1.0;
+    public static final double drivekP = 2.0;
+    public static final double drivekD = 0.0;
+    public static final double driveMaxVelocity = 3.0;
+    public static final double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
+    public static final double driveMaxAcceleration = 4;
+    public static final double driveTolerance = 0.06;
+    public static final double driveToleranceSlow = 0.06;
+    public static final double ffMinRadius = 0.1;
+    public static final double ffMaxRadius = 0.8;
+    public static final double elevatorRaiseThreshold = 1.5;
+    public static final double flipOverrideThreshold = 1.0;
+
+    public static final double offsetTagSideSwipeX = Units.inchesToMeters(8);
+    public static final double offsetTagSideSwipeY = Units.inchesToMeters(2);
+    public static final double sideSwipeOffsetTolerance = 0.1;
+    public static final double sideSwipeFFMinRadius = 0.005;
+    public static final double sideSwipeFFMaxRadius = 0.2;
+    public static final double sideSwipeTolerance = 0.02;
   }
 
   public static class Vision {
