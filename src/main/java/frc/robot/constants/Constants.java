@@ -18,6 +18,7 @@ public class Constants {
   public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = true;
   public static final boolean flipperEnabled = true;
+  public static final boolean kickerEnabled = false;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -116,7 +117,8 @@ public class Constants {
     public static final double secondFeedVoltage = 1.25;
     public static final double thirdFeedVoltage = -1.0;
 
-    public static final double shootVoltage = 4;
+    public static final double shootL1Voltage = 6;
+    public static final double shootL23Voltage = 4;
     public static final double spitVoltage = -4;
 
     public static final double shootWaitTimerSec = 0.1;

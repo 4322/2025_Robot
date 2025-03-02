@@ -19,7 +19,9 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   public EndEffectorIOTalonFX() {
     feederMotor = new TalonFX(Constants.EndEffector.feederMotorID);
-    kickerMotor = new TalonFX(Constants.EndEffector.kickerMotorID);
+    if (Constants.kickerEnabled) {
+      kickerMotor = new TalonFX(Constants.EndEffector.kickerMotorID);
+    }
 
     motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.EndEffector.statorCurrentLimit;
     motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.EndEffector.supplyCurrentLimit;
@@ -42,7 +44,7 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
           false);
     }
 
-    if (kickerConfigStatus != StatusCode.OK) {
+    if (Constants.kickerEnabled && (kickerConfigStatus != StatusCode.OK)) {
       DriverStation.reportError(
           "Talon "
               + kickerMotor.getDeviceID()
@@ -53,7 +55,9 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
     frontBeamBreak = new Canandcolor(Constants.EndEffector.frontBeamBreakID);
     backBeamBreak = new Canandcolor(Constants.EndEffector.backBeamBreakID);
-    kickerBeamBreak = new Canandcolor(Constants.EndEffector.kickerBeamBreakID);
+    if (Constants.kickerEnabled) {
+      kickerBeamBreak = new Canandcolor(Constants.EndEffector.kickerBeamBreakID);
+    }
   }
 
   @Override
@@ -64,18 +68,22 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
     inputs.feederSupplyCurrentAmps = feederMotor.getSupplyCurrent().getValueAsDouble();
     inputs.feederTempCelcius = feederMotor.getDeviceTemp().getValueAsDouble();
 
-    inputs.kickerAppliedVoltage = kickerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.kickerSpeedRotationsPerSec = kickerMotor.getVelocity().getValueAsDouble();
-    inputs.kickerStatorCurrentAmps = kickerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.kickerSupplyCurrentAmps = kickerMotor.getSupplyCurrent().getValueAsDouble();
-    inputs.kickerTempCelcius = kickerMotor.getDeviceTemp().getValueAsDouble();
+    if (Constants.kickerEnabled) {
+      inputs.kickerAppliedVoltage = kickerMotor.getMotorVoltage().getValueAsDouble();
+      inputs.kickerSpeedRotationsPerSec = kickerMotor.getVelocity().getValueAsDouble();
+      inputs.kickerStatorCurrentAmps = kickerMotor.getStatorCurrent().getValueAsDouble();
+      inputs.kickerSupplyCurrentAmps = kickerMotor.getSupplyCurrent().getValueAsDouble();
+      inputs.kickerTempCelcius = kickerMotor.getDeviceTemp().getValueAsDouble();
+    }
 
     inputs.frontBeamBreakTriggered =
         frontBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
     inputs.backBeamBreakTriggered =
         backBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
-    inputs.kickerBeamBreakTriggered =
-        kickerBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
+    if (Constants.kickerEnabled) {
+      inputs.kickerBeamBreakTriggered =
+          kickerBeamBreak.getProximity() < Constants.EndEffector.proximityDetectionThreshold;
+    }
   }
 
   @Override
@@ -85,7 +93,9 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void setKickerVoltage(double voltage) {
-    kickerMotor.setVoltage(voltage);
+    if (Constants.kickerEnabled) {
+      kickerMotor.setVoltage(voltage);
+    }
   }
 
   @Override
@@ -95,12 +105,16 @@ public class EndEffectorIOTalonFX implements EndEffectorIO {
 
   @Override
   public void stopKicker() {
-    kickerMotor.stopMotor();
+    if (Constants.kickerEnabled) {
+      kickerMotor.stopMotor();
+    }
   }
 
   @Override
   public void enableBrakeMode(boolean enable) {
     feederMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-    kickerMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    if (Constants.kickerEnabled) {
+      kickerMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
   }
 }

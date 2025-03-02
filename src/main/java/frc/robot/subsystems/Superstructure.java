@@ -199,7 +199,11 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case SCORE:
-        endEffector.requestShoot();
+        if (level == Level.L1) {
+          endEffector.requestL1Shoot();
+        } else {
+          endEffector.requestL23Shoot();
+        }
 
         if (!endEffector.coralSecured() && requestIdle) {
           state = Superstates.SAFE_RETRACT;
