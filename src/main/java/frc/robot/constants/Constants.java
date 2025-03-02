@@ -170,9 +170,9 @@ public class Constants {
   public static class AutoScoring {
     public static double drivekP = 2.0;
     public static double drivekD = 0.0;
-    public static double driveMaxVelocity = Units.inchesToMeters(150.0);
+    public static double driveMaxVelocity = 3.0;
     public static double driveMaxVelocitySlow = Units.inchesToMeters(50.0);
-    public static double driveMaxAcceleration = 4.0;
+    public static double driveMaxAcceleration = 4;
     public static double driveTolerance = 0.06;
     public static double driveToleranceSlow = 0.06;
     public static double ffMinRadius = 0.1;
