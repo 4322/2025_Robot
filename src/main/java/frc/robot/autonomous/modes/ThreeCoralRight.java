@@ -1,7 +1,6 @@
 package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -20,14 +19,10 @@ public class ThreeCoralRight extends SequentialCommandGroup {
     setName("THREE_CORAL_RIGHT");
     addRequirements(swerve, superstructure);
     addCommands(
-        new InstantCommand(
-            () -> {
-              PathPlannerPath path = Robot.ThreeCoralStartToEcho;
-              AutoBuilder.resetOdom(
-                  new Pose2d(
-                      path.getStartingHolonomicPose().get().getTranslation(),
-                      swerve.getPose().getRotation()));
-            }),
+        AutoBuilder.resetOdom(
+            new Pose2d(
+                Robot.ThreeCoralStartToEcho.getStartingHolonomicPose().get().getTranslation(),
+                swerve.getPose().getRotation())),
         AutoBuilder.followPath(Robot.ThreeCoralStartToEcho),
         new InstantCommand(
             () -> {

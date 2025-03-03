@@ -19,11 +19,7 @@ public class PreloadOnlyI3 extends SequentialCommandGroup {
     setName("Preload Only (I3)");
     addRequirements(swerve, superstructure);
     addCommands(
-        new InstantCommand(
-            () -> {
-              AutoBuilder.resetOdom(
-                  new Pose2d(new Translation2d(), swerve.getPose().getRotation()));
-            }),
+        AutoBuilder.resetOdom(new Pose2d(new Translation2d(), swerve.getPose().getRotation())),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
