@@ -224,10 +224,11 @@ public class Constants {
             mass,
             momentOfInertia,
             new ModuleConfig(
-                wheelRadius,
+                TunerConstants.BackLeft.WheelRadius,
                 TunerConstants.kSpeedAt12VoltsMps,
                 wheelCOF,
-                DCMotor.getKrakenX60Foc(1),
+                DCMotor.getKrakenX60Foc(1)
+                    .withReduction(TunerConstants.BackLeft.DriveMotorGearRatio),
                 60,
                 1),
             new Translation2d(
