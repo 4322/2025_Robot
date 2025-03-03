@@ -22,7 +22,6 @@ import frc.robot.commands.RightFeed;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
-import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.elevator.Elevator;
@@ -62,7 +61,6 @@ public class RobotContainer {
   public static EndEffector endEffector = new EndEffector(endEffectorIO);
   public static Flipper flipper = new Flipper(flipperIO);
   public static Superstructure superstructure = new Superstructure(elevator, endEffector, flipper);
-  public static LED leds = new LED();
 
   // April tag cameras
   public static PhotonCamera frontLeftCamera;
