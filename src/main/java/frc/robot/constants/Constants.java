@@ -26,7 +26,7 @@ public class Constants {
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
-  public static final int LED_NUM = 0; // TODO: Determine number of leds
+  public static final int LED_NUM = 36 + 8; // Add 8 leds from candle
 
   public static final double bumperEdgeWidth = Units.inchesToMeters(3.5);
   public static final double robotFrameLength = Units.inchesToMeters(26);
