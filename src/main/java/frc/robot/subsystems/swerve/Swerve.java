@@ -42,8 +42,6 @@ public class Swerve extends SubsystemBase {
   private ChassisSpeeds desired = new ChassisSpeeds();
   private boolean fieldRelative = false;
 
-  private boolean isBrakeMode = true;
-  private Timer lastMovementTimer = new Timer();
   private Timer gyroInitWaitTimer = new Timer();
   private boolean gyroInitialized = false;
   private Rotation2d pseudoAutoRotateAngle;
@@ -72,7 +70,6 @@ public class Swerve extends SubsystemBase {
     drivetrain.configNeutralMode(NeutralModeValue.Brake);
     configureAutoBuilder();
 
-    lastMovementTimer.start();
     gyroInitWaitTimer.start();
   }
 
@@ -162,27 +159,6 @@ public class Swerve extends SubsystemBase {
                   .withSteerRequestType(SteerRequestType.MotionMagicExpo));
         }
         break;
-    }
-
-    /* If the driver station is enabled, set the modules to break. Otherwise set them to coast */
-    boolean stillMoving = false;
-    for (int i = 0; i < 4; i++) {
-      if (drivetrain.getModule(i).getCurrentState().speedMetersPerSecond
-          > SWERVE_COAST_TRESHOLD_MPS) {
-        stillMoving = true;
-      }
-    }
-    if (stillMoving) lastMovementTimer.reset();
-    if (DriverStation.isEnabled()) {
-      if (!isBrakeMode) {
-        isBrakeMode = true;
-        drivetrain.configNeutralMode(NeutralModeValue.Brake);
-      }
-    } else {
-      if (isBrakeMode && lastMovementTimer.hasElapsed(SWERVE_COAST_TRESHOLD_SEC)) {
-        isBrakeMode = false;
-        drivetrain.configNeutralMode(NeutralModeValue.Coast);
-      }
     }
   }
 
@@ -311,6 +287,10 @@ public class Swerve extends SubsystemBase {
           return Robot.alliance == DriverStation.Alliance.Red;
         },
         this);
+  }
+
+  public void enableBrakeMode(boolean enable) {
+    drivetrain.configNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   /* Swerve State */
