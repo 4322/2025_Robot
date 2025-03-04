@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.ScoringManager.ScoringLocation;
 import frc.robot.commands.auto.AutoPreScoreCoral;
@@ -26,7 +25,6 @@ public class PreloadOnlyG3 extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.G);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new WaitCommand(2),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
