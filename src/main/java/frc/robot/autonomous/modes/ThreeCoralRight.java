@@ -1,7 +1,6 @@
 package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -9,6 +8,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.ScoringManager.ScoringLocation;
 import frc.robot.commands.auto.AutoFeedCoral;
+import frc.robot.commands.auto.AutoPoseReset;
 import frc.robot.commands.auto.AutoPreScoreCoral;
 import frc.robot.commands.auto.AutoScoreCoral;
 import frc.robot.subsystems.Superstructure;
@@ -20,10 +20,8 @@ public class ThreeCoralRight extends SequentialCommandGroup {
     setName("THREE_CORAL_RIGHT");
     addRequirements(swerve, superstructure);
     addCommands(
-        AutoBuilder.resetOdom(
-            new Pose2d(
-                Robot.ThreeCoralStartToEcho.getStartingHolonomicPose().get().getTranslation(),
-                swerve.getPose().getRotation())),
+        new AutoPoseReset(
+            swerve, Robot.ThreeCoralStartToEcho.getStartingHolonomicPose().get().getTranslation()),
         AutoBuilder.followPath(Robot.ThreeCoralStartToEcho),
         new InstantCommand(
             () -> {
