@@ -17,11 +17,9 @@ public class AutoFeedCoral extends Command {
 
   @Override
   public boolean isFinished() {
-    return superstructure.pieceSecured();
+    return superstructure.hasPiece();
   }
 
   @Override
-  public void end(boolean intterupted) {
-    superstructure.requestIdle();
-  }
+  public void end(boolean intterupted) {}
 }

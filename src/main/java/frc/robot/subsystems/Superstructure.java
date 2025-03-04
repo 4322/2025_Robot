@@ -267,4 +267,8 @@ public class Superstructure extends SubsystemBase {
   public boolean pieceSecured() {
     return endEffector.coralSecured();
   }
+
+  public boolean hasPiece() {
+    return endEffector.hasCoral();
+  }
 }

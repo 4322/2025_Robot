@@ -52,8 +52,7 @@ public class EndEffector extends SubsystemBase {
         if (DriverStation.isDisabled()) {
           if (inputs.frontBeamBreakTriggered && inputs.backBeamBreakTriggered) {
             coralSecured = true;
-          }
-          else if (!inputs.frontBeamBreakTriggered || !inputs.backBeamBreakTriggered) {
+          } else if (!inputs.frontBeamBreakTriggered || !inputs.backBeamBreakTriggered) {
             coralSecured = false;
           }
         }
