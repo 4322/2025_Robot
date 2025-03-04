@@ -1,5 +1,6 @@
 package frc.robot.subsystems.endEffector;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -46,6 +47,16 @@ public class EndEffector extends SubsystemBase {
       case IDLE:
         io.stopFeeder();
         io.stopKicker();
+
+        // Auto detect coral for auto preload
+        if (DriverStation.isDisabled()) {
+          if (inputs.frontBeamBreakTriggered && inputs.backBeamBreakTriggered) {
+            coralSecured = true;
+          }
+          else if (!inputs.frontBeamBreakTriggered || !inputs.backBeamBreakTriggered) {
+            coralSecured = false;
+          }
+        }
 
         if (requestSpit) {
           state = EndEffectorStates.SPIT;
