@@ -3,6 +3,7 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -31,8 +32,8 @@ public class ThreeCoralRight extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure),
-        AutoBuilder.followPath(Robot.ThreeCoralEchoToFeed),
-        new AutoFeedCoral(superstructure),
+        new ParallelCommandGroup(
+            AutoBuilder.followPath(Robot.ThreeCoralEchoToFeed), new AutoFeedCoral(superstructure)),
         AutoBuilder.followPath(Robot.ThreeCoralFeedToFoxtrot),
         new InstantCommand(
             () -> {
@@ -41,8 +42,9 @@ public class ThreeCoralRight extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure),
-        AutoBuilder.followPath(Robot.ThreeCoralFoxtrotToFeed),
-        new AutoFeedCoral(superstructure),
+        new ParallelCommandGroup(
+            AutoBuilder.followPath(Robot.ThreeCoralFoxtrotToFeed),
+            new AutoFeedCoral(superstructure)),
         AutoBuilder.followPath(Robot.ThreeCoralFeedToAlpha),
         new InstantCommand(
             () -> {

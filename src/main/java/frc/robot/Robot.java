@@ -233,10 +233,6 @@ public class Robot extends LoggedRobot {
       RobotContainer.elevator.setHomingState(true);
       RobotContainer.elevator.seedPosition(0);
     }
-
-    RobotContainer.elevator.enableBrakeMode(true);
-    RobotContainer.endEffector.enableBrakeMode(true);
-    RobotContainer.flipper.enableBrakeMode(true);
   }
 
   @Override
@@ -254,9 +250,6 @@ public class Robot extends LoggedRobot {
         .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning
     // wildly in place
     // RobotController.setBrownoutVoltage(5.75);
-    RobotContainer.elevator.enableBrakeMode(true);
-    RobotContainer.endEffector.enableBrakeMode(true);
-    RobotContainer.flipper.enableBrakeMode(true);
   }
 
   @Override
