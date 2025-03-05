@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
+
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -36,6 +38,12 @@ public class Robot extends LoggedRobot {
   // DIO Buttons on RIO
   DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
   DigitalInput zeroButton = new DigitalInput(Constants.dioZeroButton);
+
+  private boolean prevCoastButtonPressed;
+  private boolean prevZeroButtonPressed;
+  private boolean isInCoastMode;
+  private boolean coastToggleEnabled;
+  private Timer coastButtonTimer = new Timer();
 
   public static PathPlannerPath ThreeCoralStartToEcho;
   public static PathPlannerPath ThreeCoralEchoToFeed;
@@ -202,20 +210,75 @@ public class Robot extends LoggedRobot {
   public void disabledPeriodic() {
     RobotContainer.swerve.clearPseudoAutoRotateHeadingLock(); // don't rotate when re-enabling
 
-    if (!zeroButton.get()) {
+    if (!zeroButton.get() && !prevZeroButtonPressed) {
       RobotContainer.swerve.resetPose(new Pose2d());
+      prevZeroButtonPressed = true;
     }
-    if (!coastButton.get()) {
+    else if (zeroButton.get() && prevZeroButtonPressed) {
+      prevZeroButtonPressed = false;
+    }
+
+    // Check if button has been pressed and robot is not already in coast mode
+    if (!coastButton.get() && !prevCoastButtonPressed && !isInCoastMode && !coastToggleEnabled) {
+      coastButtonTimer.start();
       RobotContainer.elevator.enableBrakeMode(false);
       RobotContainer.endEffector.enableBrakeMode(false);
       RobotContainer.flipper.enableBrakeMode(false);
+      RobotContainer.swerve.enableBrakeMode(false);
+      prevCoastButtonPressed = true;
+      isInCoastMode = true;
     }
+    else if (coastButton.get() && prevCoastButtonPressed) { // reset previous state for reuse
+      prevCoastButtonPressed = false;
+    }
+
+    if (coastButtonTimer.hasElapsed(10)) {
+      coastButtonTimer.stop();
+      coastButtonTimer.reset();
+      if (!coastToggleEnabled) {
+        RobotContainer.elevator.enableBrakeMode(true);
+        RobotContainer.endEffector.enableBrakeMode(true);
+        RobotContainer.flipper.enableBrakeMode(true);
+        RobotContainer.swerve.enableBrakeMode(true);
+        isInCoastMode = false;
+      }
+    }
+
+    if (RobotContainer.operatorBoard.getLeftController().getRawButtonPressed(12)) {
+      coastToggleEnabled = true;
+      if (!isInCoastMode) {
+        RobotContainer.elevator.enableBrakeMode(false);
+        RobotContainer.endEffector.enableBrakeMode(false);
+        RobotContainer.flipper.enableBrakeMode(false);
+        RobotContainer.swerve.enableBrakeMode(false);
+        isInCoastMode = true;
+      } 
+    }
+    else if (RobotContainer.operatorBoard.getLeftController().getRawButtonReleased(12)) {
+      RobotContainer.elevator.enableBrakeMode(true);
+      RobotContainer.endEffector.enableBrakeMode(true);
+      RobotContainer.flipper.enableBrakeMode(true);
+      RobotContainer.swerve.enableBrakeMode(true);
+      isInCoastMode = false;
+      coastToggleEnabled = false;
+    }
+
     Logger.recordOutput("RobotButton/CoastButton", !coastButton.get());
     Logger.recordOutput("RobotButton/ZeroButton", !zeroButton.get());
   }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    if (isInCoastMode) {
+      coastButtonTimer.stop();
+      coastButtonTimer.reset();
+      isInCoastMode = false;
+      RobotContainer.elevator.enableBrakeMode(true);
+      RobotContainer.endEffector.enableBrakeMode(true);
+      RobotContainer.flipper.enableBrakeMode(true);
+      RobotContainer.swerve.enableBrakeMode(true);
+    }
+  }
 
   @Override
   public void autonomousInit() {
