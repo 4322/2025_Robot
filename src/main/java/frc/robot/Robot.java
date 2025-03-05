@@ -41,7 +41,7 @@ public class Robot extends LoggedRobot {
 
   private boolean prevCoastButtonPressed;
   private boolean prevZeroButtonPressed;
-  private boolean isInCoastMode;
+  private boolean robotInCoastMode;
   private boolean coastToggleEnabled;
   private Timer coastButtonTimer = new Timer();
 
@@ -219,14 +219,14 @@ public class Robot extends LoggedRobot {
     }
 
     // Check if button has been pressed and robot is not already in coast mode
-    if (!coastButton.get() && !prevCoastButtonPressed && !isInCoastMode && !coastToggleEnabled) {
+    if (!robotInCoastMode && !coastButton.get() && !prevCoastButtonPressed) {
       coastButtonTimer.start();
       RobotContainer.elevator.enableBrakeMode(false);
       RobotContainer.endEffector.enableBrakeMode(false);
       RobotContainer.flipper.enableBrakeMode(false);
       RobotContainer.swerve.enableBrakeMode(false);
       prevCoastButtonPressed = true;
-      isInCoastMode = true;
+      robotInCoastMode = true;
     }
     else if (coastButton.get() && prevCoastButtonPressed) { // reset previous state for reuse
       prevCoastButtonPressed = false;
@@ -240,18 +240,18 @@ public class Robot extends LoggedRobot {
         RobotContainer.endEffector.enableBrakeMode(true);
         RobotContainer.flipper.enableBrakeMode(true);
         RobotContainer.swerve.enableBrakeMode(true);
-        isInCoastMode = false;
+        robotInCoastMode = false;
       }
     }
 
     if (RobotContainer.operatorBoard.getLeftController().getRawButtonPressed(12)) {
       coastToggleEnabled = true;
-      if (!isInCoastMode) {
+      if (!robotInCoastMode) {
         RobotContainer.elevator.enableBrakeMode(false);
         RobotContainer.endEffector.enableBrakeMode(false);
         RobotContainer.flipper.enableBrakeMode(false);
         RobotContainer.swerve.enableBrakeMode(false);
-        isInCoastMode = true;
+        robotInCoastMode = true;
       } 
     }
     else if (RobotContainer.operatorBoard.getLeftController().getRawButtonReleased(12)) {
@@ -259,7 +259,7 @@ public class Robot extends LoggedRobot {
       RobotContainer.endEffector.enableBrakeMode(true);
       RobotContainer.flipper.enableBrakeMode(true);
       RobotContainer.swerve.enableBrakeMode(true);
-      isInCoastMode = false;
+      robotInCoastMode = false;
       coastToggleEnabled = false;
     }
 
@@ -269,10 +269,10 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledExit() {
-    if (isInCoastMode) {
+    if (robotInCoastMode) {
       coastButtonTimer.stop();
       coastButtonTimer.reset();
-      isInCoastMode = false;
+      robotInCoastMode = false;
       RobotContainer.elevator.enableBrakeMode(true);
       RobotContainer.endEffector.enableBrakeMode(true);
       RobotContainer.flipper.enableBrakeMode(true);
