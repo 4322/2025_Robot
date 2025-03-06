@@ -37,13 +37,13 @@ public class Robot extends LoggedRobot {
   // private CANdle leds = new CANdle(31, "Clockwork");
   // DIO Buttons on RIO
   DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
-  DigitalInput zeroButton = new DigitalInput(Constants.dioZeroButton);
+  public static DigitalInput zeroButton = new DigitalInput(Constants.dioZeroButton);
 
   private boolean prevCoastButtonPressed;
   private boolean prevZeroButtonPressed;
-  private boolean robotInCoastMode;
   private boolean coastToggleEnabled;
   private Timer coastButtonTimer = new Timer();
+  public static boolean robotInCoastMode;
 
   public static PathPlannerPath ThreeCoralStartToEcho;
   public static PathPlannerPath ThreeCoralEchoToFeed;

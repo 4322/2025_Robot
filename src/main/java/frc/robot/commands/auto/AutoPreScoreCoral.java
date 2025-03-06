@@ -117,6 +117,7 @@ public class AutoPreScoreCoral extends Command {
     desiredPose =
         RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetSideSwipePose : desiredTagPose;
     state = AutoScoreStates.TARGET_TAG_VISIBLE;
+    RobotContainer.autoScoreEngaged = true;
   }
 
   @Override
@@ -421,6 +422,7 @@ public class AutoPreScoreCoral extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    RobotContainer.autoScoreEngaged = false;
     // Reset logging
     Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
     Logger.recordOutput("AutoScore/DriveToPoseSetpoint", new Pose2d());

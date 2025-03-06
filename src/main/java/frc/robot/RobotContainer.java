@@ -61,6 +61,7 @@ public class RobotContainer {
   public static EndEffector endEffector = new EndEffector(endEffectorIO);
   public static Flipper flipper = new Flipper(flipperIO);
   public static Superstructure superstructure = new Superstructure(elevator, endEffector, flipper);
+  public static boolean autoScoreEngaged = false;
 
   // April tag cameras
   public static PhotonCamera frontLeftCamera;
