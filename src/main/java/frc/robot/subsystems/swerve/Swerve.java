@@ -16,6 +16,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.reduxrobotics.sensors.canandgyro.Canandgyro;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -45,6 +46,7 @@ public class Swerve extends SubsystemBase {
   private Timer gyroInitWaitTimer = new Timer();
   private boolean gyroInitialized = false;
   private Rotation2d pseudoAutoRotateAngle;
+  private Canandgyro canandgyro = new Canandgyro(0);
 
   private SwerveState systemState = SwerveState.PERCENT;
   private PIDController HeadingController =
@@ -113,6 +115,12 @@ public class Swerve extends SubsystemBase {
           "Swerve/Steer Motor/Stator Current/" + i,
           drivetrain.getModule(i).getSteerMotor().getStatorCurrent().getValueAsDouble());
     }
+    Logger.recordOutput("Canandgyro/yawAngle", canandgyro.getYaw());
+    Logger.recordOutput("Canandgyro/yawVelocity", canandgyro.getAngularVelocityYaw());
+    Logger.recordOutput("Canandgyro/angularPositionW", canandgyro.getQuaternionW());
+    Logger.recordOutput("Canandgyro/angularPositionX", canandgyro.getQuaternionX());
+    Logger.recordOutput("Canandgyro/angularPositionY", canandgyro.getQuaternionY());
+    Logger.recordOutput("Canandgyro/angularPositionZ", canandgyro.getQuaternionZ());
   }
 
   /* Handles statemachine logic */
