@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,29 +32,22 @@ public class LED extends SubsystemBase {
           zeroButtonTimer.stop();
           zeroButtonTimer.reset();
         }
-      }
-      else if (!Robot.zeroButton.get()) {
+      } else if (!Robot.zeroButton.get()) {
         zeroButtonTimer.start();
         setLEDState(LEDState.ZERO_ROBOT);
-      }
-      else if (Robot.robotInCoastMode) {
+      } else if (Robot.robotInCoastMode) {
         setLEDState(LEDState.COAST_MODE);
-      }
-      else if (RobotContainer.superstructure.pieceSecured()) {
+      } else if (RobotContainer.superstructure.pieceSecured()) {
         setLEDState(LEDState.CORAL_SECURED);
-      }
-      else {
+      } else {
         setLEDState(LEDState.IDLE);
       }
-    }
-    else {
+    } else {
       if (RobotContainer.autoScoreEngaged) {
         setLEDState(LEDState.AUTOMATED_SCORING);
-      }
-      else if (RobotContainer.superstructure.pieceSecured()) {
+      } else if (RobotContainer.superstructure.pieceSecured()) {
         setLEDState(LEDState.CORAL_SECURED);
-      }
-      else {
+      } else {
         setLEDState(LEDState.IDLE);
       }
     }
@@ -71,7 +63,7 @@ public class LED extends SubsystemBase {
         case UNKNOWN:
           break;
         case IDLE:
-          leds.animate(new RainbowAnimation(0.5, 0.1, Constants.LED_NUM));
+          leds.animate(new RainbowAnimation(1, 0.75, Constants.LED_NUM));
           break;
         case CORAL_SECURED:
           leds.setLEDs(0, 0, 255);

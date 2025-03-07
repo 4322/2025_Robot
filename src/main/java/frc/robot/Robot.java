@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -213,8 +212,7 @@ public class Robot extends LoggedRobot {
     if (!zeroButton.get() && !prevZeroButtonPressed) {
       RobotContainer.swerve.resetPose(new Pose2d());
       prevZeroButtonPressed = true;
-    }
-    else if (zeroButton.get() && prevZeroButtonPressed) {
+    } else if (zeroButton.get() && prevZeroButtonPressed) {
       prevZeroButtonPressed = false;
     }
 
@@ -227,8 +225,7 @@ public class Robot extends LoggedRobot {
       RobotContainer.swerve.enableBrakeMode(false);
       prevCoastButtonPressed = true;
       robotInCoastMode = true;
-    }
-    else if (coastButton.get() && prevCoastButtonPressed) { // reset previous state for reuse
+    } else if (coastButton.get() && prevCoastButtonPressed) { // reset previous state for reuse
       prevCoastButtonPressed = false;
     }
 
@@ -252,9 +249,8 @@ public class Robot extends LoggedRobot {
         RobotContainer.flipper.enableBrakeMode(false);
         RobotContainer.swerve.enableBrakeMode(false);
         robotInCoastMode = true;
-      } 
-    }
-    else if (RobotContainer.operatorBoard.getLeftController().getRawButtonReleased(12)) {
+      }
+    } else if (RobotContainer.operatorBoard.getLeftController().getRawButtonReleased(12)) {
       RobotContainer.elevator.enableBrakeMode(true);
       RobotContainer.endEffector.enableBrakeMode(true);
       RobotContainer.flipper.enableBrakeMode(true);
