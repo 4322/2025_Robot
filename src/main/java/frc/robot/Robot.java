@@ -50,6 +50,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralFoxtrotToFeed;
   public static PathPlannerPath ThreeCoralFeedToAlpha;
   public static PathPlannerPath Leave;
+  public static PathPlannerPath PushAndPreloadIndia;
 
   @Override
   public void robotInit() {
@@ -146,6 +147,7 @@ public class Robot extends LoggedRobot {
       ThreeCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Foxtrot To Feed");
       ThreeCoralFeedToAlpha = PathPlannerPath.fromPathFile("Feed To Alpha");
       Leave = PathPlannerPath.fromPathFile("Leave");
+      PushAndPreloadIndia = PathPlannerPath.fromPathFile("Push and Preload India");
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner paths", true);
     }
