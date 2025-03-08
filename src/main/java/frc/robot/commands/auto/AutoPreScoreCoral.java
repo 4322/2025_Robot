@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.commons.GeomUtil;
@@ -117,13 +116,11 @@ public class AutoPreScoreCoral extends Command {
     desiredPose =
         RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetSideSwipePose : desiredTagPose;
     state = AutoScoreStates.TARGET_TAG_VISIBLE;
-    RobotContainer.autoScoreEngaged = true;
+    RobotContainer.autoDriveEngaged = true;
   }
 
   @Override
   public void execute() {
-    long startLoopMs = RobotController.getFPGATime();
-
     // Update from tunable numbers
     if (driveMaxVelocity.hasChanged(hashCode())
         || driveMaxVelocitySlow.hasChanged(hashCode())
@@ -405,14 +402,13 @@ public class AutoPreScoreCoral extends Command {
     }
 
     // Log data
-    Logger.recordOutput("AutoScore/DistanceMeasured", currentDistance);
-    Logger.recordOutput("AutoScore/DistanceSetpoint", driveController.getSetpoint().position);
+    Logger.recordOutput("AutoPreScore/DistanceMeasured", currentDistance);
+    Logger.recordOutput("AutoPreScore/DistanceSetpoint", driveController.getSetpoint().position);
     Logger.recordOutput(
-        "AutoScore/DriveToPoseSetpoint",
+        "AutoPreScore/DriveToPoseSetpoint",
         new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
-    Logger.recordOutput("AutoScore/DesiredPoseGoal", desiredPose);
-    Logger.recordOutput("AutoScore/State", state.toString());
-    Logger.recordOutput("Loop/AutoScoreMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
+    Logger.recordOutput("AutoPreScore/DesiredPoseGoal", desiredPose);
+    Logger.recordOutput("AutoPreScore/State", state.toString());
   }
 
   @Override
@@ -422,10 +418,9 @@ public class AutoPreScoreCoral extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.autoScoreEngaged = false;
+    RobotContainer.autoDriveEngaged = false;
     // Reset logging
-    Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
-    Logger.recordOutput("AutoScore/DriveToPoseSetpoint", new Pose2d());
-    Logger.recordOutput("Loop/AutoScoreMs", 0.0);
+    Logger.recordOutput("AutoPreScore/DesiredPoseGoal", new Pose2d());
+    Logger.recordOutput("AutoPreScore/DriveToPoseSetpoint", new Pose2d());
   }
 }
