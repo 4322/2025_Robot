@@ -202,10 +202,10 @@ public class Constants {
             new Rotation3d());
     public static final Pose3d backCamera3dPos =
         new Pose3d(
+            Units.inchesToMeters(4.183),
             Units.inchesToMeters(0),
-            Units.inchesToMeters(0),
-            Units.inchesToMeters(0),
-            new Rotation3d(0, 0, Math.PI));
+            Units.inchesToMeters(40.565),
+            new Rotation3d(Units.degreesToRadians(-90), Units.degreesToRadians(-37), Units.degreesToRadians(180)));
 
     public static final double xPosVisionStandardDev = 0.2;
     public static final double yPosVisionStandardDev = 0.2;
