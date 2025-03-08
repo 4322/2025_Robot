@@ -48,22 +48,22 @@ public class AutoLeftFeedCoral extends Command {
 
   private AutoScoreStates state = AutoScoreStates.TARGET_TAG_VISIBLE;
 
-  private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("AutoScore/DriveKp");
-  private static final LoggedTunableNumber driveKd = new LoggedTunableNumber("AutoScore/DriveKd");
+  private static final LoggedTunableNumber driveKp = new LoggedTunableNumber("AutoFeed/DriveKp");
+  private static final LoggedTunableNumber driveKd = new LoggedTunableNumber("AutoFeed/DriveKd");
   private static final LoggedTunableNumber driveMaxVelocity =
-      new LoggedTunableNumber("AutoScore/DriveMaxVelocity");
+      new LoggedTunableNumber("AutoFeed/DriveMaxVelocity");
   private static final LoggedTunableNumber driveMaxVelocitySlow =
-      new LoggedTunableNumber("AutoScore/DriveMaxVelocitySlow");
+      new LoggedTunableNumber("AutoFeed/DriveMaxVelocitySlow");
   private static final LoggedTunableNumber driveMaxAcceleration =
-      new LoggedTunableNumber("AutoScore/DriveMaxAcceleration");
+      new LoggedTunableNumber("AutoFeed/DriveMaxAcceleration");
   private static final LoggedTunableNumber driveTolerance =
-      new LoggedTunableNumber("AutoScore/DriveTolerance");
+      new LoggedTunableNumber("AutoFeed/DriveTolerance");
   private static final LoggedTunableNumber driveToleranceSlow =
-      new LoggedTunableNumber("AutoScore/DriveToleranceSlow");
+      new LoggedTunableNumber("AutoFeed/DriveToleranceSlow");
   private static final LoggedTunableNumber ffMinRadius =
-      new LoggedTunableNumber("AutoScore/FFMinRadius");
+      new LoggedTunableNumber("AutoFeed/FFMinRadius");
   private static final LoggedTunableNumber ffMaxRadius =
-      new LoggedTunableNumber("AutoScore/FFMaxRadius");
+      new LoggedTunableNumber("AutoFeed/FFMaxRadius");
 
   static {
     driveKp.initDefault(Constants.AutoScoring.drivekP);
@@ -102,6 +102,16 @@ public class AutoLeftFeedCoral extends Command {
       desiredTag = 13;
     }
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+    if (Constants.tuningMode) {
+        desiredTagPose =
+            FieldConstants.aprilTagFieldLayout
+                .getTagPose(desiredTag)
+                .get()
+                .toPose2d()
+                .transformBy(
+                    GeomUtil.translationToTransform(
+                        new Translation2d(Units.inchesToMeters(14.125), 0)));
+    }
     state = AutoScoreStates.TARGET_TAG_VISIBLE;
 
     RobotContainer.autoDriveEngaged = true;
