@@ -37,7 +37,7 @@ public class AutoLeftFeedCoral extends Command {
   private double ffScaler;
   private Pose2d desiredTagPose;
 
-  private Translation2d currentTranslation; // front edge of bumper aligned with a camera
+  private Translation2d currentTranslation; // back middle bumper aligned with camera
   private Translation2d lastSetpointTranslation = new Translation2d();
 
   private int desiredTag;
