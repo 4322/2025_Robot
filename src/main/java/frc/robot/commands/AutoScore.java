@@ -254,7 +254,7 @@ public class AutoScore extends Command {
                             .getAngle()
                             .unaryMinus())
                     .getX()));
-        RobotContainer.autoScoreEngaged = true;
+        RobotContainer.autoDriveEngaged = true;
         break;
       case SIDE_SWIPE_OFFSET:
         currentTranslation =
@@ -463,7 +463,7 @@ public class AutoScore extends Command {
   public void end(boolean interrupted) {
     swerve.requestPercent(new ChassisSpeeds(), true);
     superstructure.requestIdle();
-    RobotContainer.autoScoreEngaged = false;
+    RobotContainer.autoDriveEngaged = false;
 
     // Reset logging
     Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());

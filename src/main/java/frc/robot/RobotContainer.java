@@ -63,13 +63,14 @@ public class RobotContainer {
   public static Flipper flipper = new Flipper(flipperIO);
   public static Superstructure superstructure = new Superstructure(elevator, endEffector, flipper);
   public static LED leds = new LED();
-  public static boolean autoScoreEngaged = false;
+  public static boolean autoDriveEngaged = false;
+  public static boolean autoFeedRequested = false;
+  public static int coralStationTagID = 1;
 
   // April tag cameras
   public static PhotonCamera frontLeftCamera;
   public static PhotonCamera frontRightCamera;
-  public static PhotonCamera backLeftCamera;
-  public static PhotonCamera backRightCamera;
+  public static PhotonCamera backCamera;
   public static SingleTagAprilTagVision aprilTagVision;
   public static AutonomousSelector autonomousSelector;
 
@@ -77,7 +78,8 @@ public class RobotContainer {
     if (Constants.visionEnabled) {
       frontLeftCamera = new PhotonCamera("front-left");
       frontRightCamera = new PhotonCamera("front-right");
-      aprilTagVision = new SingleTagAprilTagVision(frontLeftCamera, frontRightCamera);
+      backCamera = new PhotonCamera("back");
+      aprilTagVision = new SingleTagAprilTagVision(frontLeftCamera, frontRightCamera, backCamera);
       configureAprilTagVision();
     }
 

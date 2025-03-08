@@ -27,6 +27,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
   private PhotonCamera frontLeftCamera;
   private PhotonCamera frontRightCamera;
+  private PhotonCamera backCamera;
 
   private static final double fieldBorderMargin = 0.5;
   private Consumer<List<TimestampedVisionUpdate>> visionConsumer = (x) -> {};
@@ -34,6 +35,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   private Supplier<Pose2d> poseSupplier = () -> new Pose2d();
   private PhotonPipelineResult latestResult = new PhotonPipelineResult();
   private int targetTagID;
+  private boolean useFrontLeftCam;
+  private Pose3d robotToCameraPose;
+  private List<PhotonPipelineResult> unprocessedResults;
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -53,9 +57,11 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           new double[] {0.008, 0.027, 0.015, 0.044, 0.04, 0.078, 0.049, 0.027, 0.059, 0.029, 0.068},
           1);
 
-  public SingleTagAprilTagVision(PhotonCamera frontLeftCamera, PhotonCamera frontRightCamera) {
+  public SingleTagAprilTagVision(
+      PhotonCamera frontLeftCamera, PhotonCamera frontRightCamera, PhotonCamera backCamera) {
     this.frontLeftCamera = frontLeftCamera;
     this.frontRightCamera = frontRightCamera;
+    this.backCamera = backCamera;
   }
 
   public void setDataInterfaces(
@@ -67,23 +73,29 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   @Override
   public void periodic() {
     long startLoopMs = RobotController.getFPGATime();
-    boolean useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
-    targetTagID = RobotContainer.operatorBoard.getAprilTag();
+
+    if (RobotContainer.autoFeedRequested) {
+      targetTagID = RobotContainer.coralStationTagID;
+      unprocessedResults = backCamera.getAllUnreadResults();
+      robotToCameraPose = Constants.Vision.backCamera3dPos;
+    } else {
+      targetTagID = RobotContainer.operatorBoard.getAprilTag();
+      useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
+      // Only call one camera result at a time in order to reduce garbage
+      unprocessedResults =
+          useFrontLeftCam
+              ? frontLeftCamera.getAllUnreadResults()
+              : frontRightCamera.getAllUnreadResults();
+      robotToCameraPose =
+          useFrontLeftCam
+              ? Constants.Vision.frontLeftCamera3dPos
+              : Constants.Vision.frontRightCamera3dPos;
+    }
 
     Pose3d cameraPose;
     Pose2d robotPose;
     Pose2d currentPose = poseSupplier.get();
     visionUpdates = new ArrayList<>();
-
-    // Only call one camera result at a time in order to reduce garbage
-    List<PhotonPipelineResult> unprocessedResults =
-        useFrontLeftCam
-            ? frontLeftCamera.getAllUnreadResults()
-            : frontRightCamera.getAllUnreadResults();
-    Pose3d robotToCameraPose =
-        useFrontLeftCam
-            ? Constants.Vision.frontLeftCamera3dPos
-            : Constants.Vision.frontRightCamera3dPos;
 
     Logger.recordOutput("Vision/Frame Count", unprocessedResults.size());
 

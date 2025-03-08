@@ -43,7 +43,7 @@ public class LED extends SubsystemBase {
         setLEDState(LEDState.IDLE);
       }
     } else {
-      if (RobotContainer.autoScoreEngaged) {
+      if (RobotContainer.autoDriveEngaged) {
         setLEDState(LEDState.AUTOMATED_SCORING);
       } else if (RobotContainer.superstructure.pieceSecured()) {
         setLEDState(LEDState.CORAL_SECURED);
