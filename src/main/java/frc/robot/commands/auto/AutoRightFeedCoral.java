@@ -103,14 +103,14 @@ public class AutoRightFeedCoral extends Command {
     }
     desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
     if (Constants.tuningMode) {
-        desiredTagPose =
-            FieldConstants.aprilTagFieldLayout
-                .getTagPose(desiredTag)
-                .get()
-                .toPose2d()
-                .transformBy(
-                    GeomUtil.translationToTransform(
-                        new Translation2d(Units.inchesToMeters(14.125), 0)));
+      desiredTagPose =
+          FieldConstants.aprilTagFieldLayout
+              .getTagPose(desiredTag)
+              .get()
+              .toPose2d()
+              .transformBy(
+                  GeomUtil.translationToTransform(
+                      new Translation2d(Units.inchesToMeters(14.125), 0)));
     }
     state = AutoScoreStates.TARGET_TAG_VISIBLE;
 

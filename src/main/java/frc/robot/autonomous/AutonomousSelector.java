@@ -3,6 +3,7 @@ package frc.robot.autonomous;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.autonomous.modes.FourCoralLeft;
 import frc.robot.autonomous.modes.Leave;
 import frc.robot.autonomous.modes.PreloadOnlyE3;
 import frc.robot.autonomous.modes.PreloadOnlyG3;
@@ -26,6 +27,7 @@ public class AutonomousSelector {
     autonomousSelector.addOption("PRELOAD_ONLY_E3", new PreloadOnlyE3(swerve, superstructure));
     autonomousSelector.addOption(
         "PUSH_AND_PRELOAD_I3", new PushAndPreloadI3(swerve, superstructure));
+    autonomousSelector.addOption("FOUR_CORAL_LEFT", new FourCoralLeft(swerve, superstructure));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
   }
