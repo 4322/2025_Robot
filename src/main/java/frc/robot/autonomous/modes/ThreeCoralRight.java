@@ -2,14 +2,13 @@ package frc.robot.autonomous.modes;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.ScoringManager.ScoringLocation;
-import frc.robot.commands.auto.AutoFeedCoral;
 import frc.robot.commands.auto.AutoPoseReset;
 import frc.robot.commands.auto.AutoPreScoreCoral;
+import frc.robot.commands.auto.AutoRightFeedCoral;
 import frc.robot.commands.auto.AutoScoreCoral;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
@@ -30,8 +29,8 @@ public class ThreeCoralRight extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure),
-        new ParallelCommandGroup(
-            AutoBuilder.followPath(Robot.ThreeCoralEchoToFeed), new AutoFeedCoral(superstructure)),
+        AutoBuilder.followPath(Robot.ThreeCoralEchoToFeed),
+        new AutoRightFeedCoral(swerve, superstructure, false),
         AutoBuilder.followPath(Robot.ThreeCoralFeedToFoxtrot),
         new InstantCommand(
             () -> {
@@ -40,9 +39,8 @@ public class ThreeCoralRight extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure),
-        new ParallelCommandGroup(
-            AutoBuilder.followPath(Robot.ThreeCoralFoxtrotToFeed),
-            new AutoFeedCoral(superstructure)),
+        AutoBuilder.followPath(Robot.ThreeCoralFoxtrotToFeed),
+        new AutoRightFeedCoral(swerve, superstructure, false),
         AutoBuilder.followPath(Robot.ThreeCoralFeedToAlpha),
         new InstantCommand(
             () -> {
