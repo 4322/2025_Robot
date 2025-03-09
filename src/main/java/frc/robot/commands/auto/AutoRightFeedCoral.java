@@ -252,6 +252,7 @@ public class AutoRightFeedCoral extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    superstructure.requestIdle();
     RobotContainer.autoDriveEngaged = false;
     RobotContainer.autoFeedRequested = false;
     // Reset logging
