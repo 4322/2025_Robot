@@ -207,7 +207,7 @@ public class Constants {
             Units.inchesToMeters(40.565),
             new Rotation3d(
                 Units.degreesToRadians(0),
-                Units.degreesToRadians(37),
+                Units.degreesToRadians(-37),
                 Units.degreesToRadians(180)));
 
     public static final double xPosVisionStandardDev = 0.2;
