@@ -21,7 +21,6 @@ public class ThreeCoralRight extends SequentialCommandGroup {
     addCommands(
         new AutoPoseReset(
             swerve, Robot.ThreeCoralStartToEcho.getStartingHolonomicPose().get().getTranslation()),
-        AutoBuilder.followPath(Robot.ThreeCoralStartToEcho),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
