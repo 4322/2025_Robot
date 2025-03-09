@@ -40,13 +40,12 @@ public class EndEffector extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
     Logger.recordOutput("End Effector/State", state.toString());
-    Logger.recordOutput("End Effector/Coral Detection", hasCoral());
-    Logger.recordOutput("End Effector/Coral Detetion", coralSecured());
+    Logger.recordOutput("End Effector/Has Coral", hasCoral());
+    Logger.recordOutput("End Effector/Coral Secured", coralSecured());
 
     switch (state) {
       case IDLE:
         io.stopFeeder();
-        io.stopKicker();
 
         // Auto detect coral for auto preload
         if (DriverStation.isDisabled()) {
@@ -66,7 +65,6 @@ public class EndEffector extends SubsystemBase {
         }
         break;
       case FEED:
-        io.setKickerVoltage(Constants.EndEffector.feedVoltage);
         io.setFeederVoltage(Constants.EndEffector.feedVoltage);
 
         if (requestSpit) {
@@ -74,7 +72,6 @@ public class EndEffector extends SubsystemBase {
         } else if (inputs.frontBeamBreakTriggered) {
           // Begin automated sequence without next loop delay
           io.setFeederVoltage(Constants.EndEffector.secondFeedVoltage);
-          io.setKickerVoltage(Constants.EndEffector.secondFeedVoltage);
           state = EndEffectorStates.SECURING_CORAL;
         } else if (requestIdle) {
           state = EndEffectorStates.IDLE;
@@ -85,7 +82,6 @@ public class EndEffector extends SubsystemBase {
           state = EndEffectorStates.SPIT;
         } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
           io.setFeederVoltage(Constants.EndEffector.thirdFeedVoltage);
-          io.stopKicker();
           pullBackTimer.start();
           state = EndEffectorStates.PULL_BACK;
         }
@@ -127,7 +123,6 @@ public class EndEffector extends SubsystemBase {
         break;
       case SPIT:
         io.setFeederVoltage(Constants.EndEffector.spitVoltage);
-        io.setKickerVoltage(Constants.EndEffector.spitVoltage);
         coralSecured = false;
         if (requestIdle) {
           state = EndEffectorStates.IDLE;
@@ -137,9 +132,7 @@ public class EndEffector extends SubsystemBase {
   }
 
   public boolean hasCoral() {
-    return inputs.frontBeamBreakTriggered
-        || inputs.backBeamBreakTriggered
-        || inputs.kickerBeamBreakTriggered;
+    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
   }
 
   public boolean coralSecured() {

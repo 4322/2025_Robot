@@ -18,7 +18,6 @@ public class Constants {
   public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = true;
   public static final boolean flipperEnabled = true;
-  public static final boolean kickerEnabled = false;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -102,10 +101,8 @@ public class Constants {
 
   public static class EndEffector {
     public static final int feederMotorID = 4;
-    public static final int kickerMotorID = 10;
     public static final int frontBeamBreakID = 8;
     public static final int backBeamBreakID = 9;
-    public static final int kickerBeamBreakID = 11;
 
     public static final double supplyCurrentLimit = 40;
     public static final double statorCurrentLimit = 100;
