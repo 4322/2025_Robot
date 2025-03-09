@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoScore;
-import frc.robot.commands.LeftFeed;
 import frc.robot.commands.ManualScore;
-import frc.robot.commands.RightFeed;
+import frc.robot.commands.auto.AutoLeftFeedCoral;
+import frc.robot.commands.auto.AutoRightFeedCoral;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
@@ -133,9 +133,9 @@ public class RobotContainer {
             },
             swerve));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new RightFeed(swerve, elevator, superstructure));
+        .whileTrue(new AutoRightFeedCoral(swerve, superstructure, false));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whileTrue(new LeftFeed(swerve, elevator, superstructure));
+        .whileTrue(new AutoLeftFeedCoral(swerve, superstructure, false));
     new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
         .whileTrue(new AutoScore(swerve, superstructure, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
