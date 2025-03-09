@@ -40,8 +40,8 @@ public class EndEffector extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("End Effector", inputs);
     Logger.recordOutput("End Effector/State", state.toString());
-    Logger.recordOutput("End Effector/Coral Detection", hasCoral());
-    Logger.recordOutput("End Effector/Coral Detetion", coralSecured());
+    Logger.recordOutput("End Effector/Has Coral", hasCoral());
+    Logger.recordOutput("End Effector/Coral Secured", coralSecured());
 
     switch (state) {
       case IDLE:
