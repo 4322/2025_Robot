@@ -293,6 +293,7 @@ public class Robot extends LoggedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
+      Logger.recordOutput("AutoName", m_autonomousCommand.getName());
     }
     RobotContainer.swerve
         .clearPseudoAutoRotateHeadingLock(); // Needed to prevent pseudo auto rotate from spinning
