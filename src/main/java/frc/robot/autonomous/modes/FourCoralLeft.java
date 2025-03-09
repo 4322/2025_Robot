@@ -28,7 +28,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.K);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new AutoScoreCoral(superstructure),
+        new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.KiloToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
         AutoBuilder.followPath(Robot.FeedToLima),
@@ -38,7 +38,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.K);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new AutoScoreCoral(superstructure),
+        new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.LimaToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
         AutoBuilder.followPath(Robot.FeedToKilo),
@@ -48,7 +48,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.L);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new AutoScoreCoral(superstructure),
+        new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.KiloToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
         AutoBuilder.followPath(Robot.FeedToLima),
@@ -58,6 +58,6 @@ public class FourCoralLeft extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.L);
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
-        new AutoScoreCoral(superstructure));
+        new AutoScoreCoral(superstructure).withTimeout(2));
   }
 }
