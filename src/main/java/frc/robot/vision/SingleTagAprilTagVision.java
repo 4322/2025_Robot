@@ -38,6 +38,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   private boolean useFrontLeftCam;
   private Pose3d robotToCameraPose;
   private List<PhotonPipelineResult> unprocessedResults;
+  private List<PhotonPipelineResult> backCamUnprocessedResults;
+  private List<PhotonPipelineResult> leftCamUnprocessedResults;
+  private List<PhotonPipelineResult> rightCamUnprocessedResults;
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -74,18 +77,22 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   public void periodic() {
     long startLoopMs = RobotController.getFPGATime();
 
+    // Always call camera results once per loop to clear fifo queue
+    backCamUnprocessedResults = backCamera.getAllUnreadResults();
+    leftCamUnprocessedResults = frontLeftCamera.getAllUnreadResults();
+    rightCamUnprocessedResults = frontRightCamera.getAllUnreadResults();
+
     if (RobotContainer.autoFeedRequested) {
       targetTagID = RobotContainer.coralStationTagID;
-      unprocessedResults = backCamera.getAllUnreadResults();
+      unprocessedResults = backCamUnprocessedResults;
       robotToCameraPose = Constants.Vision.backCamera3dPos;
     } else {
       targetTagID = RobotContainer.operatorBoard.getAprilTag();
       useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
-      // Only call one camera result at a time in order to reduce garbage
       unprocessedResults =
           useFrontLeftCam
-              ? frontLeftCamera.getAllUnreadResults()
-              : frontRightCamera.getAllUnreadResults();
+              ? leftCamUnprocessedResults
+              : rightCamUnprocessedResults;
       robotToCameraPose =
           useFrontLeftCam
               ? Constants.Vision.frontLeftCamera3dPos
