@@ -20,8 +20,8 @@ public class FourCoralLeft extends SequentialCommandGroup {
     addRequirements(swerve, superstructure);
     addCommands(
         new AutoPoseReset(
-            swerve, Robot.StartToKilo.getStartingHolonomicPose().get().getTranslation()),
-        AutoBuilder.followPath(Robot.StartToKilo),
+            swerve, Robot.FourCoralStartToKilo.getStartingHolonomicPose().get().getTranslation()),
+        AutoBuilder.followPath(Robot.FourCoralStartToKilo),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);
@@ -29,9 +29,9 @@ public class FourCoralLeft extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.KiloToFeed),
+        AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
-        AutoBuilder.followPath(Robot.FeedToLima),
+        AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
@@ -39,9 +39,9 @@ public class FourCoralLeft extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.LimaToFeed),
+        AutoBuilder.followPath(Robot.FourCoralLimaToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
-        AutoBuilder.followPath(Robot.FeedToKilo),
+        AutoBuilder.followPath(Robot.FourCoralFeedToKilo),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
@@ -49,9 +49,9 @@ public class FourCoralLeft extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.KiloToFeed),
+        AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
-        AutoBuilder.followPath(Robot.FeedToLima),
+        AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);

@@ -51,11 +51,11 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralFeedToAlpha;
   public static PathPlannerPath Leave;
   public static PathPlannerPath PushAndPreloadIndia;
-  public static PathPlannerPath StartToKilo;
-  public static PathPlannerPath KiloToFeed;
-  public static PathPlannerPath FeedToLima;
-  public static PathPlannerPath LimaToFeed;
-  public static PathPlannerPath FeedToKilo;
+  public static PathPlannerPath FourCoralStartToKilo;
+  public static PathPlannerPath FourCoralKiloToFeed;
+  public static PathPlannerPath FourCoralFeedToLima;
+  public static PathPlannerPath FourCoralLimaToFeed;
+  public static PathPlannerPath FourCoralFeedToKilo;
 
   @Override
   public void robotInit() {
@@ -151,13 +151,16 @@ public class Robot extends LoggedRobot {
       ThreeCoralFeedToFoxtrot = PathPlannerPath.fromPathFile("Feed To Foxtrot");
       ThreeCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Foxtrot To Feed");
       ThreeCoralFeedToAlpha = PathPlannerPath.fromPathFile("Feed To Alpha");
+
       Leave = PathPlannerPath.fromPathFile("Leave");
+
       PushAndPreloadIndia = PathPlannerPath.fromPathFile("Push and Preload India");
-      StartToKilo = PathPlannerPath.fromPathFile("Start to Kilo");
-      KiloToFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
-      FeedToLima = PathPlannerPath.fromPathFile("Feed to Lima");
-      LimaToFeed = PathPlannerPath.fromPathFile("Lima to Feed");
-      FeedToKilo = PathPlannerPath.fromPathFile("Feed to Kilo");
+
+      FourCoralStartToKilo = PathPlannerPath.fromPathFile("Start to Kilo");
+      FourCoralKiloToFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
+      FourCoralFeedToLima = PathPlannerPath.fromPathFile("Feed to Lima");
+      FourCoralLimaToFeed = PathPlannerPath.fromPathFile("Lima to Feed");
+      FourCoralFeedToKilo = PathPlannerPath.fromPathFile("Feed to Kilo");
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner paths", true);
     }
