@@ -34,7 +34,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
                 () -> {
                   superstructure.requestFeed();
                 })
-            .andThen(new WaitUntilCommand(() -> superstructure.pieceSecured())),
+            .andThen(new WaitUntilCommand(() -> superstructure.hasPiece())),
         AutoBuilder.followPath(Robot.FeedToLima),
         new InstantCommand(
             () -> {
@@ -48,7 +48,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
                 () -> {
                   superstructure.requestFeed();
                 })
-            .andThen(new WaitUntilCommand(() -> superstructure.pieceSecured())),
+            .andThen(new WaitUntilCommand(() -> superstructure.hasPiece())),
         AutoBuilder.followPath(Robot.FeedToKilo),
         new InstantCommand(
             () -> {
@@ -62,7 +62,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
                 () -> {
                   superstructure.requestFeed();
                 })
-            .andThen(new WaitUntilCommand(() -> superstructure.pieceSecured())),
+            .andThen(new WaitUntilCommand(() -> superstructure.hasPiece())),
         AutoBuilder.followPath(Robot.FeedToLima),
         new InstantCommand(
             () -> {
