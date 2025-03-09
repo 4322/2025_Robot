@@ -31,7 +31,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
-        AutoBuilder.followPath(Robot.FourCoralFeedToLima),
+        AutoBuilder.followPath(Robot.FourCoralFeedToKiloSwipe),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
@@ -39,9 +39,9 @@ public class FourCoralLeft extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.FourCoralLimaToFeed),
+        AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
-        AutoBuilder.followPath(Robot.FourCoralFeedToKilo),
+        AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
@@ -49,7 +49,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
             }),
         new AutoPreScoreCoral(swerve, superstructure, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
+        AutoBuilder.followPath(Robot.FourCoralLimaToFeed),
         new AutoLeftFeedCoral(swerve, superstructure, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(

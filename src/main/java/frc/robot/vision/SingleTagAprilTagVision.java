@@ -89,10 +89,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     } else {
       targetTagID = RobotContainer.operatorBoard.getAprilTag();
       useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
-      unprocessedResults =
-          useFrontLeftCam
-              ? leftCamUnprocessedResults
-              : rightCamUnprocessedResults;
+      unprocessedResults = useFrontLeftCam ? leftCamUnprocessedResults : rightCamUnprocessedResults;
       robotToCameraPose =
           useFrontLeftCam
               ? Constants.Vision.frontLeftCamera3dPos
