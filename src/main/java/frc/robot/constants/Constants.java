@@ -176,6 +176,8 @@ public class Constants {
     public static final double ffMaxRadius = 0.8;
     public static final double elevatorRaiseThreshold = 1.5;
     public static final double flipOverrideThreshold = 1.0;
+    public static final double minScoreSpeed =
+        0.25; // m/s to pull us into the reef and straighten out rotation
 
     public static final double offsetTagSideSwipeX = Units.inchesToMeters(8);
     public static final double offsetTagSideSwipeY = Units.inchesToMeters(2);

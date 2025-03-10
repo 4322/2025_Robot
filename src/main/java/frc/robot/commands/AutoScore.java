@@ -435,14 +435,23 @@ public class AutoScore extends Command {
           driveVelocityScalar = 0;
         }
 
-        // Command speeds
-        driveVelocity =
-            new Pose2d(
-                    new Translation2d(),
-                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
-                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
-                .getTranslation();
+        // pull straight into reef if we're close to the end of the profiled path
+        if (currentDistance < driveController.getPositionTolerance() * 2.0
+            && driveVelocityScalar < Constants.AutoScoring.minScoreSpeed) {
+          driveVelocity =
+              desiredPose
+                  .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+                  .getTranslation();
+        } else {
+          driveVelocity =
+              new Pose2d(
+                      new Translation2d(),
+                      currentTranslation.minus(desiredPose.getTranslation()).getAngle())
+                  .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
+                  .getTranslation();
+        }
 
+        // Command speeds
         swerve.requestVelocity(
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
