@@ -3,8 +3,11 @@
   "robotLength": 0.8509,
   "holonomicMode": true,
   "pathFolders": [
+    "3 Coral Left(India Alpha Bravo)",
+    "3 Coral Right",
     "4 Coral Left",
-    "3 Coral Right"
+    "4 Coral Right",
+    "3 Coral Right(Echo Alpha Bravo)"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.5,

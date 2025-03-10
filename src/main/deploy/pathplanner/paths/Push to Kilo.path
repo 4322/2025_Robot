@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.010028409090909,
-        "y": 1.4274005681818187
+        "x": 7.139659090909091,
+        "y": 7.031434659090909
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.4615909090909085,
-        "y": 1.6866619318181812
+        "x": 9.173863636363638,
+        "y": 7.061349431818181
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.4046022727272724,
-        "y": 2.1752698863636364
+        "x": 3.789204545449559,
+        "y": 5.77501420455044
       },
       "prevControl": {
-        "x": 5.6638636363636365,
-        "y": 1.8063210227272726
+        "x": 3.3005965909041053,
+        "y": 7.051377840914077
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 3.0,
-    "rotation": 119.99999999999999
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": "3 Coral Right(Echo Alpha Bravo)",
+  "folder": "4 Coral Left",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 119.99999999999999
+    "velocity": 0.0,
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

@@ -44,19 +44,31 @@ public class Robot extends LoggedRobot {
   private Timer coastButtonTimer = new Timer();
   public static boolean robotInCoastMode;
 
-  public static PathPlannerPath ThreeCoralStartToEcho;
-  public static PathPlannerPath ThreeCoralEchoToFeed;
-  public static PathPlannerPath ThreeCoralFeedToFoxtrot;
-  public static PathPlannerPath ThreeCoralFoxtrotToFeed;
-  public static PathPlannerPath ThreeCoralFeedToAlpha;
   public static PathPlannerPath Leave;
   public static PathPlannerPath PushAndPreloadIndia;
+  // Four coral left
   public static PathPlannerPath FourCoralStartToKilo;
   public static PathPlannerPath FourCoralKiloToFeed;
   public static PathPlannerPath FourCoralFeedToLima;
   public static PathPlannerPath FourCoralLimaToFeed;
   public static PathPlannerPath FourCoralFeedToKilo;
   public static PathPlannerPath FourCoralFeedToKiloSwipe;
+  public static PathPlannerPath FourCoralPushToKilo;
+
+  // Four coral right
+  public static PathPlannerPath FourCoralStartToCharlie;
+  public static PathPlannerPath FourCoralCharlieToFeed;
+  public static PathPlannerPath FourCoralFeedToCharlie;
+  public static PathPlannerPath FourCoralFeedToDelta;
+  public static PathPlannerPath FourCoralDeltaToFeed;
+  public static PathPlannerPath FourCoralFeedToCharlieSwipe;
+
+  // Three Coral Left
+  public static PathPlannerPath ThreeCoralStartToIndia;
+  public static PathPlannerPath ThreeCoralIndiaToFeed;
+  public static PathPlannerPath ThreeCoralAlphaToFeed;
+  public static PathPlannerPath ThreeCoralFeedToBravo;
+  public static PathPlannerPath ThreeCoralFeedToAlphaSwipe;
 
   @Override
   public void robotInit() {
@@ -147,12 +159,6 @@ public class Robot extends LoggedRobot {
     Logger.disableConsoleCapture();
 
     try {
-      ThreeCoralStartToEcho = PathPlannerPath.fromPathFile("Start To Echo");
-      ThreeCoralEchoToFeed = PathPlannerPath.fromPathFile("Echo To Feed");
-      ThreeCoralFeedToFoxtrot = PathPlannerPath.fromPathFile("Feed To Foxtrot");
-      ThreeCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Foxtrot To Feed");
-      ThreeCoralFeedToAlpha = PathPlannerPath.fromPathFile("Feed To Alpha");
-
       Leave = PathPlannerPath.fromPathFile("Leave");
 
       PushAndPreloadIndia = PathPlannerPath.fromPathFile("Push and Preload India");
@@ -163,6 +169,20 @@ public class Robot extends LoggedRobot {
       FourCoralLimaToFeed = PathPlannerPath.fromPathFile("Lima to Feed");
       FourCoralFeedToKilo = PathPlannerPath.fromPathFile("Feed to Kilo");
       FourCoralFeedToKiloSwipe = PathPlannerPath.fromPathFile("Feed to Kilo Swipe");
+      FourCoralPushToKilo = PathPlannerPath.fromPathFile("Push to Kilo");
+
+      FourCoralStartToCharlie = PathPlannerPath.fromPathFile("Start to Charlie");
+      FourCoralCharlieToFeed = PathPlannerPath.fromPathFile("Charlie to Feed");
+      FourCoralFeedToCharlie = PathPlannerPath.fromPathFile("Feed to Charlie");
+      FourCoralFeedToDelta = PathPlannerPath.fromPathFile("Feed to Delta");
+      FourCoralDeltaToFeed = PathPlannerPath.fromPathFile("Delta to Feed");
+      FourCoralFeedToCharlieSwipe = PathPlannerPath.fromPathFile("Feed to Charlie Swipe");
+
+      ThreeCoralStartToIndia = PathPlannerPath.fromPathFile("Start to India");
+      ThreeCoralIndiaToFeed = PathPlannerPath.fromPathFile("India to Feed");
+      ThreeCoralAlphaToFeed = PathPlannerPath.fromPathFile("Alpha to Feed");
+      ThreeCoralFeedToBravo = PathPlannerPath.fromPathFile("Feed to Bravo");
+      ThreeCoralFeedToAlphaSwipe = PathPlannerPath.fromPathFile("Feed to Alpha Swipe");
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner paths", true);
     }

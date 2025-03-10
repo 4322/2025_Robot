@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.1666761363636364,
-        "y": 0.9886505681818175
+        "x": 7.000056818181817,
+        "y": 5.974446022727273
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.224113636363635,
-        "y": 0.6594374999999999
+        "x": 6.511448863636364,
+        "y": 6.084133522727273
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.544204545454546,
-        "y": 2.4943607954545453
+        "x": 5.653892045454545,
+        "y": 5.685269886363637
       },
       "prevControl": {
-        "x": 6.282809377878127,
-        "y": 1.2150596989810052
+        "x": 5.913153409090909,
+        "y": 6.05421875
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
-    "rotation": 119.99999999999999
+    "velocity": 3.0,
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "3 Coral Right",
+  "folder": "3 Coral Left(India Alpha Bravo)",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 54.0
+    "velocity": 0.0,
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }
