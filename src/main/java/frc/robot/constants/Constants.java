@@ -172,7 +172,7 @@ public class Constants {
     public static final double driveMaxAcceleration = 4;
     public static final double driveTolerance = 0.06;
     public static final double driveToleranceSlow = 0.06;
-    public static final double ffMinRadius = 0.1;
+    public static final double ffMinRadius = 0.2;
     public static final double ffMaxRadius = 0.8;
     public static final double elevatorRaiseThreshold = 1.5;
     public static final double flipOverrideThreshold = 1.0;
