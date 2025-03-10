@@ -16,7 +16,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoScore;
+import frc.robot.commands.LeftFeed;
 import frc.robot.commands.ManualScore;
+import frc.robot.commands.RightFeed;
 import frc.robot.commands.auto.AutoLeftFeedCoral;
 import frc.robot.commands.auto.AutoRightFeedCoral;
 import frc.robot.commons.Util;
@@ -132,6 +134,10 @@ public class RobotContainer {
               }
             },
             swerve));
+    new JoystickButton(driver, XboxController.Button.kLeftStick.value)
+        .whileTrue(new LeftFeed(swerve, elevator, superstructure));
+    new JoystickButton(driver, XboxController.Button.kRightStick.value)
+        .whileTrue(new RightFeed(swerve, elevator, superstructure));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
         .whileTrue(new AutoRightFeedCoral(swerve, superstructure, false));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
