@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.206206839425223,
+        "y": 4.214239501953125
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8587406703404015,
+        "y": 3.6241285051618304
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.957226126534598,
+        "y": 1.9152600969587048
+      },
+      "prevControl": {
+        "x": 2.333205740792411,
+        "y": 2.4160051618303546
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": 54.0
+  },
+  "reversed": false,
+  "folder": "3 Coral Right(Echo Alpha Bravo)",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
