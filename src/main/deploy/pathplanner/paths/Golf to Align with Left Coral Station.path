@@ -20,8 +20,8 @@
         "y": 1.2048723493303566
       },
       "prevControl": {
-        "x": 4.642131696428571,
-        "y": 1.174828665597098
+        "x": 7.022315761021205,
+        "y": 1.8379320417131693
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 0.0
+    "rotation": 54.0
   },
   "reversed": false,
   "folder": "Preload Golf 3",
