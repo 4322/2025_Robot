@@ -81,7 +81,7 @@ public class LED extends SubsystemBase {
           leds.setLEDs(255, 255, 255);
           break;
         case TAG_INIT_VISIBLE:
-        leds.setLEDs(255, 255, 0);
+          leds.setLEDs(255, 255, 0);
           break;
       }
     }

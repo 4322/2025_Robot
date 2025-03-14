@@ -84,8 +84,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     leftCamUnprocessedResults = frontLeftCamera.getAllUnreadResults();
     rightCamUnprocessedResults = frontRightCamera.getAllUnreadResults();
     Logger.recordOutput(
-        "Loop/SingleTagAprilTagVision1Ms",
-        (RobotController.getFPGATime() - startLoopMs) / 1000.0);
+        "Loop/SingleTagAprilTagVision1Ms", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
 
     if (RobotContainer.autoFeedRequested) {
       targetTagID = RobotContainer.coralStationTagID;
