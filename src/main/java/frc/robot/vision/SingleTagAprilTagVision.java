@@ -133,7 +133,6 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
       // Do a warmup in order to avoid massive loop overruns upon seeing correct tag for first time
       if (warmupRequested) {
-        warmupRequested = false;
         target =
             new PhotonTrackedTarget(
                 0,
@@ -234,6 +233,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       // TODO: Fix timesync server so we don't have to do this
       if (latencyMs < 0) {
         timestamp += ((25 - latencyMs) / 1000);
+      }
+
+      if (warmupRequested) {
+        warmupRequested = false;
       }
 
       visionUpdates.add(
