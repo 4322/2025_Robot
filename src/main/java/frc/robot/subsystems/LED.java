@@ -18,6 +18,7 @@ public class LED extends SubsystemBase {
   public enum LEDState {
     UNKNOWN,
     IDLE,
+    TAG_INIT_VISIBLE,
     CORAL_SECURED,
     AUTOMATED_SCORING,
     COAST_MODE,
@@ -37,6 +38,8 @@ public class LED extends SubsystemBase {
         setLEDState(LEDState.ZERO_ROBOT);
       } else if (Robot.robotInCoastMode) {
         setLEDState(LEDState.COAST_MODE);
+      } else if (RobotContainer.aprilTagVision.hasTargetTag()) {
+        setLEDState(LEDState.TAG_INIT_VISIBLE);
       } else if (RobotContainer.superstructure.pieceSecured()) {
         setLEDState(LEDState.CORAL_SECURED);
       } else {
@@ -76,6 +79,9 @@ public class LED extends SubsystemBase {
           break;
         case ZERO_ROBOT:
           leds.setLEDs(255, 255, 255);
+          break;
+        case TAG_INIT_VISIBLE:
+        leds.setLEDs(255, 255, 0);
           break;
       }
     }
