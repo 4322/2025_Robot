@@ -254,6 +254,10 @@ public class AutoLeftFeedCoral extends Command {
   public void end(boolean interrupted) {
     RobotContainer.autoDriveEngaged = false;
     RobotContainer.autoFeedRequested = false;
+    if (DriverStation.isTeleopEnabled()) {
+        superstructure.requestIdle();
+    }
+    
     // Reset logging
     Logger.recordOutput("AutoFeed/DesiredPoseGoal", new Pose2d());
     Logger.recordOutput("AutoFeed/DriveToPoseSetpoint", new Pose2d());
