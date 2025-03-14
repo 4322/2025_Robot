@@ -123,6 +123,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       if (!unprocessedResult.hasTargets() && !warmupRequested) {
         continue;
       }
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision0.1Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
 
       PhotonTrackedTarget target = null;
       for (PhotonTrackedTarget trackedTarget : unprocessedResult.getTargets()) {
@@ -130,6 +133,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           target = trackedTarget;
         }
       }
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision0.2Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
 
       // Do a warmup in order to avoid massive loop overruns upon seeing correct tag for first time
       if (warmupRequested) {
@@ -156,10 +162,16 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
       Pose3d tagPos = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get();
       double timestamp = unprocessedResult.getTimestampSeconds();
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision0.3Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
 
       // Disambiguate and use best pose estimate
       Pose3d cameraPose0 = tagPos.transformBy(target.getBestCameraToTarget().inverse());
       Pose3d cameraPose1 = tagPos.transformBy(target.getAlternateCameraToTarget().inverse());
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision0.4Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
       Pose2d robotPose0 =
           cameraPose0
               .transformBy(GeomUtil.pose3dToTransform3d(robotToCameraPose).inverse())
