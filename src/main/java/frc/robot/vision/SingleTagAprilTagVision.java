@@ -170,6 +170,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
               .transformBy(GeomUtil.pose3dToTransform3d(robotToCameraPose).inverse())
               .toPose2d();
 
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision1Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
       double projectionError = target.getPoseAmbiguity();
 
       // Select a pose using projection error and current rotation
@@ -185,6 +188,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
         robotPose = robotPose1;
       }
 
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision2Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
       // Use gyro to rotate vision translation vector for greater accuracy
       Rotation2d robotThetaError =
           RobotContainer.swerve.getPose().getRotation().minus(robotPose.getRotation());
@@ -194,6 +200,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
             robotThetaError.getDegrees() + (Math.signum(robotThetaError.getDegrees()) * -360);
         robotThetaError = Rotation2d.fromDegrees(minThetaError);
       }
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision3Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
       Pose2d tagToRobotPose = robotPose.relativeTo(tagPos.toPose2d());
       robotPose =
           tagPos
@@ -235,7 +244,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       if (latencyMs < 0) {
         timestamp += ((25 - latencyMs) / 1000);
       }
-
+      Logger.recordOutput(
+          "Loop/SingleTagAprilTagVision4Ms",
+          (RobotController.getFPGATime() - startLoopMs) / 1000.0);
       visionUpdates.add(
           new TimestampedVisionUpdate(
               robotPose,
@@ -252,12 +263,13 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     }
 
     Logger.recordOutput("Vision/hasTargetTag", hasTargetTag());
-
+    Logger.recordOutput(
+        "Loop/SingleTagAprilTagVision5Ms", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
     // Apply all vision updates to pose estimator
     visionConsumer.accept(visionUpdates);
 
     Logger.recordOutput(
-        "Loop/SingleTagAprilTagVisionMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
+        "Loop/SingleTagAprilTagVision6Ms", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 
   public boolean hasTargetTag() {
