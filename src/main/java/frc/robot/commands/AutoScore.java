@@ -120,7 +120,9 @@ public class AutoScore extends Command {
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
     desiredPose =
-        RobotContainer.operatorBoard.isAlgaePeg() ? desiredOffsetSideSwipePose : desiredTagPose;
+        RobotContainer.operatorBoard.getFlipRequested()
+            ? desiredOffsetSideSwipePose
+            : desiredTagPose;
     state = AutoScoreStates.TARGET_TAG_NOT_VISIBLE;
   }
 
@@ -227,7 +229,7 @@ public class AutoScore extends Command {
                                 : Constants.Vision.frontRightCamera3dPos.getY())
                         .rotateBy(swerve.getPose().getRotation()));
         lastSetpointTranslation = currentTranslation;
-        if (RobotContainer.operatorBoard.isAlgaePeg()) {
+        if (RobotContainer.operatorBoard.getFlipRequested()) {
           desiredPose = desiredOffsetSideSwipePose;
           state = AutoScoreStates.SIDE_SWIPE_OFFSET;
         } else {

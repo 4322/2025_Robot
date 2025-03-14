@@ -212,6 +212,20 @@ public class RobotContainer {
                       operatorBoard.setOverrideFlipRequest(false);
                     })
                 .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 9)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      operatorBoard.setInhibitOverrideFlipRequest(true);
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 9)
+        .onFalse(
+            new InstantCommand(
+                    () -> {
+                      operatorBoard.setInhibitOverrideFlipRequest(false);
+                    })
+                .ignoringDisable(true));
   }
 
   private void configureAprilTagVision() {

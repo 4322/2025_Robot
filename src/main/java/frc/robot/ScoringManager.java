@@ -59,6 +59,7 @@ public class ScoringManager {
   private int aprilTag = 1;
   private boolean flipRequested = false;
   private boolean overrideFlipRequested = false;
+  private boolean inhibitOverrideFlipRequested = false;
   private ScoringLocation scoringLocation = ScoringLocation.A;
 
   // scoring face enumerated from 0 - 5 counterclockwise starting at reef face
@@ -102,6 +103,10 @@ public class ScoringManager {
     overrideFlipRequested = requestOverride;
   }
 
+  public void setInhibitOverrideFlipRequest(boolean inhibitRequestOverride) {
+    inhibitOverrideFlipRequested = inhibitRequestOverride;
+  }
+
   public GenericHID getRightController() {
     return rightController;
   }
@@ -123,7 +128,7 @@ public class ScoringManager {
   }
 
   public boolean getFlipRequested() {
-    return flipRequested || overrideFlipRequested;
+    return (flipRequested || overrideFlipRequested) && !inhibitOverrideFlipRequested;
   }
 
   public ScoringLocation getScoringLocation() {
