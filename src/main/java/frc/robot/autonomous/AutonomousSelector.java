@@ -11,7 +11,6 @@ import frc.robot.autonomous.modes.PreloadOnlyE3;
 import frc.robot.autonomous.modes.PreloadOnlyG3;
 import frc.robot.autonomous.modes.PreloadOnlyI3;
 import frc.robot.autonomous.modes.PushAndPreloadI3;
-import frc.robot.autonomous.modes.ThreeCoralLeft;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.swerve.Swerve;
 
@@ -22,7 +21,6 @@ public class AutonomousSelector {
 
   public AutonomousSelector(Swerve swerve, Superstructure superstructure) {
     autonomousSelector.setDefaultOption("DO_NOTHING", new SequentialCommandGroup());
-    autonomousSelector.addOption("THREE_CORAL_LEFT", new ThreeCoralLeft(swerve, superstructure));
     autonomousSelector.addOption("LEAVE", new Leave(swerve));
     autonomousSelector.addOption("PRELOAD_ONLY_G3", new PreloadOnlyG3(swerve, superstructure));
     autonomousSelector.addOption("PRELOAD_ONLY_I3", new PreloadOnlyI3(swerve, superstructure));
