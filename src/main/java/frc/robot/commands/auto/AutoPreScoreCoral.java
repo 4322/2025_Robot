@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.commons.GeomUtil;
@@ -121,6 +122,8 @@ public class AutoPreScoreCoral extends Command {
 
   @Override
   public void execute() {
+    long startLoopMs = RobotController.getFPGATime();
+
     // Update from tunable numbers
     if (driveMaxVelocity.hasChanged(hashCode())
         || driveMaxVelocitySlow.hasChanged(hashCode())
@@ -409,6 +412,8 @@ public class AutoPreScoreCoral extends Command {
         new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
     Logger.recordOutput("AutoPreScore/DesiredPoseGoal", desiredPose);
     Logger.recordOutput("AutoPreScore/State", state.toString());
+    Logger.recordOutput(
+        "Loop/AutoPreScoreCoralMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
   }
 
   @Override
