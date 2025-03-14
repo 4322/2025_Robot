@@ -6,6 +6,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -41,6 +42,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   private List<PhotonPipelineResult> backCamUnprocessedResults;
   private List<PhotonPipelineResult> leftCamUnprocessedResults;
   private List<PhotonPipelineResult> rightCamUnprocessedResults;
+  private boolean warmupRequested = false;
 
   private PolynomialRegression xyStdDevModel =
       new PolynomialRegression(
@@ -105,7 +107,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
     // skip loop if camera hasn't processed a new frame since last check
     // Assume max frames(20) in FIFO queue to be switching camera so discard initial results
-    if (unprocessedResults.isEmpty() || unprocessedResults.size() == 20) {
+    if ((unprocessedResults.isEmpty() || unprocessedResults.size() == 20) && !warmupRequested) {
       return;
     }
 
@@ -118,7 +120,7 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       }
 
       // continue if there's no targets
-      if (!unprocessedResult.hasTargets()) {
+      if (!unprocessedResult.hasTargets() && !warmupRequested) {
         continue;
       }
 
@@ -127,6 +129,12 @@ public class SingleTagAprilTagVision extends SubsystemBase {
         if (trackedTarget.fiducialId == targetTagID) {
           target = trackedTarget;
         }
+      }
+
+      // Do a warmup in order to avoid massive loop overruns upon seeing correct tag for first time
+      if (warmupRequested) {
+        warmupRequested = false;
+        target = new PhotonTrackedTarget(0, 0, 0, 0, 1, 0, 0, new Transform3d(), new Transform3d(), 0, new ArrayList<>(), new ArrayList<>());
       }
 
       // Continue if the camera doesn't have the right target we're looking for
@@ -247,5 +255,11 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       }
     }
     return false;
+  }
+
+  // Do a warmup in order to avoid massive loop overruns upon seeing correct tag for first time
+  // Create a fake tag with ID 1 which we by default look for
+  public void warmupPhotonVision() {
+    warmupRequested = true;
   }
 }
