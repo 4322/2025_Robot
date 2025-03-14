@@ -134,7 +134,20 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       // Do a warmup in order to avoid massive loop overruns upon seeing correct tag for first time
       if (warmupRequested) {
         warmupRequested = false;
-        target = new PhotonTrackedTarget(0, 0, 0, 0, 1, 0, 0, new Transform3d(), new Transform3d(), 0, new ArrayList<>(), new ArrayList<>());
+        target =
+            new PhotonTrackedTarget(
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                new Transform3d(),
+                new Transform3d(),
+                0,
+                new ArrayList<>(),
+                new ArrayList<>());
       }
 
       // Continue if the camera doesn't have the right target we're looking for
@@ -192,10 +205,11 @@ public class SingleTagAprilTagVision extends SubsystemBase {
       Logger.recordOutput("Vision/Pose Estimate", robotPose);
 
       // Move on to next camera if robot pose is off the field
-      if (robotPose.getX() < -fieldBorderMargin
-          || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
-          || robotPose.getY() < -fieldBorderMargin
-          || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin) {
+      if ((robotPose.getX() < -fieldBorderMargin
+              || robotPose.getX() > FieldConstants.fieldLength + fieldBorderMargin
+              || robotPose.getY() < -fieldBorderMargin
+              || robotPose.getY() > FieldConstants.fieldWidth + fieldBorderMargin)
+          && !warmupRequested) {
         continue;
       }
 

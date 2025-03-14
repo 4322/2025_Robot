@@ -189,7 +189,8 @@ public class Robot extends LoggedRobot {
 
     m_robotContainer.configureAutonomousSelector();
     FollowPathCommand.warmupCommand().schedule(); // avoid delay when auto starts
-    RobotContainer.aprilTagVision.warmupPhotonVision(); // avoid delay upon seeing correct tsg for first time
+    RobotContainer.aprilTagVision
+        .warmupPhotonVision(); // avoid delay upon seeing correct tsg for first time
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 
