@@ -28,7 +28,7 @@ public class FourCoralRight extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.C);
             }),
-        new AutoPreScoreCoral(swerve, superstructure, false),
+        new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralCharlieToFeed),
         new AutoRightFeedCoral(swerve, superstructure, false),
@@ -38,7 +38,7 @@ public class FourCoralRight extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.C);
             }),
-        new AutoPreScoreCoral(swerve, superstructure, false),
+        new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralCharlieToFeed),
         new AutoRightFeedCoral(swerve, superstructure, false),
@@ -48,7 +48,7 @@ public class FourCoralRight extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.D);
             }),
-        new AutoPreScoreCoral(swerve, superstructure, false),
+        new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralDeltaToFeed),
         new AutoRightFeedCoral(swerve, superstructure, false),
@@ -58,7 +58,7 @@ public class FourCoralRight extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.D);
             }),
-        new AutoPreScoreCoral(swerve, superstructure, false),
+        new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2));
   }
 }

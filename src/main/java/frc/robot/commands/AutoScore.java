@@ -49,6 +49,7 @@ public class AutoScore extends Command {
   private int desiredTag;
   private boolean useLeftCam;
   private double autoRotateSetpoint;
+  private boolean warmup = false;
 
   private double driveVelocityScalar;
   private Translation2d driveVelocity = new Translation2d();
@@ -93,10 +94,11 @@ public class AutoScore extends Command {
   }
 
   /** Drives to the specified pose under full software control. */
-  public AutoScore(Swerve swerve, Superstructure superstructure, boolean slowMode) {
+  public AutoScore(Swerve swerve, Superstructure superstructure, boolean slowMode, boolean warmup) {
     this.swerve = swerve;
     this.superstructure = superstructure;
     this.slowMode = slowMode;
+    this.warmup = warmup;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     addRequirements(swerve, superstructure);
@@ -459,6 +461,11 @@ public class AutoScore extends Command {
     Logger.recordOutput("AutoScore/DesiredPoseGoal", desiredPose);
     Logger.recordOutput("AutoScore/State", state.toString());
     Logger.recordOutput("Loop/AutoScoreMs", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
+  }
+
+  @Override
+  public boolean isFinished() {
+    return warmup;
   }
 
   @Override

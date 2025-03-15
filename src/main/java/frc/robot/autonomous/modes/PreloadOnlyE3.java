@@ -23,7 +23,7 @@ public class PreloadOnlyE3 extends SequentialCommandGroup {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.E);
             }),
-        new AutoPreScoreCoral(swerve, superstructure, false),
+        new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure));
   }
 }

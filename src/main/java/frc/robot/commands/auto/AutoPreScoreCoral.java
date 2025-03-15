@@ -45,6 +45,7 @@ public class AutoPreScoreCoral extends Command {
   private int desiredTag;
   private boolean useLeftCam;
   private double autoRotateSetpoint;
+  private boolean warmup = false;
 
   private double driveVelocityScalar;
   private Translation2d driveVelocity = new Translation2d();
@@ -88,10 +89,12 @@ public class AutoPreScoreCoral extends Command {
   }
 
   /** Drives to the specified pose under full software control. */
-  public AutoPreScoreCoral(Swerve swerve, Superstructure superstructure, boolean slowMode) {
+  public AutoPreScoreCoral(
+      Swerve swerve, Superstructure superstructure, boolean slowMode, boolean warmup) {
     this.swerve = swerve;
     this.superstructure = superstructure;
     this.slowMode = slowMode;
+    this.warmup = warmup;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     addRequirements(swerve, superstructure);
@@ -418,7 +421,7 @@ public class AutoPreScoreCoral extends Command {
 
   @Override
   public boolean isFinished() {
-    return state == AutoScoreStates.SCORING_POSITION && driveController.atGoal();
+    return (state == AutoScoreStates.SCORING_POSITION && driveController.atGoal()) || warmup;
   }
 
   @Override

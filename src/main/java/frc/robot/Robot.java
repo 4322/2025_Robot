@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoScore;
+import frc.robot.commands.auto.AutoPreScoreCoral;
 import frc.robot.constants.Constants;
 import java.io.File;
 import java.io.IOException;
@@ -188,9 +191,15 @@ public class Robot extends LoggedRobot {
     }
 
     m_robotContainer.configureAutonomousSelector();
-    FollowPathCommand.warmupCommand().schedule(); // avoid delay when auto starts
     RobotContainer.aprilTagVision
         .warmupPhotonVision(); // avoid delay upon seeing correct tsg for first time
+    CommandScheduler.getInstance()
+        .schedule(
+            new SequentialCommandGroup(
+                FollowPathCommand.warmupCommand(),
+                new AutoPreScoreCoral(
+                    RobotContainer.swerve, RobotContainer.superstructure, false, true),
+                new AutoScore(RobotContainer.swerve, RobotContainer.superstructure, false, true)));
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 

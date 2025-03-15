@@ -143,7 +143,7 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
         .whileTrue(new AutoLeftFeedCoral(swerve, superstructure, false));
     new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
-        .whileTrue(new AutoScore(swerve, superstructure, false));
+        .whileTrue(new AutoScore(swerve, superstructure, false, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new ManualScore(swerve, superstructure));
     new Trigger(() -> endEffector.coralSecured())
