@@ -247,7 +247,10 @@ public class AutoRightFeedCoral extends Command {
 
   @Override
   public boolean isFinished() {
-    return superstructure.hasPiece();
+    if (DriverStation.isAutonomous()) {
+      return superstructure.hasPiece();
+    }
+    return false;
   }
 
   @Override
