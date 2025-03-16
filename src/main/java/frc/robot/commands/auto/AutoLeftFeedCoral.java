@@ -197,8 +197,7 @@ public class AutoLeftFeedCoral extends Command {
         currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
         ffScaler =
             MathUtil.clamp(
-                (currentDistance - ffMinRadius.get())
-                    / (ffMaxRadius.get() - ffMinRadius.get()),
+                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
                 0.0,
                 1.0);
         driveErrorAbs = currentDistance;
