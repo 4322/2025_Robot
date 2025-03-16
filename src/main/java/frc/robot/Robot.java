@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -212,6 +213,8 @@ public class Robot extends LoggedRobot {
                 new AutoPreScoreCoral(
                     RobotContainer.swerve, RobotContainer.superstructure, false, true),
                 new AutoScore(RobotContainer.swerve, RobotContainer.superstructure, false, true)));
+    // Remove signal logging during comp to prevent loop overrun in auto beginning
+    SignalLogger.enableAutoLogging(false);
     lastRobotPeriodicUsec = RobotController.getFPGATime();
   }
 
