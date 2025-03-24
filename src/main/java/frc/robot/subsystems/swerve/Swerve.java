@@ -300,6 +300,9 @@ public class Swerve extends SubsystemBase {
 
   public void enableBrakeMode(boolean enable) {
     drivetrain.configNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    for (int i = 0; i < 4; i++) {
+      drivetrain.getModule(i).getSteerMotor().setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
   }
 
   /* Swerve State */
