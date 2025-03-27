@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
@@ -27,6 +29,7 @@ public class LED extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Logger.recordOutput("LED/State", currentState.toString());
     if (DriverStation.isDisabled()) {
       if (zeroButtonTimer.isRunning()) {
         if (zeroButtonTimer.hasElapsed(0.5)) {
