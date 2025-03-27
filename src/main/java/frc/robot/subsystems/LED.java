@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.StrobeAnimation;
@@ -11,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.climber.Climber.ClimbState;
+import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
   private CANdle leds = new CANdle(31);
@@ -23,6 +23,7 @@ public class LED extends SubsystemBase {
     TAG_INIT_VISIBLE,
     CORAL_SECURED,
     AUTOMATED_SCORING,
+    CLIMBING,
     COAST_MODE,
     ZERO_ROBOT;
   }
@@ -53,6 +54,8 @@ public class LED extends SubsystemBase {
         setLEDState(LEDState.AUTOMATED_SCORING);
       } else if (RobotContainer.superstructure.pieceSecured()) {
         setLEDState(LEDState.CORAL_SECURED);
+      } else if (RobotContainer.climber.getState() != ClimbState.STARTING_CONFIG) {
+        setLEDState(LEDState.CLIMBING);
       } else {
         setLEDState(LEDState.IDLE);
       }
@@ -84,7 +87,10 @@ public class LED extends SubsystemBase {
           leds.setLEDs(255, 255, 255);
           break;
         case TAG_INIT_VISIBLE:
-          leds.setLEDs(255, 255, 0);
+          leds.setLEDs(255, 255, 0); // yellow
+          break;
+        case CLIMBING:
+          leds.setLEDs(255, 0, 255); // purple
           break;
       }
     }

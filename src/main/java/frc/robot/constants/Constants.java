@@ -18,6 +18,7 @@ public class Constants {
   public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = true;
   public static final boolean flipperEnabled = true;
+  public static final boolean climberEnabled = true;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
@@ -151,6 +152,33 @@ public class Constants {
 
       public static final double descoreVoltage = -4;
     }
+  }
+
+  public static class Climber {
+    public static final int climberMotorID = 0; // TODO
+    public static final int servoHubID = 0; // TODO
+    public static final int pinServoChannelID = 0; // TODO
+    public static final int ratchetServoChannelID = 0; // TODO
+
+    public static final double gearRatio = 4.0;
+
+    public static final double supplyCurrentLimit = 40;
+    public static final double statorCurrentLimit = 100;
+    public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
+
+    public static final double kP = 1.0; // TODO
+    public static final double kD = 0;
+
+    public static final int ratchetServoUnlockPWM = 500; // TODO: Min position
+    public static final int ratchetServoLockPWM = 1500; // TODO: 0 degree position?
+
+    public static final int pinServoPullPWM = 500; // TODO: Min position
+    public static final int pinServoResetPWM = 2500; // TODO: Max position
+    public static final double servoWaitTimer = 0.2;
+
+    public static final double motorDeployRotations = 0; // TODO
+    public static final double motorRetractRotations = 0; // TODO
+    public static final double motorRotationPosTolerance = 3;
   }
 
   public static class Scoring {

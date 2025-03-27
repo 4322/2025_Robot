@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.flipper.Flipper;
@@ -15,11 +16,16 @@ public class Superstructure extends SubsystemBase {
   private boolean requestPreScoreFlip;
   private boolean requestScore;
   private boolean overrideSafeFlip;
+  private boolean requestPreClimb;
+  private boolean requestClimb;
+  private boolean requestRedoClimb;
+  private boolean enableClimb;
 
   private Superstates state = Superstates.IDLE;
   private Elevator elevator;
   private EndEffector endEffector;
   private Flipper flipper;
+  private Climber climber;
 
   private Level level = Level.L1;
   private Level prevLevel = Level.L1;
@@ -34,7 +40,10 @@ public class Superstructure extends SubsystemBase {
     SAFE_RETRACT,
     PRE_SCORE_FLIP,
     TRANSITION_FLIP,
-    SCORE
+    SCORE,
+    PRE_CLIMB,
+    CLIMB,
+    REDO_CLIMB
   }
 
   public static enum Level {
@@ -43,10 +52,12 @@ public class Superstructure extends SubsystemBase {
     L3
   }
 
-  public Superstructure(Elevator elevator, EndEffector endEffector, Flipper flipper) {
+  public Superstructure(
+      Elevator elevator, EndEffector endEffector, Flipper flipper, Climber climber) {
     this.elevator = elevator;
     this.endEffector = endEffector;
     this.flipper = flipper;
+    this.climber = climber;
   }
 
   @Override
@@ -70,6 +81,8 @@ public class Superstructure extends SubsystemBase {
           } else {
             state = Superstates.SAFE_FLIP;
           }
+        } else if (enableClimb && requestPreClimb) {
+          state = Superstates.PRE_CLIMB;
         }
         break;
       case FEEDING:
@@ -209,6 +222,27 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SAFE_RETRACT;
         }
         break;
+      case PRE_CLIMB:
+        climber.requestInitialDeploy();
+
+        if (requestClimb) {
+          state = Superstates.CLIMB;
+        }
+        break;
+      case CLIMB:
+        climber.requestRetract();
+
+        if (requestRedoClimb) {
+          state = Superstates.REDO_CLIMB;
+        }
+        break;
+      case REDO_CLIMB:
+        climber.requestResetDeploy();
+
+        if (requestClimb) {
+          state = Superstates.CLIMB;
+        }
+        break;
     }
   }
 
@@ -247,6 +281,25 @@ public class Superstructure extends SubsystemBase {
     requestScore = true;
   }
 
+  public void requestClimb() {
+    unsetAllRequests();
+    requestClimb = true;
+  }
+
+  public void requestResetClimb() {
+    unsetAllRequests();
+    requestRedoClimb = true;
+  }
+
+  public void requestPreClimb(boolean requestPreClimb) {
+    unsetAllRequests();
+    this.requestPreClimb = requestPreClimb;
+  }
+
+  public void enableClimb(boolean enable) {
+    enableClimb = enable;
+  }
+
   private void unsetAllRequests() {
     requestIdle = false;
     requestEject = false;
@@ -254,6 +307,9 @@ public class Superstructure extends SubsystemBase {
     requestPreScore = false;
     requestPreScoreFlip = false;
     requestScore = false;
+    requestPreClimb = false;
+    requestClimb = false;
+    requestRedoClimb = false;
   }
 
   public void requestLevel(Level level) {

@@ -27,6 +27,9 @@ import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
@@ -59,11 +62,15 @@ public class RobotContainer {
       Constants.endEffectorEnabled ? new EndEffectorIOTalonFX() : new EndEffectorIO() {};
   public static FlipperIO flipperIO =
       Constants.flipperEnabled ? new FlipperIOTalonFX() : new FlipperIO() {};
+  public static ClimberIO climberIO =
+      Constants.climberEnabled ? new ClimberIOTalonFX() : new ClimberIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static EndEffector endEffector = new EndEffector(endEffectorIO);
   public static Flipper flipper = new Flipper(flipperIO);
-  public static Superstructure superstructure = new Superstructure(elevator, endEffector, flipper);
+  public static Climber climber = new Climber(climberIO);
+  public static Superstructure superstructure =
+      new Superstructure(elevator, endEffector, flipper, climber);
   public static LED leds = new LED();
   public static boolean autoDriveEngaged = false;
   public static boolean autoFeedRequested = false;
@@ -146,6 +153,18 @@ public class RobotContainer {
         .whileTrue(new AutoScore(swerve, superstructure, false, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
         .whileTrue(new ManualScore(swerve, superstructure));
+    new JoystickButton(driver, XboxController.Button.kB.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestClimb();
+                }));
+    new JoystickButton(driver, XboxController.Button.kX.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestResetClimb();
+                }));
     new Trigger(() -> endEffector.coralSecured())
         .toggleOnTrue(
             new InstantCommand(
@@ -162,6 +181,7 @@ public class RobotContainer {
     // driver right trigger controls manual shooting of coral in ManualScore and AutoScore command
 
     // operator left controller button 6 while held controls elevator jiggle when feeding
+    // operator left controller button 12 while held controls coast mode when disabled
     operatorBoard.configScoringPosButtons();
     new JoystickButton(operatorBoard.getLeftController(), 5)
         .onTrue(
@@ -197,6 +217,7 @@ public class RobotContainer {
                       operatorBoard.setScoringLevel(Level.L3);
                     })
                 .ignoringDisable(true));
+
     // Override toggle for flip
     new JoystickButton(operatorBoard.getLeftController(), 8)
         .onTrue(
@@ -224,6 +245,36 @@ public class RobotContainer {
             new InstantCommand(
                     () -> {
                       operatorBoard.setInhibitOverrideFlipRequest(false);
+                    })
+                .ignoringDisable(true));
+
+    // Climb button bindings
+    new JoystickButton(operatorBoard.getLeftController(), 11)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superstructure.enableClimb(true);
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 11)
+        .onFalse(
+            new InstantCommand(
+                    () -> {
+                      superstructure.enableClimb(false);
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 7)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superstructure.requestPreClimb(true);
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(operatorBoard.getLeftController(), 7)
+        .onFalse(
+            new InstantCommand(
+                    () -> {
+                      superstructure.requestPreClimb(false);
                     })
                 .ignoringDisable(true));
   }

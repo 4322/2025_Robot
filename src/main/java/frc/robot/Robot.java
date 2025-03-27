@@ -266,6 +266,7 @@ public class Robot extends LoggedRobot {
     RobotContainer.endEffector.requestIdle();
     RobotContainer.elevator.requestSetpoint(0);
     RobotContainer.flipper.requestIdle();
+    RobotContainer.climber.setStartingConfig();
   }
 
   @Override
@@ -286,6 +287,7 @@ public class Robot extends LoggedRobot {
       RobotContainer.endEffector.enableBrakeMode(false);
       RobotContainer.flipper.enableBrakeMode(false);
       RobotContainer.swerve.enableBrakeMode(false);
+      RobotContainer.climber.enableBrakeMode(false);
       prevCoastButtonPressed = true;
       robotInCoastMode = true;
     } else if (coastButton.get() && prevCoastButtonPressed) { // reset previous state for reuse
@@ -300,6 +302,7 @@ public class Robot extends LoggedRobot {
         RobotContainer.endEffector.enableBrakeMode(true);
         RobotContainer.flipper.enableBrakeMode(true);
         RobotContainer.swerve.enableBrakeMode(true);
+        RobotContainer.climber.enableBrakeMode(true);
         robotInCoastMode = false;
       }
     }
@@ -311,6 +314,7 @@ public class Robot extends LoggedRobot {
         RobotContainer.endEffector.enableBrakeMode(false);
         RobotContainer.flipper.enableBrakeMode(false);
         RobotContainer.swerve.enableBrakeMode(false);
+        RobotContainer.climber.enableBrakeMode(false);
         robotInCoastMode = true;
       }
     } else if (RobotContainer.operatorBoard.getLeftController().getRawButtonReleased(12)) {
@@ -318,6 +322,7 @@ public class Robot extends LoggedRobot {
       RobotContainer.endEffector.enableBrakeMode(true);
       RobotContainer.flipper.enableBrakeMode(true);
       RobotContainer.swerve.enableBrakeMode(true);
+      RobotContainer.climber.enableBrakeMode(true);
       robotInCoastMode = false;
       coastToggleEnabled = false;
     }
@@ -336,6 +341,7 @@ public class Robot extends LoggedRobot {
       RobotContainer.endEffector.enableBrakeMode(true);
       RobotContainer.flipper.enableBrakeMode(true);
       RobotContainer.swerve.enableBrakeMode(true);
+      RobotContainer.climber.enableBrakeMode(true);
     }
   }
 
