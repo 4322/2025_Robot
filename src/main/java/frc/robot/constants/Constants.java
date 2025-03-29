@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
   public static final String logPath = "/home/lvuser/logs";
-  public static final long minFreeSpace = 100000000; // 100 MB
+  public static final long minFreeSpace = 1000000000; // 1 GB
 
   public static final boolean elevatorEnabled = true;
   public static final boolean endEffectorEnabled = true;
