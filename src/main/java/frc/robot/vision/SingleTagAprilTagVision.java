@@ -65,7 +65,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           1);
 
   public SingleTagAprilTagVision(
-      PhotonCamera frontLeftCamera, PhotonCamera frontRightCamera, PhotonCamera backLeftCamera, PhotonCamera backRightCamera) {
+      PhotonCamera frontLeftCamera,
+      PhotonCamera frontRightCamera,
+      PhotonCamera backLeftCamera,
+      PhotonCamera backRightCamera) {
     this.frontLeftCamera = frontLeftCamera;
     this.frontRightCamera = frontRightCamera;
     this.backLeftCamera = backLeftCamera;
@@ -92,12 +95,19 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
     if (RobotContainer.autoFeedRequested) {
       targetTagID = RobotContainer.coralStationTagID;
-      unprocessedResults = RobotContainer.useBackLeftCamera ? backLeftCamUnprocessedResults : backRightCamUnprocessedResults;
-      robotToCameraPose = RobotContainer.useBackLeftCamera ? Constants.Vision.backLeftCamera3dPos : Constants.Vision.backRightCamera3dPos;
+      unprocessedResults =
+          RobotContainer.useBackLeftCamera
+              ? backLeftCamUnprocessedResults
+              : backRightCamUnprocessedResults;
+      robotToCameraPose =
+          RobotContainer.useBackLeftCamera
+              ? Constants.Vision.backLeftCamera3dPos
+              : Constants.Vision.backRightCamera3dPos;
     } else {
       targetTagID = RobotContainer.operatorBoard.getAprilTag();
       useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
-      unprocessedResults = useFrontLeftCam ? frontLeftCamUnprocessedResults : frontRightCamUnprocessedResults;
+      unprocessedResults =
+          useFrontLeftCam ? frontLeftCamUnprocessedResults : frontRightCamUnprocessedResults;
       robotToCameraPose =
           useFrontLeftCam
               ? Constants.Vision.frontLeftCamera3dPos

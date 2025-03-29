@@ -93,7 +93,9 @@ public class RobotContainer {
       frontRightCamera = new PhotonCamera("front-right");
       backLeftCamera = new PhotonCamera("back-left");
       backRightCamera = new PhotonCamera("back-right");
-      aprilTagVision = new SingleTagAprilTagVision(frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
+      aprilTagVision =
+          new SingleTagAprilTagVision(
+              frontLeftCamera, frontRightCamera, backLeftCamera, backRightCamera);
       configureAprilTagVision();
     }
 
