@@ -225,11 +225,20 @@ public class Constants {
             Units.inchesToMeters(-7.5),
             Units.inchesToMeters(11.86),
             new Rotation3d());
-    public static final Pose3d backCamera3dPos =
+    public static final Pose3d backLeftCamera3dPos = // TODO
         new Pose3d(
-            Units.inchesToMeters(-4.183),
             Units.inchesToMeters(0),
-            Units.inchesToMeters(40.565),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
+            new Rotation3d(
+                Units.degreesToRadians(0),
+                Units.degreesToRadians(-37),
+                Units.degreesToRadians(180)));
+    public static final Pose3d backRightCamera3dPos = // TODO
+        new Pose3d(
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
+            Units.inchesToMeters(0),
             new Rotation3d(
                 Units.degreesToRadians(0),
                 Units.degreesToRadians(-37),

@@ -116,6 +116,7 @@ public class AutoLeftFeedCoral extends Command {
 
     RobotContainer.autoDriveEngaged = true;
     RobotContainer.autoFeedRequested = true;
+    RobotContainer.useBackLeftCamera = false;
     RobotContainer.coralStationTagID = desiredTag;
     superstructure.requestFeed();
   }

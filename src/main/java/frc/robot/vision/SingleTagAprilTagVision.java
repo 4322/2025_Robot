@@ -28,7 +28,8 @@ public class SingleTagAprilTagVision extends SubsystemBase {
 
   private PhotonCamera frontLeftCamera;
   private PhotonCamera frontRightCamera;
-  private PhotonCamera backCamera;
+  private PhotonCamera backLeftCamera;
+  private PhotonCamera backRightCamera;
 
   private static final double fieldBorderMargin = 0.5;
   private Consumer<List<TimestampedVisionUpdate>> visionConsumer = (x) -> {};
@@ -39,9 +40,10 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   private boolean useFrontLeftCam;
   private Pose3d robotToCameraPose;
   private List<PhotonPipelineResult> unprocessedResults;
-  private List<PhotonPipelineResult> backCamUnprocessedResults;
-  private List<PhotonPipelineResult> leftCamUnprocessedResults;
-  private List<PhotonPipelineResult> rightCamUnprocessedResults;
+  private List<PhotonPipelineResult> backLeftCamUnprocessedResults;
+  private List<PhotonPipelineResult> backRightCamUnprocessedResults;
+  private List<PhotonPipelineResult> frontLeftCamUnprocessedResults;
+  private List<PhotonPipelineResult> frontRightCamUnprocessedResults;
   private boolean warmupRequested = false;
 
   private PolynomialRegression xyStdDevModel =
@@ -63,10 +65,11 @@ public class SingleTagAprilTagVision extends SubsystemBase {
           1);
 
   public SingleTagAprilTagVision(
-      PhotonCamera frontLeftCamera, PhotonCamera frontRightCamera, PhotonCamera backCamera) {
+      PhotonCamera frontLeftCamera, PhotonCamera frontRightCamera, PhotonCamera backLeftCamera, PhotonCamera backRightCamera) {
     this.frontLeftCamera = frontLeftCamera;
     this.frontRightCamera = frontRightCamera;
-    this.backCamera = backCamera;
+    this.backLeftCamera = backLeftCamera;
+    this.backRightCamera = backRightCamera;
   }
 
   public void setDataInterfaces(
@@ -80,20 +83,21 @@ public class SingleTagAprilTagVision extends SubsystemBase {
     long startLoopMs = RobotController.getFPGATime();
 
     // Always call camera results once per loop to clear fifo queue
-    backCamUnprocessedResults = backCamera.getAllUnreadResults();
-    leftCamUnprocessedResults = frontLeftCamera.getAllUnreadResults();
-    rightCamUnprocessedResults = frontRightCamera.getAllUnreadResults();
+    backLeftCamUnprocessedResults = backLeftCamera.getAllUnreadResults();
+    backRightCamUnprocessedResults = backRightCamera.getAllUnreadResults();
+    frontLeftCamUnprocessedResults = frontLeftCamera.getAllUnreadResults();
+    frontRightCamUnprocessedResults = frontRightCamera.getAllUnreadResults();
     Logger.recordOutput(
         "Loop/SingleTagAprilTagVision1Ms", (RobotController.getFPGATime() - startLoopMs) / 1000.0);
 
     if (RobotContainer.autoFeedRequested) {
       targetTagID = RobotContainer.coralStationTagID;
-      unprocessedResults = backCamUnprocessedResults;
-      robotToCameraPose = Constants.Vision.backCamera3dPos;
+      unprocessedResults = RobotContainer.useBackLeftCamera ? backLeftCamUnprocessedResults : backRightCamUnprocessedResults;
+      robotToCameraPose = RobotContainer.useBackLeftCamera ? Constants.Vision.backLeftCamera3dPos : Constants.Vision.backRightCamera3dPos;
     } else {
       targetTagID = RobotContainer.operatorBoard.getAprilTag();
       useFrontLeftCam = RobotContainer.operatorBoard.getUseLeftCamera();
-      unprocessedResults = useFrontLeftCam ? leftCamUnprocessedResults : rightCamUnprocessedResults;
+      unprocessedResults = useFrontLeftCam ? frontLeftCamUnprocessedResults : frontRightCamUnprocessedResults;
       robotToCameraPose =
           useFrontLeftCam
               ? Constants.Vision.frontLeftCamera3dPos
