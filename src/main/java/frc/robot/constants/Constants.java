@@ -156,7 +156,7 @@ public class Constants {
 
   public static class Climber {
     public static final int climberMotorID = 0; // TODO
-    public static final int servoHubID = 0; // TODO
+    public static final int servoHubID = 3;
     public static final int pinServoChannelID = 0; // TODO
     public static final int ratchetServoChannelID = 0; // TODO
 
