@@ -296,4 +296,8 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   public void warmupPhotonVision() {
     warmupRequested = true;
   }
+
+  public boolean camerasConnected() {
+    return frontLeftCamera.isConnected() && frontRightCamera.isConnected() && backLeftCamera.isConnected() && backRightCamera.isConnected();
+  }
 }

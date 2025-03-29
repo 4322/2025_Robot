@@ -25,7 +25,8 @@ public class LED extends SubsystemBase {
     AUTOMATED_SCORING,
     CLIMBING,
     COAST_MODE,
-    ZERO_ROBOT;
+    ZERO_ROBOT,
+    CAMERAS_DISCONNECTED;
   }
 
   @Override
@@ -42,6 +43,8 @@ public class LED extends SubsystemBase {
         setLEDState(LEDState.ZERO_ROBOT);
       } else if (Robot.robotInCoastMode) {
         setLEDState(LEDState.COAST_MODE);
+      } else if (!RobotContainer.aprilTagVision.camerasConnected()) {
+        setLEDState(LEDState.CAMERAS_DISCONNECTED);
       } else if (RobotContainer.aprilTagVision.hasTargetTag()) {
         setLEDState(LEDState.TAG_INIT_VISIBLE);
       } else if (RobotContainer.superstructure.pieceSecured()) {
@@ -72,25 +75,28 @@ public class LED extends SubsystemBase {
         case UNKNOWN:
           break;
         case IDLE:
-          leds.animate(new RainbowAnimation(1, 0.75, Constants.LED_NUM));
+          leds.animate(new RainbowAnimation(1, 0.75, Constants.LED_NUM)); // rainbow
           break;
         case CORAL_SECURED:
-          leds.setLEDs(0, 0, 255);
+          leds.setLEDs(0, 0, 255); // blue
           break;
         case AUTOMATED_SCORING:
-          leds.setLEDs(255, 0, 0);
+          leds.setLEDs(255, 0, 0); // red
           break;
         case COAST_MODE:
-          leds.animate(new StrobeAnimation(0, 255, 0, 0, 0.2, Constants.LED_NUM));
+          leds.animate(new StrobeAnimation(0, 255, 0, 0, 0.2, Constants.LED_NUM)); // green flashing
           break;
         case ZERO_ROBOT:
-          leds.setLEDs(255, 255, 255);
+          leds.setLEDs(255, 255, 255); // white
           break;
         case TAG_INIT_VISIBLE:
           leds.setLEDs(255, 255, 0); // yellow
           break;
         case CLIMBING:
           leds.setLEDs(255, 0, 255); // purple
+          break;
+        case CAMERAS_DISCONNECTED:
+          leds.animate(new StrobeAnimation(255, 0, 0, 0, 0.2, Constants.LED_NUM)); // red flashing
           break;
       }
     }
