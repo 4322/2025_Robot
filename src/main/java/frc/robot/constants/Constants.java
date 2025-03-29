@@ -137,7 +137,7 @@ public class Constants {
 
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
-      public static final double stowedSetpointMechanismRotations = 0;
+      public static final double stowedSetpointMechanismRotations = 0.14015;
       public static final double deployedSetpointMechanismRotations =
           0.3372 + 0.014 + Units.degreesToRotations(8.5);
       public static final double setpointToleranceMechanismRotations = 0.05;
