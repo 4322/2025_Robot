@@ -46,7 +46,6 @@ public class Robot extends LoggedRobot {
   private boolean prevZeroButtonPressed;
   private boolean coastToggleEnabled;
   private Timer coastButtonTimer = new Timer();
-  private Timer pathPlannerWarmupTimer = new Timer();
   public static boolean robotInCoastMode;
 
   public static PathPlannerPath Leave;
@@ -198,18 +197,7 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance()
         .schedule(
             new SequentialCommandGroup(
-                FollowPathCommand.warmupCommand()
-                    .beforeStarting(
-                        () -> {
-                          pathPlannerWarmupTimer.start();
-                        })
-                    .finallyDo(
-                        () -> {
-                          Logger.recordOutput(
-                              "Loop/PathPlannerWarmup", pathPlannerWarmupTimer.get());
-                          pathPlannerWarmupTimer.stop();
-                          pathPlannerWarmupTimer.reset();
-                        }),
+                FollowPathCommand.warmupCommand(),
                 new AutoPreScoreCoral(
                     RobotContainer.swerve, RobotContainer.superstructure, false, true),
                 new AutoScore(RobotContainer.swerve, RobotContainer.superstructure, false, true)));

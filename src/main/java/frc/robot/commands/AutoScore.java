@@ -469,6 +469,11 @@ public class AutoScore extends Command {
   }
 
   @Override
+  public boolean runsWhenDisabled() {
+    return warmup;
+  }
+
+  @Override
   public void end(boolean interrupted) {
     swerve.requestPercent(new ChassisSpeeds(), true);
     superstructure.requestIdle();

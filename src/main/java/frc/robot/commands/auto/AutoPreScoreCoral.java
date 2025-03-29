@@ -425,6 +425,11 @@ public class AutoPreScoreCoral extends Command {
   }
 
   @Override
+  public boolean runsWhenDisabled() {
+    return warmup;
+  }
+
+  @Override
   public void end(boolean interrupted) {
     RobotContainer.autoDriveEngaged = false;
     // Reset logging
