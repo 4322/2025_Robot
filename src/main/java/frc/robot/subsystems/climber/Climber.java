@@ -15,7 +15,8 @@ public class Climber extends SubsystemBase {
   private boolean requestResetDeploy = false;
   private boolean requestRetract = false;
 
-  private Timer servoWaitTimer = new Timer();
+  private Timer ratchetWaitTimer = new Timer();
+  private Timer pinWaitTimer = new Timer();
 
   public enum ClimbState {
     STARTING_CONFIG,
@@ -42,13 +43,14 @@ public class Climber extends SubsystemBase {
         }
         break;
       case UNLOCK_SERVOS:
-        servoWaitTimer.start();
+        ratchetWaitTimer.start();
+        pinWaitTimer.start();
         io.unlockRatchetServo(true);
         io.pullPinServo(true);
 
-        if (servoWaitTimer.hasElapsed(Constants.Climber.servoWaitTimer)) {
-          servoWaitTimer.stop();
-          servoWaitTimer.reset();
+        if (ratchetWaitTimer.hasElapsed(Constants.Climber.ratchetWaitTimer)) {
+          ratchetWaitTimer.stop();
+          ratchetWaitTimer.reset();
           state = ClimbState.DEPLOYING;
         }
         break;
@@ -62,7 +64,14 @@ public class Climber extends SubsystemBase {
       case DEPLOYED:
         io.unlockRatchetServo(false);
 
+        // Make it easier to reset after match by resetting pin servo
+        if (pinWaitTimer.hasElapsed(4)) {
+          io.pullPinServo(false);
+        }
+
         if (requestRetract) {
+          pinWaitTimer.stop();
+          pinWaitTimer.reset();
           state = ClimbState.RETRACT;
         }
         break;
