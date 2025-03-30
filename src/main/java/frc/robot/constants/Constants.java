@@ -176,7 +176,7 @@ public class Constants {
     public static final int pinServoResetPWM = 2500; // TODO: Max position
     public static final double servoWaitTimer = 0.2;
 
-    public static final double motorDeployRotations = 0; // TODO
+    public static final double motorDeployRotations = 82.52;
     public static final double motorRetractRotations = 0; // TODO
     public static final double motorRotationPosTolerance = 3;
   }
