@@ -151,12 +151,13 @@ public class AutoRightFeedCoral extends Command {
                 .getTranslation()
                 .plus(
                     new Translation2d(
-                            (Constants.robotFrameLength / 2)
+                            -((Constants.robotFrameLength / 2)
                                 + Constants.bumperEdgeWidth
-                                + Units.inchesToMeters(0.25),
-                            0)
-                        .rotateBy(swerve.getPose().getRotation())
-                        .unaryMinus());
+                                + Units.inchesToMeters(0.25)),
+                            RobotContainer.useBackLeftCamera
+                                ? Constants.Vision.backLeftCamera3dPos.getY()
+                                : Constants.Vision.backRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
         lastSetpointTranslation = currentTranslation;
         state = AutoScoreStates.SCORING_POSITION;
 
@@ -187,12 +188,13 @@ public class AutoRightFeedCoral extends Command {
                 .getTranslation()
                 .plus(
                     new Translation2d(
-                            (Constants.robotFrameLength / 2)
+                            -((Constants.robotFrameLength / 2)
                                 + Constants.bumperEdgeWidth
-                                + Units.inchesToMeters(0.25),
-                            0)
-                        .rotateBy(swerve.getPose().getRotation())
-                        .unaryMinus());
+                                + Units.inchesToMeters(0.25)),
+                            RobotContainer.useBackLeftCamera
+                                ? Constants.Vision.backLeftCamera3dPos.getY()
+                                : Constants.Vision.backRightCamera3dPos.getY())
+                        .rotateBy(swerve.getPose().getRotation()));
 
         // Calculate drive speed
         currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
