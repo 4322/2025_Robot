@@ -298,6 +298,9 @@ public class SingleTagAprilTagVision extends SubsystemBase {
   }
 
   public boolean camerasConnected() {
-    return frontLeftCamera.isConnected() && frontRightCamera.isConnected() && backLeftCamera.isConnected() && backRightCamera.isConnected();
+    return frontLeftCamera.isConnected()
+        && frontRightCamera.isConnected()
+        && backLeftCamera.isConnected()
+        && backRightCamera.isConnected();
   }
 }
