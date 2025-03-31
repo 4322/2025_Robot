@@ -157,8 +157,8 @@ public class Constants {
   public static class Climber {
     public static final int climberMotorID = 23;
     public static final int servoHubID = 3;
-    public static final int pinServoChannelID = 0; // TODO
-    public static final int ratchetServoChannelID = 0; // TODO
+    public static final int pinServoChannelID = 0;
+    public static final int ratchetServoChannelID = 2;
 
     public static final double gearRatio = 4.0;
 
@@ -166,16 +166,14 @@ public class Constants {
     public static final double statorCurrentLimit = 100;
     public static final InvertedValue motorInversion = InvertedValue.Clockwise_Positive;
 
-    public static final double kP = 1.0; // TODO
+    public static final double kP = 6.0;
     public static final double kD = 0;
-    public static final double mechanismMaxAccel = 0; // TODO
-    public static final double mechanismMaxCruiseVel = 0; // TODO
 
-    public static final int ratchetServoUnlockPWM = 500; // TODO: Min position
-    public static final int ratchetServoLockPWM = 1500; // TODO: 0 degree position?
+    public static final int ratchetServoUnlockPWM = 1950;
+    public static final int ratchetServoLockPWM = 1200;
 
-    public static final int pinServoPullPWM = 500; // TODO: Min position
-    public static final int pinServoResetPWM = 2500; // TODO: Max position
+    public static final int pinServoPullPWM = 1000;
+    public static final int pinServoResetPWM = 2000;
     public static final double ratchetWaitTimer = 0.2;
     public static final double pinWaitTimer = 4;
 
@@ -228,7 +226,7 @@ public class Constants {
             Units.inchesToMeters(-7.5),
             Units.inchesToMeters(11.86),
             new Rotation3d());
-    public static final Pose3d backLeftCamera3dPos = // TODO
+    public static final Pose3d backLeftCamera3dPos =
         new Pose3d(
             Units.inchesToMeters(-3.645896),
             Units.inchesToMeters(10.75),
@@ -237,7 +235,7 @@ public class Constants {
                 Units.degreesToRadians(0),
                 Units.degreesToRadians(-37),
                 Units.degreesToRadians(180)));
-    public static final Pose3d backRightCamera3dPos = // TODO
+    public static final Pose3d backRightCamera3dPos =
         new Pose3d(
             Units.inchesToMeters(-3.645896),
             Units.inchesToMeters(-10.75),

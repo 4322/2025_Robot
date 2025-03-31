@@ -2,7 +2,7 @@ package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.REVLibError;
@@ -64,9 +64,6 @@ public class ClimberIOTalonFX implements ClimberIO {
     climberConfig.Slot0.kP = Constants.Climber.kP;
     climberConfig.Slot0.kD = Constants.Climber.kD;
 
-    climberConfig.MotionMagic.MotionMagicCruiseVelocity = Constants.Climber.mechanismMaxCruiseVel;
-    climberConfig.MotionMagic.MotionMagicAcceleration = Constants.Climber.mechanismMaxAccel;
-
     climberConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
     climberConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
 
@@ -110,7 +107,7 @@ public class ClimberIOTalonFX implements ClimberIO {
 
   @Override
   public void setMotorPosition(double motorRotations) {
-    climberMotor.setControl(new MotionMagicVoltage(motorRotations).withEnableFOC(true));
+    climberMotor.setControl(new PositionVoltage(motorRotations).withEnableFOC(true));
   }
 
   @Override
