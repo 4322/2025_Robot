@@ -52,6 +52,8 @@ public class ClimberIOTalonFX implements ClimberIO {
       DriverStation.reportError(
           "ServoHub " + servoHub.getDeviceId() + " error: " + servoConfigStatus.toString(), false);
     }
+
+    climberMotor.setPosition(0);
   }
 
   private StatusCode configMotor() {
