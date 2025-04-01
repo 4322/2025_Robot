@@ -39,7 +39,7 @@ public class AutoRightFeedCoral extends Command {
   private double driveErrorAbs;
   private double currentDistance;
   private double ffScaler;
-  private Pose2d desiredTagPose;
+  private Pose2d desiredPose;
 
   private Translation2d currentTranslation; // back middle bumper aligned with camera
   private Translation2d lastSetpointTranslation = new Translation2d();
@@ -107,9 +107,18 @@ public class AutoRightFeedCoral extends Command {
       autoRotateSetpoint = Math.toRadians(54);
       desiredTag = 12;
     }
-    desiredTagPose = FieldConstants.aprilTagFieldLayout.getTagPose(desiredTag).get().toPose2d();
+    // End 1 coral width away from station because intake is too floppy/unreliable when close to
+    // coral station
+    desiredPose =
+        FieldConstants.aprilTagFieldLayout
+            .getTagPose(desiredTag)
+            .get()
+            .toPose2d()
+            .transformBy(
+                GeomUtil.translationToTransform(new Translation2d(Units.inchesToMeters(4), 0)));
+    ;
     if (Constants.tuningMode) {
-      desiredTagPose =
+      desiredPose =
           FieldConstants.aprilTagFieldLayout
               .getTagPose(desiredTag)
               .get()
@@ -173,14 +182,14 @@ public class AutoRightFeedCoral extends Command {
         // Negative sign used because negative error(goal > current) requires negative velocity
         // input.
         driveController.reset(
-            currentTranslation.getDistance(desiredTagPose.getTranslation()),
+            currentTranslation.getDistance(desiredPose.getTranslation()),
             Math.min(
                 0.0,
                 -new Translation2d(
                         swerve.getFieldRelativeSpeeds().getX(),
                         swerve.getFieldRelativeSpeeds().getY())
                     .rotateBy(
-                        desiredTagPose
+                        desiredPose
                             .getTranslation()
                             .minus(swerve.getPose().getTranslation())
                             .getAngle()
@@ -203,7 +212,7 @@ public class AutoRightFeedCoral extends Command {
                         .rotateBy(swerve.getPose().getRotation()));
 
         // Calculate drive speed
-        currentDistance = currentTranslation.getDistance(desiredTagPose.getTranslation());
+        currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
         ffScaler =
             MathUtil.clamp(
                 (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
@@ -211,7 +220,7 @@ public class AutoRightFeedCoral extends Command {
                 1.0);
         driveErrorAbs = currentDistance;
         driveController.reset(
-            lastSetpointTranslation.getDistance(desiredTagPose.getTranslation()),
+            lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
             driveController.getSetpoint().velocity);
         driveVelocityScalar =
             driveController.getSetpoint().velocity * ffScaler
@@ -220,8 +229,8 @@ public class AutoRightFeedCoral extends Command {
         // cache setpoint value for logging and use during next iteration
         lastSetpointTranslation =
             new Pose2d(
-                    desiredTagPose.getTranslation(),
-                    currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
+                    desiredPose.getTranslation(),
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
                 .transformBy(
                     GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
                 .getTranslation();
@@ -246,7 +255,7 @@ public class AutoRightFeedCoral extends Command {
         driveVelocity =
             new Pose2d(
                     new Translation2d(),
-                    currentTranslation.minus(desiredTagPose.getTranslation()).getAngle())
+                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
                 .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
                 .getTranslation();
 
@@ -261,7 +270,7 @@ public class AutoRightFeedCoral extends Command {
     Logger.recordOutput(
         "AutoFeed/DriveToPoseSetpoint",
         new Pose2d(lastSetpointTranslation, new Rotation2d(autoRotateSetpoint)));
-    Logger.recordOutput("AutoFeed/DesiredPoseGoal", desiredTagPose);
+    Logger.recordOutput("AutoFeed/DesiredPoseGoal", desiredPose);
     Logger.recordOutput("AutoFeed/State", state.toString());
   }
 
