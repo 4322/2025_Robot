@@ -12,12 +12,13 @@ import frc.robot.commands.auto.AutoPreScoreCoral;
 import frc.robot.commands.auto.AutoScoreCoral;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
+import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class FourCoralLeft extends SequentialCommandGroup {
-  public FourCoralLeft(Swerve swerve, Superstructure superstructure) {
+  public FourCoralLeft(Swerve swerve, Superstructure superstructure, EndEffector endEffector) {
     setName("FOUR_CORAL_LEFT");
-    addRequirements(swerve, superstructure);
+    addRequirements(swerve, superstructure, endEffector);
     addCommands(
         new AutoPoseReset(
             swerve, Robot.FourCoralStartToKilo.getStartingHolonomicPose().get().getTranslation()),
@@ -30,7 +31,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, false),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToKiloSwipe),
         new InstantCommand(
             () -> {
@@ -40,7 +41,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, false),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
             () -> {
@@ -50,7 +51,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralLimaToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, false),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
             () -> {

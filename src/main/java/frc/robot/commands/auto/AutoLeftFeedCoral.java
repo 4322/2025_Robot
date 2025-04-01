@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -18,13 +19,15 @@ import frc.robot.commons.LoggedTunableNumber;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.swerve.Swerve;
 import org.littletonrobotics.junction.Logger;
 
 public class AutoLeftFeedCoral extends Command {
   private final Swerve swerve;
   private Superstructure superstructure;
-
+  private EndEffector endEffector;
+  private Timer coralDebounceTimer = new Timer();
   private final boolean slowMode;
 
   private final ProfiledPIDController driveController =
@@ -83,9 +86,11 @@ public class AutoLeftFeedCoral extends Command {
   }
 
   /** Drives to the specified pose under full software control. */
-  public AutoLeftFeedCoral(Swerve swerve, Superstructure superstructure, boolean slowMode) {
+  public AutoLeftFeedCoral(
+      Swerve swerve, Superstructure superstructure, EndEffector endEffector, boolean slowMode) {
     this.swerve = swerve;
     this.superstructure = superstructure;
+    this.endEffector = endEffector;
     this.slowMode = slowMode;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -225,6 +230,20 @@ public class AutoLeftFeedCoral extends Command {
           driveVelocityScalar = 0;
         }
 
+        // Debounce coral
+        // If 0.1 seconds elapsed sice sensor senses the coral piece and the state of if the sensor
+        // senses the coral it goes on
+        // If not sensed the timer stops and resets.
+        if (endEffector.backSensorTriggered()) {
+          coralDebounceTimer.start();
+        }
+        if (coralDebounceTimer.isRunning()) {
+          if (!endEffector.backSensorTriggered()) {
+            coralDebounceTimer.stop();
+            coralDebounceTimer.reset();
+          }
+        }
+
         // Command speeds
         driveVelocity =
             new Pose2d(
@@ -251,7 +270,8 @@ public class AutoLeftFeedCoral extends Command {
   @Override
   public boolean isFinished() {
     if (DriverStation.isAutonomous()) {
-      return superstructure.hasPiece();
+      return endEffector.frontSensorTriggered()
+          || coralDebounceTimer.hasElapsed(Constants.AutoScoring.coralDebounceSec);
     }
     return false;
   }
@@ -260,6 +280,8 @@ public class AutoLeftFeedCoral extends Command {
   public void end(boolean interrupted) {
     RobotContainer.autoDriveEngaged = false;
     RobotContainer.autoFeedRequested = false;
+    coralDebounceTimer.stop();
+    coralDebounceTimer.reset();
     if (DriverStation.isTeleopEnabled()) {
       superstructure.requestIdle();
     }

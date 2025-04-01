@@ -139,6 +139,14 @@ public class EndEffector extends SubsystemBase {
     return coralSecured;
   }
 
+  public boolean backSensorTriggered() {
+    return inputs.backBeamBreakTriggered;
+  }
+
+  public boolean frontSensorTriggered() {
+    return inputs.frontBeamBreakTriggered;
+  }
+
   // Use method only to reset state when robot is disabled
   public void forceIdle() {
     unsetAllRequests();

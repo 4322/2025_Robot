@@ -153,9 +153,9 @@ public class RobotContainer {
     new JoystickButton(driver, XboxController.Button.kRightStick.value)
         .whileTrue(new RightFeed(swerve, elevator, superstructure));
     new JoystickButton(driver, XboxController.Button.kRightBumper.value)
-        .whileTrue(new AutoRightFeedCoral(swerve, superstructure, false));
+        .whileTrue(new AutoRightFeedCoral(swerve, superstructure, endEffector, false));
     new JoystickButton(driver, XboxController.Button.kLeftBumper.value)
-        .whileTrue(new AutoLeftFeedCoral(swerve, superstructure, false));
+        .whileTrue(new AutoLeftFeedCoral(swerve, superstructure, endEffector, false));
     new Trigger(() -> driver.getLeftTriggerAxis() > 0.5)
         .whileTrue(new AutoScore(swerve, superstructure, false, false));
     new JoystickButton(driver, XboxController.Button.kA.value)
@@ -295,6 +295,6 @@ public class RobotContainer {
   }
 
   public void configureAutonomousSelector() {
-    autonomousSelector = new AutonomousSelector(swerve, superstructure);
+    autonomousSelector = new AutonomousSelector(swerve, superstructure, endEffector);
   }
 }

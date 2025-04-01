@@ -212,6 +212,7 @@ public class Constants {
     public static final double sideSwipeFFMinRadius = 0.005;
     public static final double sideSwipeFFMaxRadius = 0.2;
     public static final double sideSwipeTolerance = 0.02;
+    public static final double coralDebounceSec = 0.1;
   }
 
   public static class Vision {
