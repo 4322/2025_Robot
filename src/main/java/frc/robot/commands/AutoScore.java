@@ -42,7 +42,6 @@ public class AutoScore extends Command {
   private Pose2d desiredTagPose;
   private Pose2d desiredOffsetSideSwipePose;
   private Pose2d desiredSideSwipePose;
-  private Pose2d desiredL1StartPose;
   private Pose2d desiredL1StrafePose;
   private Pose2d desiredPose;
 
@@ -125,24 +124,16 @@ public class AutoScore extends Command {
     desiredSideSwipePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
-
-    desiredL1StartPose =
-        desiredTagPose.transformBy(
-            GeomUtil.translationToTransform(
-                Constants.AutoScoring.l1StartX,
-                RobotContainer.operatorBoard.getUseLeftCamera()
-                    ? -Constants.AutoScoring.l1StartY
-                    : Constants.AutoScoring.l1StartY));
     desiredL1StrafePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(
                 Constants.AutoScoring.l1StrafeX,
                 RobotContainer.operatorBoard.getUseLeftCamera()
-                    ? Constants.AutoScoring.l1StrafeY
-                    : -Constants.AutoScoring.l1StrafeY));
+                    ? -Constants.AutoScoring.l1StrafeY
+                    : Constants.AutoScoring.l1StrafeY));
     desiredPose =
         (superstructure.getLevel() == Level.L1)
-            ? desiredL1StartPose
+            ? desiredL1StrafePose
             : (RobotContainer.operatorBoard.getFlipRequested()
                 ? desiredOffsetSideSwipePose
                 : desiredTagPose);
@@ -197,20 +188,13 @@ public class AutoScore extends Command {
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(Constants.AutoScoring.offsetTagSideSwipeY, 0));
 
-    desiredL1StartPose =
-        desiredTagPose.transformBy(
-            GeomUtil.translationToTransform(
-                Constants.AutoScoring.l1StartX,
-                RobotContainer.operatorBoard.getUseLeftCamera()
-                    ? -Constants.AutoScoring.l1StartY
-                    : Constants.AutoScoring.l1StartY));
     desiredL1StrafePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(
                 Constants.AutoScoring.l1StrafeX,
                 RobotContainer.operatorBoard.getUseLeftCamera()
-                    ? Constants.AutoScoring.l1StrafeY
-                    : -Constants.AutoScoring.l1StrafeY));
+                    ? -Constants.AutoScoring.l1StrafeY
+                    : Constants.AutoScoring.l1StrafeY));
 
     double thetaVelocity =
         thetaController.calculate(swerve.getPose().getRotation().getRadians(), autoRotateSetpoint);
@@ -272,7 +256,7 @@ public class AutoScore extends Command {
           state = AutoScoreStates.SIDE_SWIPE_OFFSET;
         } else {
           if (superstructure.getLevel() == Level.L1) {
-            desiredPose = desiredL1StartPose;
+            desiredPose = desiredL1StrafePose;
           } else {
             desiredPose = desiredTagPose;
           }
@@ -495,54 +479,14 @@ public class AutoScore extends Command {
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
       case L1_STRAFE:
-        currentTranslation =
-            swerve
-                .getPose()
-                .getTranslation()
-                .plus(
-                    new Translation2d(
-                            (Constants.robotFrameLength / 2)
-                                + Constants.bumperEdgeWidth
-                                + Units.inchesToMeters(0.25),
-                            useLeftCam
-                                ? Constants.Vision.frontLeftCamera3dPos.getY()
-                                : Constants.Vision.frontRightCamera3dPos.getY())
-                        .rotateBy(swerve.getPose().getRotation()));
-
-        // Calculate drive speed
-        currentDistance = currentTranslation.getDistance(desiredPose.getTranslation());
-        ffScaler =
-            MathUtil.clamp(
-                (currentDistance - ffMinRadius.get()) / (ffMaxRadius.get() - ffMinRadius.get()),
-                0.0,
-                1.0);
-        driveErrorAbs = currentDistance;
-        driveController.reset(
-            lastSetpointTranslation.getDistance(desiredPose.getTranslation()),
-            driveController.getSetpoint().velocity);
-        driveVelocityScalar =
-            driveController.getSetpoint().velocity * ffScaler
-                + driveController.calculate(driveErrorAbs, 0.0);
-
-        // cache setpoint value for logging and use during next iteration
-        lastSetpointTranslation =
-            new Pose2d(
-                    desiredPose.getTranslation(),
-                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
-                .transformBy(
-                    GeomUtil.translationToTransform(driveController.getSetpoint().position, 0.0))
-                .getTranslation();
-
-        // Command speeds
-        driveVelocity =
-            new Pose2d(
-                    new Translation2d(),
-                    currentTranslation.minus(desiredPose.getTranslation()).getAngle())
-                .transformBy(GeomUtil.translationToTransform(driveVelocityScalar, 0.0))
-                .getTranslation();
-
-        swerve.requestVelocity(
-            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
+        if (superstructure.pieceSecured()) {
+            driveVelocity = new Translation2d(0, RobotContainer.operatorBoard.getUseLeftCamera() ? Constants.AutoScoring.l1StrafeSpeed : -Constants.AutoScoring.l1StrafeSpeed);
+        }
+        else {
+            driveVelocity = new Translation2d(0,0);
+        }
+        
+        swerve.requestVelocity(new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
         break;
     }
 
