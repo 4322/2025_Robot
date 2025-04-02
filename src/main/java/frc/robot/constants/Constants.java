@@ -214,9 +214,9 @@ public class Constants {
     public static final double sideSwipeTolerance = 0.02;
 
     public static final double l1StartX = Units.inchesToMeters(0);
-    public static final double l1StartY = Units.inchesToMeters(2.5); // 4 inches inside from peg
+    public static final double l1StartY = Units.inchesToMeters(4);
     public static final double l1StrafeX = Units.inchesToMeters(0);
-    public static final double l1StrafeY = Units.inchesToMeters(14.5);
+    public static final double l1StrafeY = Units.inchesToMeters(8);
 
     public static final double coralDebounceSec = 0.1;
   }

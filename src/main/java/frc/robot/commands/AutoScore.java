@@ -131,8 +131,8 @@ public class AutoScore extends Command {
             GeomUtil.translationToTransform(
                 Constants.AutoScoring.l1StartX,
                 RobotContainer.operatorBoard.getUseLeftCamera()
-                    ? Constants.AutoScoring.l1StartY
-                    : -Constants.AutoScoring.l1StartY));
+                    ? -Constants.AutoScoring.l1StartY
+                    : Constants.AutoScoring.l1StartY));
     desiredL1StrafePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(
@@ -202,8 +202,8 @@ public class AutoScore extends Command {
             GeomUtil.translationToTransform(
                 Constants.AutoScoring.l1StartX,
                 RobotContainer.operatorBoard.getUseLeftCamera()
-                    ? Constants.AutoScoring.l1StartY
-                    : -Constants.AutoScoring.l1StartY));
+                    ? -Constants.AutoScoring.l1StartY
+                    : Constants.AutoScoring.l1StartY));
     desiredL1StrafePose =
         desiredTagPose.transformBy(
             GeomUtil.translationToTransform(
