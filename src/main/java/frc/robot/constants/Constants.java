@@ -177,8 +177,8 @@ public class Constants {
     public static final double ratchetWaitTimer = 0.2;
     public static final double pinWaitTimer = 4;
 
-    public static final double motorDeployRotations = 82.52;
-    public static final double motorRetractRotations = 0; // TODO
+    public static final double motorDeployRotations = 64.25;
+    public static final double motorRetractRotations = -10.0;
     public static final double motorRotationPosTolerance = 3;
   }
 
