@@ -179,7 +179,7 @@ public class Constants {
 
     public static final double motorDeployRotations = 76;
     public static final double motorRetractRotations = -3.0;
-    public static final double motorRotationPosTolerance = 3;
+    public static final double motorRotationPosTolerance = 1;
   }
 
   public static class Scoring {

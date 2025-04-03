@@ -480,13 +480,18 @@ public class AutoScore extends Command {
         break;
       case L1_STRAFE:
         if (superstructure.pieceSecured()) {
-            driveVelocity = new Translation2d(0, RobotContainer.operatorBoard.getUseLeftCamera() ? Constants.AutoScoring.l1StrafeSpeed : -Constants.AutoScoring.l1StrafeSpeed);
+          driveVelocity =
+              new Translation2d(
+                  0,
+                  RobotContainer.operatorBoard.getUseLeftCamera()
+                      ? Constants.AutoScoring.l1StrafeSpeed
+                      : -Constants.AutoScoring.l1StrafeSpeed);
+        } else {
+          driveVelocity = new Translation2d(0, 0);
         }
-        else {
-            driveVelocity = new Translation2d(0,0);
-        }
-        
-        swerve.requestVelocity(new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
+
+        swerve.requestVelocity(
+            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
         break;
     }
 
