@@ -31,8 +31,8 @@ public class Constants {
   public static final double bumperEdgeWidth = Units.inchesToMeters(3.5);
   public static final double robotFrameLength = Units.inchesToMeters(26);
 
-  public static final int dioCoastButton = 0;
-  public static final int dioZeroButton = 1;
+  public static final int dioCoastButton = 1;
+  public static final int dioZeroButton = 0;
 
   /* Constants pertaining to the swerve drive */
   public static class Swerve {
