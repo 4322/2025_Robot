@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -23,6 +24,7 @@ import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.swerve.Swerve;
+
 import org.littletonrobotics.junction.Logger;
 
 public class AutoScore extends Command {
@@ -47,6 +49,7 @@ public class AutoScore extends Command {
 
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private Translation2d lastSetpointTranslation = new Translation2d();
+  private Timer strafeTimer = new Timer();
 
   private int desiredTag;
   private boolean useLeftCam;
@@ -479,7 +482,10 @@ public class AutoScore extends Command {
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
       case L1_STRAFE:
-        if (superstructure.pieceSecured()) {
+        if (!strafeTimer.hasElapsed(Constants.AutoScoring.l1ExtraStrafeTime)) {
+          if (!superstructure.pieceSecured()) {
+            strafeTimer.start();
+          }
           driveVelocity =
               new Translation2d(
                   0,
@@ -521,6 +527,8 @@ public class AutoScore extends Command {
     swerve.requestPercent(new ChassisSpeeds(), true);
     superstructure.requestIdle();
     RobotContainer.autoDriveEngaged = false;
+    strafeTimer.stop();
+    strafeTimer.reset();
 
     // Reset logging
     Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
