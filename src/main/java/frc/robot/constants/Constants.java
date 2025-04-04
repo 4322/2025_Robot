@@ -115,7 +115,7 @@ public class Constants {
     public static final double secondFeedVoltage = 1.25;
     public static final double thirdFeedVoltage = -1.0;
 
-    public static final double shootL1Voltage = 3.5;
+    public static final double shootL1Voltage = 4;
     public static final double shootL23Voltage = 4;
     public static final double spitVoltage = -4;
 
@@ -217,7 +217,6 @@ public class Constants {
     public static final double l1StrafeY = Units.inchesToMeters(4);
     public static final double l1StrafeSpeed = 1;
     public static final double l1ExtraStrafeTime = 0.5;
-
 
     public static final double coralDebounceSec = 0.1;
   }

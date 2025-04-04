@@ -24,7 +24,6 @@ import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.swerve.Swerve;
-
 import org.littletonrobotics.junction.Logger;
 
 public class AutoScore extends Command {
