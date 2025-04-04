@@ -174,7 +174,7 @@ public class Constants {
 
     public static final int pinServoPullPWM = 1000;
     public static final int pinServoResetPWM = 2000;
-    public static final double ratchetWaitTimer = 0.2;
+    public static final double ratchetWaitTimer = 0.5;
     public static final double pinWaitTimer = 4;
 
     public static final double motorDeployRotations = 76;
