@@ -48,7 +48,8 @@ public class AutoScore extends Command {
 
   private Translation2d currentTranslation; // front edge of bumper aligned with a camera
   private Translation2d lastSetpointTranslation = new Translation2d();
-  private Timer strafeTimer = new Timer();
+  private Timer strafeFollowThroughTimer = new Timer();
+  private Timer strafeWaitTimer = new Timer();
 
   private int desiredTag;
   private boolean useLeftCam;
@@ -463,6 +464,7 @@ public class AutoScore extends Command {
             if (superstructure.getLevel() == Level.L1) {
               desiredPose = desiredL1StrafePose;
               state = AutoScoreStates.L1_STRAFE;
+              strafeWaitTimer.start();
             }
             superstructure.requestScore();
           }
@@ -481,9 +483,10 @@ public class AutoScore extends Command {
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
       case L1_STRAFE:
-        if (!strafeTimer.hasElapsed(Constants.AutoScoring.l1ExtraStrafeTime)) {
+        // wait a little before strafing and follow through after piece is ejected to make sure coral is horizontal
+        if (!strafeFollowThroughTimer.hasElapsed(Constants.AutoScoring.l1ExtraStrafeTime) && strafeWaitTimer.hasElapsed(Constants.AutoScoring.l1WaitStrafeTime)) {
           if (!superstructure.pieceSecured()) {
-            strafeTimer.start();
+            strafeFollowThroughTimer.start();
           }
           driveVelocity =
               new Translation2d(
@@ -526,8 +529,10 @@ public class AutoScore extends Command {
     swerve.requestPercent(new ChassisSpeeds(), true);
     superstructure.requestIdle();
     RobotContainer.autoDriveEngaged = false;
-    strafeTimer.stop();
-    strafeTimer.reset();
+    strafeFollowThroughTimer.stop();
+    strafeFollowThroughTimer.reset();
+    strafeWaitTimer.stop();
+    strafeWaitTimer.reset();
 
     // Reset logging
     Logger.recordOutput("AutoScore/DesiredPoseGoal", new Pose2d());
