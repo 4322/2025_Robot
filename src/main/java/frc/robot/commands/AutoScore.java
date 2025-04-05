@@ -483,8 +483,10 @@ public class AutoScore extends Command {
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
         break;
       case L1_STRAFE:
-        // wait a little before strafing and follow through after piece is ejected to make sure coral is horizontal
-        if (!strafeFollowThroughTimer.hasElapsed(Constants.AutoScoring.l1ExtraStrafeTime) && strafeWaitTimer.hasElapsed(Constants.AutoScoring.l1WaitStrafeTime)) {
+        // wait a little before strafing and follow through after piece is ejected to make sure
+        // coral is horizontal
+        if (!strafeFollowThroughTimer.hasElapsed(Constants.AutoScoring.l1ExtraStrafeTime)
+            && strafeWaitTimer.hasElapsed(Constants.AutoScoring.l1WaitStrafeTime)) {
           if (!superstructure.pieceSecured()) {
             strafeFollowThroughTimer.start();
           }

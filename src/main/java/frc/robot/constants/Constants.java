@@ -150,7 +150,7 @@ public class Constants {
       public static final double statorCurrentLimit = 100;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
-      public static final double descoreVoltage = -4;
+      public static final double descoreVoltage = -5;
     }
   }
 
@@ -183,7 +183,7 @@ public class Constants {
   }
 
   public static class Scoring {
-    public static final double L1ScoringHeight = 0.06;
+    public static final double L1ScoringHeight = 0.05;
     public static final double L2ScoringHeight = 0.300 + Units.inchesToMeters(0.125);
     public static final double L3ScoringHeight = 0.685;
 
