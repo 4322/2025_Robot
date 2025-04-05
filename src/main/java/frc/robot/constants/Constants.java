@@ -217,7 +217,7 @@ public class Constants {
     public static final double l1StrafeY = Units.inchesToMeters(4);
     public static final double l1StrafeSpeed = 1;
     public static final double l1ExtraStrafeTime = 0.5;
-    public static final double l1WaitStrafeTime = 0.1;
+    public static final double l1WaitStrafeTime = 0.05;
 
     public static final double coralDebounceSec = 0.1;
   }
