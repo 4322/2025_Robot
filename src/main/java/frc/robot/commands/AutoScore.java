@@ -489,8 +489,8 @@ public class AutoScore extends Command {
               new Translation2d(
                   0,
                   RobotContainer.operatorBoard.getUseLeftCamera()
-                      ? Constants.AutoScoring.l1StrafeSpeed
-                      : -Constants.AutoScoring.l1StrafeSpeed);
+                      ? -Constants.AutoScoring.l1StrafeSpeed
+                      : Constants.AutoScoring.l1StrafeSpeed);
         } else {
           driveVelocity = new Translation2d(0, 0);
         }
