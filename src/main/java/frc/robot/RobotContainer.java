@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.AutoScore;
+import frc.robot.commands.Climb;
 import frc.robot.commands.LeftFeed;
 import frc.robot.commands.ManualScore;
 import frc.robot.commands.RightFeed;
@@ -272,18 +273,9 @@ public class RobotContainer {
                 .ignoringDisable(true));
     new JoystickButton(operatorBoard.getLeftController(), 7)
         .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superstructure.requestPreClimb(true);
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(operatorBoard.getLeftController(), 7)
-        .onFalse(
-            new InstantCommand(
-                    () -> {
-                      superstructure.requestPreClimb(false);
-                    })
-                .ignoringDisable(true));
+            new Climb(swerve, superstructure)
+                .ignoringDisable(false)
+                .onlyIf(() -> superstructure.climbEnabled()));
   }
 
   private void configureAprilTagVision() {

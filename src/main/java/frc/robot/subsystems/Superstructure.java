@@ -328,4 +328,8 @@ public class Superstructure extends SubsystemBase {
   public boolean hasPiece() {
     return endEffector.hasCoral();
   }
+
+  public boolean climbEnabled() {
+    return enableClimb;
+  }
 }
