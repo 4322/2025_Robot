@@ -73,9 +73,9 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.EJECT;
         } else if (requestFeed && !endEffector.coralSecured() && elevator.atSetpoint()) {
           state = Superstates.FEEDING;
-        } else if (requestPreScore) {
+        } else if (requestPreScore && !(endEffector.hasCoral() && !endEffector.coralSecured())) {
           state = Superstates.PRE_SCORE;
-        } else if (requestPreScoreFlip) {
+        } else if (requestPreScoreFlip && !(endEffector.hasCoral() && !endEffector.coralSecured())) {
           if (overrideSafeFlip) {
             state = Superstates.OVERRIDE_SAFE_FLIP;
           } else {
