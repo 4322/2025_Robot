@@ -115,7 +115,7 @@ public class Constants {
     public static final double secondFeedVoltage = 1.25;
     public static final double thirdFeedVoltage = -1.0;
 
-    public static final double shootL1Voltage = 4;
+    public static final double shootL1Voltage = 3;
     public static final double shootL23Voltage = 4;
     public static final double spitVoltage = -4;
 
@@ -139,7 +139,7 @@ public class Constants {
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
       public static final double stowedSetpointMechanismRotations = 0.14015;
       public static final double deployedSetpointMechanismRotations =
-          0.3372 + 0.014 + Units.degreesToRotations(8.5);
+          0.3372 + 0.014 + Units.degreesToRotations(5.5);
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
@@ -217,7 +217,7 @@ public class Constants {
     public static final double l1StrafeY = Units.inchesToMeters(4);
     public static final double l1StrafeSpeed = 1;
     public static final double l1ExtraStrafeTime = 0.5;
-    public static final double l1WaitStrafeTime = 0.05;
+    public static final double l1WaitStrafeTime = 0;
 
     public static final double coralDebounceSec = 0.1;
   }
