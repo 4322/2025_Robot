@@ -28,6 +28,7 @@ import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
+import frc.robot.subsystems.Superstructure.Superstates;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOTalonFX;
@@ -275,7 +276,10 @@ public class RobotContainer {
         .onTrue(
             new Climb(swerve, superstructure)
                 .ignoringDisable(false)
-                .onlyIf(() -> superstructure.climbEnabled()));
+                .onlyIf(
+                    () ->
+                        superstructure.climbEnabled()
+                            && superstructure.getState() == Superstates.IDLE));
   }
 
   private void configureAprilTagVision() {
