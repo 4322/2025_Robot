@@ -22,42 +22,36 @@ public class FourCoralLeft extends SequentialCommandGroup {
     addCommands(
         new AutoPoseReset(
             swerve, Robot.FourCoralStartToKilo.getStartingHolonomicPose().get().getTranslation()),
+        new InstantCommand(
+          () -> {
+            RobotContainer.operatorBoard.setScoringLevel(Level.L2);
+            RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.K);
+          }),
         AutoBuilder.followPath(Robot.FourCoralStartToKilo),
-        new InstantCommand(
-            () -> {
-              RobotContainer.operatorBoard.setScoringLevel(Level.L2);
-              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.K);
-            }),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
-        AutoBuilder.followPath(Robot.FourCoralFeedToKiloSwipe),
         new InstantCommand(
-            () -> {
-              RobotContainer.operatorBoard.setScoringLevel(Level.L3);
-              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.K);
-            }),
+          () -> {
+            RobotContainer.operatorBoard.setScoringLevel(Level.L3);
+            RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.K);
+          }),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.FourCoralKiloToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
-        AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
-            () -> {
-              RobotContainer.operatorBoard.setScoringLevel(Level.L3);
-              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.L);
-            }),
+          () -> {
+            RobotContainer.operatorBoard.setScoringLevel(Level.L3);
+            RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.L);
+          }),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
-        AutoBuilder.followPath(Robot.FourCoralLimaToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
-        AutoBuilder.followPath(Robot.FourCoralFeedToLima),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);
               RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.L);
             }),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2));
   }
