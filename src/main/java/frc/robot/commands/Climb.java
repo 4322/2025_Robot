@@ -88,11 +88,12 @@ public class Climb extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return swerve.getPitch() < Constants.Climber.autoClimbPitchDeg;
   }
 
   @Override
   public void end(boolean interrupted) {
+    superstructure.requestClimb();
     initialAlign = false;
   }
 }

@@ -94,6 +94,7 @@ public class Swerve extends SubsystemBase {
     Logger.recordOutput("Swerve/OmegaRadsPerSec", getRobotRelativeSpeeds().omegaRadiansPerSecond);
     Logger.recordOutput("Swerve/RawHeadingDeg", drivetrain.getState().RawHeading.getDegrees());
     Logger.recordOutput("Swerve/HeadingDeg", drivetrain.getState().Pose.getRotation().getDegrees());
+    Logger.recordOutput("Swerve/Pitch", getPitch());
     Logger.recordOutput("Swerve/SwerveState", systemState.toString());
     Logger.recordOutput(
         "Swerve/RequestedSpeedsMag",
@@ -228,6 +229,10 @@ public class Swerve extends SubsystemBase {
     Translation2d fieldRelativeSpeeds2d = speeds2d.rotateBy(getPose().getRotation());
 
     return fieldRelativeSpeeds2d;
+  }
+
+  public double getPitch() {
+    return drivetrain.getPigeon2().getPitch().getValueAsDouble();
   }
 
   public boolean atAngularSetpoint(double setpointRad, double tolerance) {
