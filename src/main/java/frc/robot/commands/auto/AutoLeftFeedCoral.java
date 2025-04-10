@@ -277,11 +277,10 @@ public class AutoLeftFeedCoral extends Command {
 
   @Override
   public boolean isFinished() {
-    if (DriverStation.isAutonomous()) {
-      return endEffector.frontSensorTriggered()
-          || coralDebounceTimer.hasElapsed(Constants.AutoScoring.coralDebounceSec);
-    }
-    return false;
+    // End command in teleop too so that drive stick can be held in certain direction while
+    // auto-aligning and once command ends, there will be no delay leaving station
+    return endEffector.frontSensorTriggered()
+        || coralDebounceTimer.hasElapsed(Constants.AutoScoring.coralDebounceSec);
   }
 
   @Override
@@ -290,9 +289,7 @@ public class AutoLeftFeedCoral extends Command {
     RobotContainer.autoFeedRequested = false;
     coralDebounceTimer.stop();
     coralDebounceTimer.reset();
-    if (DriverStation.isTeleopEnabled()) {
-      superstructure.requestIdle();
-    }
+    superstructure.requestIdle();
 
     // Reset logging
     Logger.recordOutput("AutoFeed/DesiredPoseGoal", new Pose2d());
