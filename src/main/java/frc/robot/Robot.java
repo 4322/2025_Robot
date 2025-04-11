@@ -74,6 +74,10 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralFeedToBravo;
   public static PathPlannerPath ThreeCoralFeedToAlphaSwipe;
 
+  public static PathPlannerPath TwoCoralStartToIndia;
+  public static PathPlannerPath TwoCoralIndiaToFeed;
+  public static PathPlannerPath TwoCoralFeedToJuliet;
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
@@ -166,6 +170,10 @@ public class Robot extends LoggedRobot {
       Leave = PathPlannerPath.fromPathFile("Leave");
 
       PushAndPreloadIndia = PathPlannerPath.fromPathFile("Push and Preload India");
+
+      TwoCoralStartToIndia = PathPlannerPath.fromPathFile("Two Coral Start to India");
+      TwoCoralIndiaToFeed = PathPlannerPath.fromPathFile("Two Coral India to Feed");
+      TwoCoralFeedToJuliet = PathPlannerPath.fromPathFile("Two Coral Feed to Juliet");
 
       FourCoralStartToKilo = PathPlannerPath.fromPathFile("Start to Kilo");
       FourCoralKiloToFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
