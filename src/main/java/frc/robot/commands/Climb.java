@@ -88,7 +88,7 @@ public class Climb extends Command {
 
   @Override
   public boolean isFinished() {
-    return swerve.getPitch() < Constants.Climber.autoClimbPitchDeg;
+    return swerve.getRoll() > Constants.Climber.autoClimbPitchDeg;
   }
 
   @Override
