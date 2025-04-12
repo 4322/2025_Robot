@@ -71,7 +71,7 @@ public class Superstructure extends SubsystemBase {
 
         if (requestEject) {
           state = Superstates.EJECT;
-        } else if (requestFeed && !endEffector.coralSecured() && elevator.atSetpoint()) {
+        } else if (requestFeed && !pieceSecured() && elevator.atSetpoint()) {
           state = Superstates.FEEDING;
         } else if (requestPreScore && !(endEffector.hasCoral() && !endEffector.coralSecured())) {
           state = Superstates.PRE_SCORE;
@@ -87,8 +87,13 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case FEEDING:
-        endEffector.requestFeed();
-
+        if (level == Level.L1) {
+          flipper.requestFeed();
+        }
+        else {
+          endEffector.requestFeed();
+        }
+        
         if (requestEject) {
           state = Superstates.EJECT;
         } else if (endEffector.hasCoral()) {
@@ -96,21 +101,23 @@ public class Superstructure extends SubsystemBase {
             state = Superstates.IDLE;
             unsetAllRequests(); // account for automation from sensor triggers
           }
+        } else if (flipper.coralSecured()) {
+          state = Superstates.IDLE;
+          unsetAllRequests(); // account for automation from sensor triggers
         } else if (requestIdle) {
           state = Superstates.IDLE;
         }
         break;
       case EJECT:
         endEffector.requestSpit();
+        flipper.requestEject();
 
         if (requestIdle) {
           state = Superstates.IDLE;
         }
         break;
       case PRE_SCORE:
-        if (level == Level.L1) {
-          elevator.requestSetpoint(Constants.Scoring.L1ScoringHeight);
-        } else if (level == Level.L2) {
+        if (level == Level.L2) {
           elevator.requestSetpoint(Constants.Scoring.L2ScoringHeight);
         } else if (level == Level.L3) {
           elevator.requestSetpoint(Constants.Scoring.L3ScoringHeight);
@@ -137,16 +144,26 @@ public class Superstructure extends SubsystemBase {
           prevLevel = level;
         }
 
-        if (elevator.atSetpoint() && level != Level.L1) {
-          flipper.requestDescore();
+        if (elevator.atSetpoint()) {
+          if (level == Level.L1) {
+            flipper.requestPreScore();
+          }
+          else {
+            flipper.requestDescore();
+          }
         }
 
-        if (flipper.atDeploySetpoint() || level == Level.L1) {
+        if (flipper.atSetpoint()) {
           state = Superstates.PRE_SCORE_FLIP;
         }
         break;
       case OVERRIDE_SAFE_FLIP:
-        flipper.requestDescore();
+        if (level == Level.L1) {
+          flipper.requestPreScore();
+        }
+        else {
+          flipper.requestDescore();
+        }
         prevLevel = level;
         state = Superstates.PRE_SCORE_FLIP;
         break;
@@ -170,7 +187,7 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SAFE_RETRACT;
         } else if (requestPreScore) {
           state = Superstates.SAFE_RETRACT;
-        } else if (requestScore && elevator.atSetpoint() && endEffector.coralSecured()) {
+        } else if (requestScore && elevator.atSetpoint() && pieceSecured()) {
           state = Superstates.SCORE;
         }
         break;
@@ -214,12 +231,12 @@ public class Superstructure extends SubsystemBase {
         break;
       case SCORE:
         if (level == Level.L1) {
-          endEffector.requestL1Shoot();
+          flipper.requestScore();
         } else {
           endEffector.requestL23Shoot();
         }
 
-        if (!endEffector.coralSecured() && requestIdle) {
+        if (!endEffector.coralSecured() && !flipper.coralSecured() && requestIdle) {
           state = Superstates.SAFE_RETRACT;
         }
         break;
@@ -322,7 +339,7 @@ public class Superstructure extends SubsystemBase {
   }
 
   public boolean pieceSecured() {
-    return endEffector.coralSecured();
+    return endEffector.coralSecured() || flipper.coralSecured();
   }
 
   public boolean hasPiece() {

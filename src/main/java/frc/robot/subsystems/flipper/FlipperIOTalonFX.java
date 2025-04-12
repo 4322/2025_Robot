@@ -18,6 +18,8 @@ public class FlipperIOTalonFX implements FlipperIO {
   private TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
   private TalonFXConfiguration rollerConfig = new TalonFXConfiguration();
 
+  private double setpointMechanismRot;
+
   public FlipperIOTalonFX() {
     pivotMotor = new TalonFX(Constants.Flipper.pivotMotorID);
     rollerMotor = new TalonFX(Constants.Flipper.rollerMotorID);
@@ -88,6 +90,7 @@ public class FlipperIOTalonFX implements FlipperIO {
         (pivotEncoder.getAbsPosition() > Constants.Flipper.Pivot.absZeroWrapThreshold)
             ? 0.0
             : (pivotEncoder.getAbsPosition() / Constants.Flipper.Pivot.absEncoderGearRatio);
+    inputs.pivotSetpointMechanismRotations = setpointMechanismRot;
     inputs.rollerAppliedVoltage = rollerMotor.getMotorVoltage().getValueAsDouble();
     inputs.rollerStatorCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
     inputs.rollerSupplyCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
@@ -100,6 +103,7 @@ public class FlipperIOTalonFX implements FlipperIO {
     pivotMotor.setControl(
         new PositionVoltage(mechanismRotations * Constants.Flipper.Pivot.motorGearRatio)
             .withEnableFOC(true));
+    setpointMechanismRot = mechanismRotations;
   }
 
   @Override

@@ -11,6 +11,7 @@ public interface FlipperIO {
     public double pivotTempCelcius = 0.0;
     public double pivotPosMotorRotations = 0.0;
     public double pivotPosAbsMechanismRotations = 0.0;
+    public double pivotSetpointMechanismRotations = 0.0;
 
     public double rollerAppliedVoltage = 0.0;
     public double rollerSupplyCurrentAmps = 0.0;

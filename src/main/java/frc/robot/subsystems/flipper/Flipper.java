@@ -2,6 +2,7 @@ package frc.robot.subsystems.flipper;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
@@ -13,8 +14,13 @@ public class Flipper extends SubsystemBase {
   private boolean requestIdle;
   private boolean requestDescore;
   private boolean requestFeed;
+  private boolean requestPreScore;
   private boolean requestScore;
+  private boolean requestEject;
+  private boolean coralSecured;
 
+  private Timer stallTimer = new Timer();
+  private Timer scoreTimer = new Timer();
   private FlipperStates state = FlipperStates.SEED_POSITION;
 
   public enum FlipperStates {
@@ -23,7 +29,9 @@ public class Flipper extends SubsystemBase {
     DESCORE,
     FEED,
     HOLD,
+    PRE_SCORE,
     SCORE,
+    EJECT
   }
 
   public Flipper(FlipperIO io) {
@@ -48,13 +56,14 @@ public class Flipper extends SubsystemBase {
         if (requestDescore) {
           state = FlipperStates.DESCORE;
         }
-        if (requestFeed) {
+        else if (requestFeed) {
           state = FlipperStates.FEED;
         }
         break;
       case DESCORE:
         io.setPivotPosition(Constants.Flipper.Pivot.descoreSetpointMechanismRotations);
         io.setRollerVoltage(Constants.Flipper.Roller.descoreVoltage);
+
         if (requestIdle) {
           state = FlipperStates.IDLE;
         }
@@ -62,23 +71,85 @@ public class Flipper extends SubsystemBase {
       case FEED:
         io.setPivotPosition(Constants.Flipper.Pivot.feedSetpointMechanismRotations);
         io.setRollerVoltage(Constants.Flipper.Roller.feedVoltage);
+
+        if (Util.atReference(inputs.rollerStatorCurrentAmps, Constants.Flipper.Roller.statorCurrentLimit, Constants.Flipper.Roller.stallCurrentTolerance, true)) {
+          stallTimer.start();
+        }
+        else if (stallTimer.isRunning()) {
+          stallTimer.stop();
+          stallTimer.reset();
+        }
+        
+        if (stallTimer.isRunning()) {
+          if (stallTimer.hasElapsed(Constants.Flipper.Roller.stallTimeSec)) {
+            stallTimer.stop();
+            stallTimer.reset();
+            coralSecured = true;
+            state = FlipperStates.HOLD;
+          }
+        } else if (requestIdle) {
+          stallTimer.stop();
+          stallTimer.reset();
+          state = FlipperStates.IDLE;
+        }
+        break;
+      case HOLD:
+        io.setPivotPosition(Constants.Flipper.Pivot.stowedSetpointMechanismRotations);
+        io.setRollerVoltage(Constants.Flipper.Roller.holdVoltage);
+
+        if (requestPreScore) {
+          state = FlipperStates.PRE_SCORE;
+        }
+        else if (requestEject) {
+          state = FlipperStates.EJECT;
+        }
+        break;
+      case PRE_SCORE:
+        io.setPivotPosition(Constants.Flipper.Pivot.scoreSetpointMechanismRotations);
+
+        if (requestScore && atSetpoint()) {
+          state = FlipperStates.SCORE;
+        }
+        else if (requestIdle) {
+          state = FlipperStates.HOLD;
+        }
+        break;
+      case SCORE:
+        io.setRollerVoltage(Constants.Flipper.Roller.scoreVoltage);
+        scoreTimer.start();
+
+        if (requestIdle && scoreTimer.hasElapsed(Constants.Flipper.Roller.scoreWaitTimerSec)) {
+          scoreTimer.stop();
+          scoreTimer.reset();
+          coralSecured = false;
+          state = FlipperStates.IDLE;
+        }
+        break;
+      case EJECT:
+        io.setRollerVoltage(Constants.Flipper.Roller.ejectVoltage);
+
         if (requestIdle) {
+          coralSecured = false;
           state = FlipperStates.IDLE;
         }
         break;
     }
   }
 
-  public boolean atDeploySetpoint() {
+  public boolean atSetpoint() {
     return Util.atReference(
         inputs.pivotPosAbsMechanismRotations,
-        Constants.Flipper.Pivot.deployedSetpointMechanismRotations,
+        inputs.pivotSetpointMechanismRotations,
         Constants.Flipper.Pivot.setpointToleranceMechanismRotations,
         true);
   }
 
   public double getPivotPosition() {
     return inputs.pivotPosAbsMechanismRotations;
+  }
+
+  public boolean coralSecured() {
+    return coralSecured;
   }
 
   // Use method only to reset state when robot is disabled
@@ -97,9 +168,33 @@ public class Flipper extends SubsystemBase {
     requestDescore = true;
   }
 
+  public void requestFeed() {
+    unsetAllRequests();
+    requestFeed = true;
+  }
+
+  public void requestPreScore() {
+    unsetAllRequests();
+    requestPreScore = true;
+  }
+
+  public void requestScore() {
+    unsetAllRequests();
+    requestScore = true;
+  }
+
+  public void requestEject() {
+    unsetAllRequests();
+    requestEject = true;
+  }
+
   private void unsetAllRequests() {
     requestDescore = false;
     requestIdle = false;
+    requestFeed = false;
+    requestPreScore = false;
+    requestScore = false;
+    requestEject = false;
   }
 
   public void enableBrakeMode(boolean enable) {

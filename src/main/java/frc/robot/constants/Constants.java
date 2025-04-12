@@ -141,7 +141,8 @@ public class Constants {
       public static final double stowedSetpointMechanismRotations = 0.14015;
       public static final double descoreSetpointMechanismRotations =
           0.3372 + 0.014 + Units.degreesToRotations(3.5);
-      public static final double feedSetpointMechanismRotations = 0;//TODO
+      public static final double feedSetpointMechanismRotations = 0;// TODO
+      public static final double scoreSetpointMechanismRotations = 0;// TODO
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
@@ -153,7 +154,14 @@ public class Constants {
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
       public static final double descoreVoltage = -5;
-      public static final double feedVoltage = -3;//TODO
+      public static final double feedVoltage = -3; // TODO
+      public static final double holdVoltage = -1; // TODO
+      public static final double scoreVoltage = 1; // TODO
+      public static final double ejectVoltage = 2; // TODO
+
+      public static final double stallCurrentTolerance = 3; //  TODO
+      public static final double stallTimeSec = 0.5; //  TODO
+      public static final double scoreWaitTimerSec = 0.1; // tODO
     }
   }
 
@@ -188,7 +196,7 @@ public class Constants {
   }
 
   public static class Scoring {
-    public static final double L1ScoringHeight = 0.05;
+    public static final double L1ScoringHeight = 0;
     public static final double L2ScoringHeight = 0.300 + Units.inchesToMeters(0.125);
     public static final double L3ScoringHeight = 0.685;
 
