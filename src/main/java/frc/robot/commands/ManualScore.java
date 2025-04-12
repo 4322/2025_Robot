@@ -10,6 +10,7 @@ import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.swerve.Swerve;
 
 public class ManualScore extends Command {
@@ -74,7 +75,7 @@ public class ManualScore extends Command {
     swerve.requestPercent(new ChassisSpeeds(dx, dy, output), true);
 
     if (swerve.atAngularSetpoint(setpoint)) {
-      if (RobotContainer.operatorBoard.getFlipRequested()) {
+      if (RobotContainer.operatorBoard.getFlipRequested() || superstructure.getLevel() == Level.L1) {
         superstructure.requestPreScoreFlip(false);
       } else {
         superstructure.requestPreScore();

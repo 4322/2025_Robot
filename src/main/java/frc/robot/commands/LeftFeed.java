@@ -10,6 +10,7 @@ import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.Superstructure.Superstates;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.swerve.Swerve;
@@ -37,9 +38,9 @@ public class LeftFeed extends Command {
   @Override
   public void initialize() {
     if (Robot.alliance == DriverStation.Alliance.Red) {
-      setpoint = Math.toRadians(126);
+      setpoint = superstructure.getLevel() == Level.L1 ? Math.toRadians(-54) : Math.toRadians(126);
     } else {
-      setpoint = Math.toRadians(-54);
+      setpoint = superstructure.getLevel() == Level.L1 ? Math.toRadians(126) : Math.toRadians(-54);
     }
 
     superstructure.requestFeed();
@@ -47,6 +48,12 @@ public class LeftFeed extends Command {
 
   @Override
   public void execute() {
+    if (Robot.alliance == DriverStation.Alliance.Red) {
+      setpoint = superstructure.getLevel() == Level.L1 ? Math.toRadians(-54) : Math.toRadians(126);
+    } else {
+      setpoint = superstructure.getLevel() == Level.L1 ? Math.toRadians(126) : Math.toRadians(-54);
+    }
+    
     double measurement = swerve.getPose().getRotation().getRadians();
     double output = turnPID.calculate(measurement, setpoint);
 

@@ -95,8 +95,7 @@ public class AutoScore extends Command {
     TARGET_TAG_VISIBLE,
     SIDE_SWIPE_OFFSET,
     SIDE_SWIPE,
-    SCORING_POSITION,
-    L1_STRAFE
+    SCORING_POSITION
   }
 
   /** Drives to the specified pose under full software control. */
@@ -450,7 +449,7 @@ public class AutoScore extends Command {
                 .getTranslation();
 
         if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
-          if (RobotContainer.operatorBoard.getFlipRequested()) {
+          if (RobotContainer.operatorBoard.getFlipRequested() || superstructure.getLevel() == Level.L1) {
             superstructure.requestPreScoreFlip(
                 currentDistance > Constants.AutoScoring.flipOverrideThreshold);
           } else {
@@ -461,11 +460,6 @@ public class AutoScore extends Command {
         // check if at scoring position
         if (currentDistance < driveController.getPositionTolerance()) {
           if (RobotContainer.driver.getRightTriggerAxis() > 0.5) {
-            if (superstructure.getLevel() == Level.L1) {
-              desiredPose = desiredL1StrafePose;
-              state = AutoScoreStates.L1_STRAFE;
-              strafeWaitTimer.start();
-            }
             superstructure.requestScore();
           }
           driveVelocityScalar = 0;
@@ -481,27 +475,6 @@ public class AutoScore extends Command {
 
         swerve.requestVelocity(
             new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), true);
-        break;
-      case L1_STRAFE:
-        // wait a little before strafing and follow through after piece is ejected to make sure
-        // coral is horizontal
-        if (!strafeFollowThroughTimer.hasElapsed(Constants.AutoScoring.l1ExtraStrafeTime)
-            && strafeWaitTimer.hasElapsed(Constants.AutoScoring.l1WaitStrafeTime)) {
-          if (!superstructure.pieceSecured()) {
-            strafeFollowThroughTimer.start();
-          }
-          driveVelocity =
-              new Translation2d(
-                  0,
-                  RobotContainer.operatorBoard.getUseLeftCamera()
-                      ? -Constants.AutoScoring.l1StrafeSpeed
-                      : Constants.AutoScoring.l1StrafeSpeed);
-        } else {
-          driveVelocity = new Translation2d(0, 0);
-        }
-
-        swerve.requestVelocity(
-            new ChassisSpeeds(driveVelocity.getX(), driveVelocity.getY(), thetaVelocity), false);
         break;
     }
 
