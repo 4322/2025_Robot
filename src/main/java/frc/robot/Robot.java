@@ -71,12 +71,17 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralStartToIndia;
   public static PathPlannerPath ThreeCoralIndiaToFeed;
   public static PathPlannerPath ThreeCoralAlphaToFeed;
-  public static PathPlannerPath ThreeCoralFeedToBravo;
   public static PathPlannerPath ThreeCoralFeedToAlphaSwipe;
 
+  // Two Coral Left
   public static PathPlannerPath TwoCoralStartToIndia;
   public static PathPlannerPath TwoCoralIndiaToFeed;
   public static PathPlannerPath TwoCoralFeedToJuliet;
+
+  // Two Coral Right
+  public static PathPlannerPath TwoCoralStartToFoxtrot;
+  public static PathPlannerPath TwoCoralFoxtrotToFeed;
+  public static PathPlannerPath TwoCoralFeedToEcho;
 
   @Override
   public void robotInit() {
@@ -175,6 +180,10 @@ public class Robot extends LoggedRobot {
       TwoCoralIndiaToFeed = PathPlannerPath.fromPathFile("Two Coral India to Feed");
       TwoCoralFeedToJuliet = PathPlannerPath.fromPathFile("Two Coral Feed to Juliet");
 
+      TwoCoralStartToFoxtrot = PathPlannerPath.fromPathFile("Two Coral Start to Foxtrot");
+      TwoCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Two Coral Foxtrot to Feed");
+      TwoCoralFeedToEcho = PathPlannerPath.fromPathFile("Two Coral Feed to Echo");
+
       FourCoralStartToKilo = PathPlannerPath.fromPathFile("Start to Kilo");
       FourCoralKiloToFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
       FourCoralFeedToLima = PathPlannerPath.fromPathFile("Feed to Lima");
@@ -193,7 +202,6 @@ public class Robot extends LoggedRobot {
       ThreeCoralStartToIndia = PathPlannerPath.fromPathFile("Start to India");
       ThreeCoralIndiaToFeed = PathPlannerPath.fromPathFile("India to Feed");
       ThreeCoralAlphaToFeed = PathPlannerPath.fromPathFile("Alpha to Feed");
-      ThreeCoralFeedToBravo = PathPlannerPath.fromPathFile("Feed to Bravo");
       ThreeCoralFeedToAlphaSwipe = PathPlannerPath.fromPathFile("Feed to Alpha Swipe");
     } catch (Exception e) {
       DriverStation.reportError("Failed to load PathPlanner paths", true);

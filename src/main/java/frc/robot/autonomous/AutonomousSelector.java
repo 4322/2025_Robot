@@ -12,6 +12,7 @@ import frc.robot.autonomous.modes.PreloadOnlyG3;
 import frc.robot.autonomous.modes.PreloadOnlyI3;
 import frc.robot.autonomous.modes.PushAndPreloadI3;
 import frc.robot.autonomous.modes.TwoCoralLeft;
+import frc.robot.autonomous.modes.TwoCoralRight;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.swerve.Swerve;
@@ -37,8 +38,14 @@ public class AutonomousSelector {
         "FOUR_CORAL_LEFT_PUSH", new FourCoralLeftPush(swerve, superstructure, endEffector));
     autonomousSelector.addOption(
         "TWO_CORAL_LEFT", new TwoCoralLeft(swerve, superstructure, endEffector));
+    autonomousSelector.addOption(
+        "TWO_CORAL_RIGHT", new TwoCoralRight(swerve, superstructure, endEffector));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
+
+    // Configurable delay timers for two coral auto
+    SmartDashboard.putNumber("Two Coral Initial Wait Timer", 0.0);
+    SmartDashboard.putNumber("Two Coral Score Wait Timer", 0.0);
   }
 
   public SequentialCommandGroup get() {
