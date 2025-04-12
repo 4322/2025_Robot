@@ -19,35 +19,35 @@ import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.HashSet;
 
-public class TwoCoralLeft extends SequentialCommandGroup {
-  public TwoCoralLeft(Swerve swerve, Superstructure superstructure, EndEffector endEffector) {
-    setName("TWO_CORAL_LEFT");
+public class TwoCoralCenter extends SequentialCommandGroup {
+  public TwoCoralCenter(Swerve swerve, Superstructure superstructure, EndEffector endEffector) {
+    setName("TWO_CORAL_CENTER");
     addRequirements(swerve, superstructure, endEffector);
     addCommands(
         new AutoPoseReset(
-            swerve, Robot.TwoCoralStartToIndia.getStartingHolonomicPose().get().getTranslation()),
+            swerve, Robot.TwoCoralStartToAlpha.getStartingHolonomicPose().get().getTranslation()),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);
-              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.I);
+              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.A);
             }),
         new DeferredCommand(
             () -> new WaitCommand(SmartDashboard.getNumber("Two Coral Initial Wait Timer", 0)),
             new HashSet<>()),
-        AutoBuilder.followPath(Robot.TwoCoralStartToIndia),
+        AutoBuilder.followPath(Robot.TwoCoralStartToAlpha),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);
-              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.J);
+              RobotContainer.operatorBoard.setScoringLocation(ScoringLocation.B);
             }),
         new DeferredCommand(
             () -> new WaitCommand(SmartDashboard.getNumber("Two Coral Score Wait Timer", 0)),
             new HashSet<>()),
-        AutoBuilder.followPath(Robot.TwoCoralIndiaToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false, false).withTimeout(3),
-        AutoBuilder.followPath(Robot.TwoCoralFeedToJuliet),
+        AutoBuilder.followPath(Robot.TwoCoralAlphaToFeed),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, true, false).withTimeout(3),
+        AutoBuilder.followPath(Robot.TwoCoralFeedToBravo),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2));
   }

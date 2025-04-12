@@ -33,7 +33,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         new WaitUntilCommand(() -> superstructure.getState() == Superstates.IDLE),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false, false),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
@@ -42,7 +42,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         new WaitUntilCommand(() -> superstructure.getState() == Superstates.IDLE),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false, false),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
@@ -51,7 +51,7 @@ public class FourCoralLeft extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         new WaitUntilCommand(() -> superstructure.getState() == Superstates.IDLE),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false, false),
         new InstantCommand(
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L2);

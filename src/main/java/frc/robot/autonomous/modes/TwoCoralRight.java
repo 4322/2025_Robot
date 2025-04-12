@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.ScoringManager.ScoringLocation;
-import frc.robot.commands.auto.AutoLeftFeedCoral;
 import frc.robot.commands.auto.AutoPoseReset;
 import frc.robot.commands.auto.AutoPreScoreCoral;
+import frc.robot.commands.auto.AutoRightFeedCoral;
 import frc.robot.commands.auto.AutoScoreCoral;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
@@ -46,7 +46,7 @@ public class TwoCoralRight extends SequentialCommandGroup {
             () -> new WaitCommand(SmartDashboard.getNumber("Two Coral Score Wait Timer", 0)),
             new HashSet<>()),
         AutoBuilder.followPath(Robot.TwoCoralFoxtrotToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, false).withTimeout(3),
+        new AutoRightFeedCoral(swerve, superstructure, endEffector, true, false).withTimeout(3),
         AutoBuilder.followPath(Robot.TwoCoralFeedToEcho),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2));

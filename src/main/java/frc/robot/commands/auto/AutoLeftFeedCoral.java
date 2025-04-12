@@ -29,6 +29,7 @@ public class AutoLeftFeedCoral extends Command {
   private EndEffector endEffector;
   private Timer coralDebounceTimer = new Timer();
   private final boolean slowMode;
+  private final boolean useLeftCam;
 
   private final ProfiledPIDController driveController =
       new ProfiledPIDController(0.0, 0.0, 0.0, new TrapezoidProfile.Constraints(0.0, 0.0));
@@ -87,11 +88,16 @@ public class AutoLeftFeedCoral extends Command {
 
   /** Drives to the specified pose under full software control. */
   public AutoLeftFeedCoral(
-      Swerve swerve, Superstructure superstructure, EndEffector endEffector, boolean slowMode) {
+      Swerve swerve,
+      Superstructure superstructure,
+      EndEffector endEffector,
+      boolean useLeftCam,
+      boolean slowMode) {
     this.swerve = swerve;
     this.superstructure = superstructure;
     this.endEffector = endEffector;
     this.slowMode = slowMode;
+    this.useLeftCam = useLeftCam;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     addRequirements(swerve, superstructure);
@@ -129,7 +135,7 @@ public class AutoLeftFeedCoral extends Command {
 
     RobotContainer.autoDriveEngaged = true;
     RobotContainer.autoFeedRequested = true;
-    RobotContainer.useBackLeftCamera = false;
+    RobotContainer.useBackLeftCamera = useLeftCam;
     RobotContainer.coralStationTagID = desiredTag;
     superstructure.requestFeed();
   }

@@ -154,7 +154,7 @@ public class Constants {
 
       public static final double descoreVoltage = -5;
       public static final double feedVoltage = -3; // TODO
-      public static final double holdVoltage = -1.5;
+      public static final double holdVoltage = -2;
       public static final double scoreVoltage = 1; // TODO
       public static final double ejectVoltage = 2; // TODO
 

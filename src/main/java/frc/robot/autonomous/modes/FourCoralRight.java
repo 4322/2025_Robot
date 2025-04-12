@@ -32,7 +32,7 @@ public class FourCoralRight extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralCharlieToFeed),
-        new AutoRightFeedCoral(swerve, superstructure, endEffector, false),
+        new AutoRightFeedCoral(swerve, superstructure, endEffector, true, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToCharlieSwipe),
         new InstantCommand(
             () -> {
@@ -42,7 +42,7 @@ public class FourCoralRight extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralCharlieToFeed),
-        new AutoRightFeedCoral(swerve, superstructure, endEffector, false),
+        new AutoRightFeedCoral(swerve, superstructure, endEffector, true, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToDelta),
         new InstantCommand(
             () -> {
@@ -52,7 +52,7 @@ public class FourCoralRight extends SequentialCommandGroup {
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
         AutoBuilder.followPath(Robot.FourCoralDeltaToFeed),
-        new AutoRightFeedCoral(swerve, superstructure, endEffector, false),
+        new AutoRightFeedCoral(swerve, superstructure, endEffector, true, false),
         AutoBuilder.followPath(Robot.FourCoralFeedToDelta),
         new InstantCommand(
             () -> {

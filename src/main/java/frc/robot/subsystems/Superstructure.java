@@ -149,10 +149,10 @@ public class Superstructure extends SubsystemBase {
           } else {
             flipper.requestDescore();
           }
-        }
 
-        if (flipper.atSetpoint()) {
-          state = Superstates.PRE_SCORE_FLIP;
+          if (flipper.atSetpoint()) {
+            state = Superstates.PRE_SCORE_FLIP;
+          }
         }
         break;
       case OVERRIDE_SAFE_FLIP:

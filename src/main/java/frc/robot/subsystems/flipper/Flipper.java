@@ -112,7 +112,11 @@ public class Flipper extends SubsystemBase {
         if (requestScore && atSetpoint()) {
           state = FlipperStates.SCORE;
         } else if (requestIdle) {
-          state = FlipperStates.HOLD;
+          if (coralSecured) {
+            state = FlipperStates.HOLD;
+          } else {
+            state = FlipperStates.IDLE;
+          }
         }
         break;
       case SCORE:
