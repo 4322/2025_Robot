@@ -3,6 +3,7 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -138,8 +139,9 @@ public class Constants {
       public static final double absEncoderGearRatio = 24.0 / 22.0;
       public static final double motorGearRatio = (24.0 / 22.0) * 5 * 4 * 4;
       public static final double stowedSetpointMechanismRotations = 0.14015;
-      public static final double deployedSetpointMechanismRotations =
+      public static final double descoreSetpointMechanismRotations =
           0.3372 + 0.014 + Units.degreesToRotations(3.5);
+      public static final double feedSetpointMechanismRotations = 0;//TODO
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
@@ -151,6 +153,7 @@ public class Constants {
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
       public static final double descoreVoltage = -5;
+      public static final double feedVoltage = -3;//TODO
     }
   }
 

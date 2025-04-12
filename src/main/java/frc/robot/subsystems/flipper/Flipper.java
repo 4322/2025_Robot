@@ -1,9 +1,10 @@
 package frc.robot.subsystems.flipper;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
-import org.littletonrobotics.junction.Logger;
 
 public class Flipper extends SubsystemBase {
   private FlipperIO io;
@@ -11,13 +12,18 @@ public class Flipper extends SubsystemBase {
 
   private boolean requestIdle;
   private boolean requestDescore;
+  private boolean requestFeed;
+  private boolean requestScore;
 
   private FlipperStates state = FlipperStates.SEED_POSITION;
 
   public enum FlipperStates {
     SEED_POSITION,
     IDLE,
-    FLIP
+    DESCORE,
+    FEED,
+    HOLD,
+    SCORE,
   }
 
   public Flipper(FlipperIO io) {
@@ -40,12 +46,22 @@ public class Flipper extends SubsystemBase {
         io.setRollerVoltage(0);
 
         if (requestDescore) {
-          state = FlipperStates.FLIP;
+          state = FlipperStates.DESCORE;
+        }
+        if (requestFeed) {
+          state = FlipperStates.FEED;
         }
         break;
-      case FLIP:
-        io.setPivotPosition(Constants.Flipper.Pivot.deployedSetpointMechanismRotations);
+      case DESCORE:
+        io.setPivotPosition(Constants.Flipper.Pivot.descoreSetpointMechanismRotations);
         io.setRollerVoltage(Constants.Flipper.Roller.descoreVoltage);
+        if (requestIdle) {
+          state = FlipperStates.IDLE;
+        }
+        break;
+      case FEED:
+        io.setPivotPosition(Constants.Flipper.Pivot.feedSetpointMechanismRotations);
+        io.setRollerVoltage(Constants.Flipper.Roller.feedVoltage);
         if (requestIdle) {
           state = FlipperStates.IDLE;
         }
