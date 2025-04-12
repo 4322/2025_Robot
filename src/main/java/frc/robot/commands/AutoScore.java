@@ -449,7 +449,8 @@ public class AutoScore extends Command {
                 .getTranslation();
 
         if (currentDistance < Constants.AutoScoring.elevatorRaiseThreshold) {
-          if (RobotContainer.operatorBoard.getFlipRequested() || superstructure.getLevel() == Level.L1) {
+          if (RobotContainer.operatorBoard.getFlipRequested()
+              || superstructure.getLevel() == Level.L1) {
             superstructure.requestPreScoreFlip(
                 currentDistance > Constants.AutoScoring.flipOverrideThreshold);
           } else {

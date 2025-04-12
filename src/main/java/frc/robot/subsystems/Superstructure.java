@@ -89,11 +89,10 @@ public class Superstructure extends SubsystemBase {
       case FEEDING:
         if (level == Level.L1) {
           flipper.requestFeed();
-        }
-        else {
+        } else {
           endEffector.requestFeed();
         }
-        
+
         if (requestEject) {
           state = Superstates.EJECT;
         } else if (endEffector.hasCoral()) {
@@ -147,8 +146,7 @@ public class Superstructure extends SubsystemBase {
         if (elevator.atSetpoint()) {
           if (level == Level.L1) {
             flipper.requestPreScore();
-          }
-          else {
+          } else {
             flipper.requestDescore();
           }
         }
@@ -160,8 +158,7 @@ public class Superstructure extends SubsystemBase {
       case OVERRIDE_SAFE_FLIP:
         if (level == Level.L1) {
           flipper.requestPreScore();
-        }
-        else {
+        } else {
           flipper.requestDescore();
         }
         prevLevel = level;

@@ -53,7 +53,7 @@ public class RightFeed extends Command {
     } else {
       setpoint = superstructure.getLevel() == Level.L1 ? Math.toRadians(-126) : Math.toRadians(54);
     }
-    
+
     double measurement = swerve.getPose().getRotation().getRadians();
     double output = turnPID.calculate(measurement, setpoint);
 

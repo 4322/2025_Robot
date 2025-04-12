@@ -75,7 +75,8 @@ public class ManualScore extends Command {
     swerve.requestPercent(new ChassisSpeeds(dx, dy, output), true);
 
     if (swerve.atAngularSetpoint(setpoint)) {
-      if (RobotContainer.operatorBoard.getFlipRequested() || superstructure.getLevel() == Level.L1) {
+      if (RobotContainer.operatorBoard.getFlipRequested()
+          || superstructure.getLevel() == Level.L1) {
         superstructure.requestPreScoreFlip(false);
       } else {
         superstructure.requestPreScore();
