@@ -184,8 +184,10 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SAFE_RETRACT;
         } else if (requestPreScore) {
           state = Superstates.SAFE_RETRACT;
-        } else if (requestScore && elevator.atSetpoint() && pieceSecured()) {
-          state = Superstates.SCORE;
+        } else if (requestScore && elevator.atSetpoint()) {
+          if ((flipper.coralSecured() && level == Level.L1) || endEffector.coralSecured()) {
+            state = Superstates.SCORE;
+          }
         }
         break;
       case TRANSITION_FLIP:
