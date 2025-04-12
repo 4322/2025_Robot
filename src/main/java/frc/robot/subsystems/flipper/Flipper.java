@@ -1,11 +1,10 @@
 package frc.robot.subsystems.flipper;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commons.Util;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Flipper extends SubsystemBase {
   private FlipperIO io;
@@ -55,8 +54,7 @@ public class Flipper extends SubsystemBase {
 
         if (requestDescore) {
           state = FlipperStates.DESCORE;
-        }
-        else if (requestFeed) {
+        } else if (requestFeed) {
           state = FlipperStates.FEED;
         }
         break;
@@ -72,14 +70,17 @@ public class Flipper extends SubsystemBase {
         io.setPivotPosition(Constants.Flipper.Pivot.feedSetpointMechanismRotations);
         io.setRollerVoltage(Constants.Flipper.Roller.feedVoltage);
 
-        if (Util.atReference(inputs.rollerStatorCurrentAmps, Constants.Flipper.Roller.statorCurrentLimit, Constants.Flipper.Roller.stallCurrentTolerance, true)) {
+        if (Util.atReference(
+            inputs.rollerStatorCurrentAmps,
+            Constants.Flipper.Roller.statorCurrentLimit,
+            Constants.Flipper.Roller.stallCurrentTolerance,
+            true)) {
           stallTimer.start();
-        }
-        else if (stallTimer.isRunning()) {
+        } else if (stallTimer.isRunning()) {
           stallTimer.stop();
           stallTimer.reset();
         }
-        
+
         if (stallTimer.isRunning()) {
           if (stallTimer.hasElapsed(Constants.Flipper.Roller.stallTimeSec)) {
             stallTimer.stop();
@@ -99,8 +100,7 @@ public class Flipper extends SubsystemBase {
 
         if (requestPreScore) {
           state = FlipperStates.PRE_SCORE;
-        }
-        else if (requestEject) {
+        } else if (requestEject) {
           state = FlipperStates.EJECT;
         }
         break;
@@ -109,8 +109,7 @@ public class Flipper extends SubsystemBase {
 
         if (requestScore && atSetpoint()) {
           state = FlipperStates.SCORE;
-        }
-        else if (requestIdle) {
+        } else if (requestIdle) {
           state = FlipperStates.HOLD;
         }
         break;
@@ -118,11 +117,13 @@ public class Flipper extends SubsystemBase {
         io.setRollerVoltage(Constants.Flipper.Roller.scoreVoltage);
         scoreTimer.start();
 
-        if (requestIdle && scoreTimer.hasElapsed(Constants.Flipper.Roller.scoreWaitTimerSec)) {
+        if (scoreTimer.hasElapsed(Constants.Flipper.Roller.scoreWaitTimerSec)) {
           scoreTimer.stop();
           scoreTimer.reset();
           coralSecured = false;
-          state = FlipperStates.IDLE;
+          if (requestIdle) {
+            state = FlipperStates.IDLE;
+          }
         }
         break;
       case EJECT:

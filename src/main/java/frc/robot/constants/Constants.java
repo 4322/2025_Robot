@@ -3,7 +3,6 @@ package frc.robot.constants;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -141,8 +140,8 @@ public class Constants {
       public static final double stowedSetpointMechanismRotations = 0.14015;
       public static final double descoreSetpointMechanismRotations =
           0.3372 + 0.014 + Units.degreesToRotations(3.5);
-      public static final double feedSetpointMechanismRotations = 0;// TODO
-      public static final double scoreSetpointMechanismRotations = 0;// TODO
+      public static final double feedSetpointMechanismRotations = 0.14015;
+      public static final double scoreSetpointMechanismRotations = 0.3839;
       public static final double setpointToleranceMechanismRotations = 0.05;
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
@@ -155,12 +154,12 @@ public class Constants {
 
       public static final double descoreVoltage = -5;
       public static final double feedVoltage = -3; // TODO
-      public static final double holdVoltage = -1; // TODO
+      public static final double holdVoltage = -1.5;
       public static final double scoreVoltage = 1; // TODO
       public static final double ejectVoltage = 2; // TODO
 
       public static final double stallCurrentTolerance = 3; //  TODO
-      public static final double stallTimeSec = 0.5; //  TODO
+      public static final double stallTimeSec = 0.2; //  TODO
       public static final double scoreWaitTimerSec = 0.1; // tODO
     }
   }
