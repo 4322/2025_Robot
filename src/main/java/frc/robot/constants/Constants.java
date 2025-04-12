@@ -150,6 +150,7 @@ public class Constants {
     public static class Roller {
       public static final double supplyCurrentLimit = 40;
       public static final double statorCurrentLimit = 100;
+      public static final double statorCurrentNoStallThreshold = 60;
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
       public static final double descoreVoltage = -5;
