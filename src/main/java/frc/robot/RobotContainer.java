@@ -174,7 +174,7 @@ public class RobotContainer {
                 () -> {
                   superstructure.requestResetClimb();
                 }));
-    new Trigger(() -> endEffector.coralSecured())
+    new Trigger(() -> superstructure.pieceSecured())
         .toggleOnTrue(
             new InstantCommand(
                     () -> {
