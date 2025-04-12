@@ -43,6 +43,7 @@ public class Flipper extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Flipper", inputs);
     Logger.recordOutput("Flipper/State", state.toString());
+    Logger.recordOutput("Flipper/coralSecured", coralSecured);
 
     switch (state) {
       case SEED_POSITION:
