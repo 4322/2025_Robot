@@ -20,6 +20,7 @@ public class Flipper extends SubsystemBase {
 
   private Timer stallTimer = new Timer();
   private Timer scoreTimer = new Timer();
+  private Timer noStallTimer = new Timer();
   private FlipperStates state = FlipperStates.SEED_POSITION;
 
   public enum FlipperStates {
@@ -99,7 +100,24 @@ public class Flipper extends SubsystemBase {
       case HOLD:
         io.setPivotPosition(Constants.Flipper.Pivot.stowedSetpointMechanismRotations);
         io.setRollerVoltage(Constants.Flipper.Roller.holdVoltage);
+        //So the coral is known as held and hasn't fallen out
+        if (!(Util.atReference(
+            inputs.rollerStatorCurrentAmps,
+            Constants.Flipper.Roller.statorCurrentLimit,
+            Constants.Flipper.Roller.stallCurrentTolerance,
+            true))) {
+          noStallTimer.start();
+        } else if (noStallTimer.isRunning()) {
+          noStallTimer.stop();
+          noStallTimer.reset();
+        }
 
+        if (noStallTimer.hasElapsed(Constants.Flipper.Roller.noStallTimeSec)) {
+          noStallTimer.stop();
+          noStallTimer.reset();
+          state = FlipperStates.IDLE;
+          coralSecured = false;
+        }
         if (requestPreScore) {
           state = FlipperStates.PRE_SCORE;
         } else if (requestEject) {
@@ -108,6 +126,23 @@ public class Flipper extends SubsystemBase {
         break;
       case PRE_SCORE:
         io.setPivotPosition(Constants.Flipper.Pivot.scoreSetpointMechanismRotations);
+        //Coral detection for L1 so we can tell if coral is not there anymore
+        if (!(Util.atReference(
+            inputs.rollerStatorCurrentAmps,
+            Constants.Flipper.Roller.statorCurrentLimit,
+            Constants.Flipper.Roller.stallCurrentTolerance,
+            true))) {
+          noStallTimer.start();
+        } else if (noStallTimer.isRunning()) {
+          noStallTimer.stop();
+          noStallTimer.reset();
+        }
+
+        if (noStallTimer.hasElapsed(Constants.Flipper.Roller.noStallTimeSec)) {
+          noStallTimer.stop();
+          noStallTimer.reset();
+          coralSecured = false;
+        }
 
         if (requestScore && atSetpoint()) {
           state = FlipperStates.SCORE;

@@ -153,14 +153,15 @@ public class Constants {
       public static final InvertedValue motorInversion = InvertedValue.CounterClockwise_Positive;
 
       public static final double descoreVoltage = -5;
-      public static final double feedVoltage = -3; // TODO
+      public static final double feedVoltage = -3;
       public static final double holdVoltage = -2;
-      public static final double scoreVoltage = 1; // TODO
-      public static final double ejectVoltage = 2; // TODO
+      public static final double scoreVoltage = 1;
+      public static final double ejectVoltage = 2;
 
-      public static final double stallCurrentTolerance = 3; //  TODO
-      public static final double stallTimeSec = 0.2; //  TODO
-      public static final double scoreWaitTimerSec = 0.1; // tODO
+      public static final double stallCurrentTolerance = 3;
+      public static final double stallTimeSec = 0.2;
+      public static final double noStallTimeSec = 0.2;
+      public static final double scoreWaitTimerSec = 0.1;
     }
   }
 
