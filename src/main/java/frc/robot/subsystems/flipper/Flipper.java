@@ -56,6 +56,8 @@ public class Flipper extends SubsystemBase {
           state = FlipperStates.DESCORE;
         } else if (requestFeed) {
           state = FlipperStates.FEED;
+        } else if (requestPreScore) {
+          state = FlipperStates.PRE_SCORE;
         }
         break;
       case DESCORE:
