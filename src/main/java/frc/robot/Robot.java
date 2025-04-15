@@ -73,6 +73,10 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath ThreeCoralAlphaToFeed;
   public static PathPlannerPath ThreeCoralFeedToAlphaSwipe;
 
+  // L3 Three Coral Right
+  public static PathPlannerPath ThreeCoralStartToEcho;
+  public static PathPlannerPath ThreeCoralEchoToFeed;
+
   // Two Coral Left
   public static PathPlannerPath TwoCoralStartToIndia;
   public static PathPlannerPath TwoCoralIndiaToFeed;
@@ -192,6 +196,9 @@ public class Robot extends LoggedRobot {
       TwoCoralStartToAlpha = PathPlannerPath.fromPathFile("Two Coral Start to Alpha");
       TwoCoralAlphaToFeed = PathPlannerPath.fromPathFile("Two Coral Alpha to Feed");
       TwoCoralFeedToBravo = PathPlannerPath.fromPathFile("Two Coral Feed to Bravo");
+
+      ThreeCoralStartToEcho = PathPlannerPath.fromPathFile("Start To Echo");
+      ThreeCoralEchoToFeed = PathPlannerPath.fromPathFile("Echo To Feed");
 
       FourCoralStartToKilo = PathPlannerPath.fromPathFile("Start to Kilo");
       FourCoralKiloToFeed = PathPlannerPath.fromPathFile("Kilo to Feed");
