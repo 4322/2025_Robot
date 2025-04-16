@@ -19,9 +19,9 @@ import frc.robot.subsystems.endEffector.EndEffector;
 import frc.robot.subsystems.swerve.Swerve;
 import java.util.HashSet;
 
-public class TwoCoralCenter extends SequentialCommandGroup {
-  public TwoCoralCenter(Swerve swerve, Superstructure superstructure, EndEffector endEffector) {
-    setName("TWO_CORAL_CENTER");
+public class L2TwoCoralCenter extends SequentialCommandGroup {
+  public L2TwoCoralCenter(Swerve swerve, Superstructure superstructure, EndEffector endEffector) {
+    setName("L2_TWO_CORAL_CENTER");
     addRequirements(swerve, superstructure, endEffector);
     addCommands(
         new AutoPoseReset(
