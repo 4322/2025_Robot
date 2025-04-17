@@ -87,11 +87,17 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath TwoCoralFoxtrotToFeed;
   public static PathPlannerPath TwoCoralFeedToEcho;
 
-  // Two Coral Center
-  public static PathPlannerPath TwoCoralStartToAlpha;
-  public static PathPlannerPath TwoCoralAlphaToFeed;
-  public static PathPlannerPath TwoCoralFeedToBravo;
-  public static PathPlannerPath TwoCoralBravoToEnd;
+  // Two Coral Center Left
+  public static PathPlannerPath LeftTwoCoralStartToAlpha;
+  public static PathPlannerPath LeftTwoCoralAlphaToFeed;
+  public static PathPlannerPath LeftTwoCoralFeedToBravo;
+  public static PathPlannerPath LeftTwoCoralBravoToEnd;
+
+  // Two Coral Center Right
+  public static PathPlannerPath RightTwoCoralStartToBravo;
+  public static PathPlannerPath RightTwoCoralBravoToFeed;
+  public static PathPlannerPath RightTwoCoralFeedToAlpha;
+  public static PathPlannerPath RightTwoCoralAlphaToEnd;
 
   @Override
   public void robotInit() {
@@ -193,11 +199,19 @@ public class Robot extends LoggedRobot {
       TwoCoralStartToFoxtrot = PathPlannerPath.fromPathFile("Two Coral Start to Foxtrot");
       TwoCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Two Coral Foxtrot to Feed");
       TwoCoralFeedToEcho = PathPlannerPath.fromPathFile("Two Coral Feed to Echo");
-      TwoCoralBravoToEnd = PathPlannerPath.fromPathFile("Two Coral Bravo to End");
+      LeftTwoCoralBravoToEnd = PathPlannerPath.fromPathFile("Two Coral Center Bravo to End");
 
-      TwoCoralStartToAlpha = PathPlannerPath.fromPathFile("Two Coral Start to Alpha");
-      TwoCoralAlphaToFeed = PathPlannerPath.fromPathFile("Two Coral Alpha to Feed");
-      TwoCoralFeedToBravo = PathPlannerPath.fromPathFile("Two Coral Feed to Bravo");
+      LeftTwoCoralStartToAlpha = PathPlannerPath.fromPathFile("Two Coral Center Start to Alpha");
+      LeftTwoCoralAlphaToFeed = PathPlannerPath.fromPathFile("Two Coral Center Alpha to Feed");
+      LeftTwoCoralFeedToBravo = PathPlannerPath.fromPathFile("Two Coral Center Feed to Bravo");
+
+      RightTwoCoralStartToBravo =
+          PathPlannerPath.fromPathFile("Two Coral Center Right Start to Bravo");
+      RightTwoCoralBravoToFeed =
+          PathPlannerPath.fromPathFile("Two Coral Center Right Bravo to Feed");
+      RightTwoCoralFeedToAlpha =
+          PathPlannerPath.fromPathFile("Two Coral Center Right Feed to Alpha");
+      RightTwoCoralAlphaToEnd = PathPlannerPath.fromPathFile("Two Coral Center Right Alpha to End");
 
       ThreeCoralStartToEcho = PathPlannerPath.fromPathFile("Start to Echo");
       ThreeCoralEchoToFeed = PathPlannerPath.fromPathFile("Echo To Feed");

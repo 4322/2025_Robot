@@ -91,8 +91,7 @@ public class Climb extends Command {
 
     if (swerve.getRoll() > (initialPitch + Constants.Climber.autoClimbPitchDeg)) {
       autoClimbDebounce.start();
-    }
-    else if (autoClimbDebounce.isRunning()){
+    } else if (autoClimbDebounce.isRunning()) {
       autoClimbDebounce.stop();
       autoClimbDebounce.reset();
     }

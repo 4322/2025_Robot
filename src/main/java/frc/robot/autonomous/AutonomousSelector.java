@@ -6,13 +6,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.FourCoralLeft;
 import frc.robot.autonomous.modes.FourCoralLeftPush;
 import frc.robot.autonomous.modes.FourCoralRight;
-import frc.robot.autonomous.modes.L2TwoCoralCenter;
-import frc.robot.autonomous.modes.L3TwoCoralCenter;
 import frc.robot.autonomous.modes.Leave;
+import frc.robot.autonomous.modes.LeftL2TwoCoralCenter;
+import frc.robot.autonomous.modes.LeftL3TwoCoralCenter;
 import frc.robot.autonomous.modes.PreloadOnlyE3;
 import frc.robot.autonomous.modes.PreloadOnlyG3;
 import frc.robot.autonomous.modes.PreloadOnlyI3;
 import frc.robot.autonomous.modes.PushAndPreloadI3;
+import frc.robot.autonomous.modes.RightL2TwoCoralCenter;
 import frc.robot.autonomous.modes.TwoCoralLeft;
 import frc.robot.autonomous.modes.TwoCoralRight;
 import frc.robot.subsystems.Superstructure;
@@ -43,9 +44,12 @@ public class AutonomousSelector {
     autonomousSelector.addOption(
         "TWO_CORAL_RIGHT", new TwoCoralRight(swerve, superstructure, endEffector));
     autonomousSelector.addOption(
-        "L2_TWO_CORAL_CENTER", new L2TwoCoralCenter(swerve, superstructure, endEffector));
+        "RIGHT_L2_TWO_CORAL_CENTER",
+        new RightL2TwoCoralCenter(swerve, superstructure, endEffector));
     autonomousSelector.addOption(
-        "L3_TWO_CORAL_CENTER", new L3TwoCoralCenter(swerve, superstructure, endEffector));
+        "LEFT_L2_TWO_CORAL_CENTER", new LeftL2TwoCoralCenter(swerve, superstructure, endEffector));
+    autonomousSelector.addOption(
+        "LEFT_L3_TWO_CORAL_CENTER", new LeftL3TwoCoralCenter(swerve, superstructure, endEffector));
 
     SmartDashboard.putData("Autonomus Selector", autonomousSelector);
 

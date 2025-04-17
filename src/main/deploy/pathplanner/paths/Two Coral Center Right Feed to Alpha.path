@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.139659090909091,
-        "y": 7.559928977272728
+        "x": 0.7179545454545455,
+        "y": 1.3177130681818177
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3960227272727277,
-        "y": 5.804928977272726
+        "x": 2.562698863636364,
+        "y": 3.0228551136363633
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3233806818131977,
-        "y": 4.179559659090909
+        "x": 2.6025852272727277,
+        "y": 4.209474431818181
       },
       "prevControl": {
-        "x": 0.4586931818181821,
-        "y": 6.682428977272727
+        "x": 1.8447443181818184,
+        "y": 4.359048295454545
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1,
-      "rotationDegrees": 0.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -46,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 2.0,
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "2 Coral Center",
+  "folder": "2 Coral Center Right",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 54.0
   },
   "useDefaultConstraints": true
 }
