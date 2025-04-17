@@ -5,9 +5,16 @@ import frc.robot.subsystems.Superstructure;
 
 public class AutoScoreCoral extends Command {
   private Superstructure superstructure;
+  private boolean resetElevator = false;
+
+  // Add reset elevator parameter for G-side L3 auto to stop it from puncturing algae
+  public AutoScoreCoral(Superstructure superstructure, boolean resetElevator) {
+    this.superstructure = superstructure;
+    this.resetElevator = resetElevator;
+  }
 
   public AutoScoreCoral(Superstructure superstructure) {
-    this.superstructure = superstructure;
+    this(superstructure, true);
   }
 
   @Override
@@ -22,6 +29,8 @@ public class AutoScoreCoral extends Command {
 
   @Override
   public void end(boolean intterupted) {
-    superstructure.requestIdle();
+    if (resetElevator) {
+      superstructure.requestIdle();
+    }
   }
 }

@@ -6,11 +6,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.autonomous.modes.FourCoralLeft;
 import frc.robot.autonomous.modes.FourCoralLeftPush;
 import frc.robot.autonomous.modes.FourCoralRight;
+import frc.robot.autonomous.modes.L2PreloadOnlyG3;
 import frc.robot.autonomous.modes.Leave;
 import frc.robot.autonomous.modes.LeftL2TwoCoralCenter;
 import frc.robot.autonomous.modes.LeftL3TwoCoralCenter;
 import frc.robot.autonomous.modes.PreloadOnlyE3;
-import frc.robot.autonomous.modes.PreloadOnlyG3;
+import frc.robot.autonomous.modes.L3PreloadOnlyG3;
 import frc.robot.autonomous.modes.PreloadOnlyI3;
 import frc.robot.autonomous.modes.PushAndPreloadI3;
 import frc.robot.autonomous.modes.RightL2TwoCoralCenter;
@@ -28,7 +29,8 @@ public class AutonomousSelector {
   public AutonomousSelector(Swerve swerve, Superstructure superstructure, EndEffector endEffector) {
     autonomousSelector.setDefaultOption("DO_NOTHING", new SequentialCommandGroup());
     autonomousSelector.addOption("LEAVE", new Leave(swerve));
-    autonomousSelector.addOption("PRELOAD_ONLY_G3", new PreloadOnlyG3(swerve, superstructure));
+    autonomousSelector.addOption("L3_PRELOAD_ONLY_G3", new L3PreloadOnlyG3(swerve, superstructure));
+    autonomousSelector.addOption("L2_PRELOAD_ONLY_G3", new L2PreloadOnlyG3(swerve, superstructure));
     autonomousSelector.addOption("PRELOAD_ONLY_I3", new PreloadOnlyI3(swerve, superstructure));
     autonomousSelector.addOption("PRELOAD_ONLY_E3", new PreloadOnlyE3(swerve, superstructure));
     autonomousSelector.addOption(

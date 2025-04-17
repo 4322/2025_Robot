@@ -12,9 +12,9 @@ import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.swerve.Swerve;
 
-public class PreloadOnlyG3 extends SequentialCommandGroup {
-  public PreloadOnlyG3(Swerve swerve, Superstructure superstructure) {
-    setName("Preload Only (G3)");
+public class L3PreloadOnlyG3 extends SequentialCommandGroup {
+  public L3PreloadOnlyG3(Swerve swerve, Superstructure superstructure) {
+    setName("L3 Preload Only (G3)");
     addRequirements(swerve, superstructure);
     addCommands(
         new AutoPoseReset(swerve, new Translation2d()),
@@ -28,6 +28,6 @@ public class PreloadOnlyG3 extends SequentialCommandGroup {
             () -> {
               RobotContainer.operatorBoard.setScoringLevel(Level.L3);
             }),
-        new AutoScoreCoral(superstructure));
+        new AutoScoreCoral(superstructure, false));
   }
 }
