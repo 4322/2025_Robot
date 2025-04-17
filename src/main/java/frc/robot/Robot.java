@@ -199,7 +199,7 @@ public class Robot extends LoggedRobot {
       TwoCoralAlphaToFeed = PathPlannerPath.fromPathFile("Two Coral Alpha to Feed");
       TwoCoralFeedToBravo = PathPlannerPath.fromPathFile("Two Coral Feed to Bravo");
 
-      ThreeCoralStartToEcho = PathPlannerPath.fromPathFile("Start To Echo");
+      ThreeCoralStartToEcho = PathPlannerPath.fromPathFile("Start to Echo");
       ThreeCoralEchoToFeed = PathPlannerPath.fromPathFile("Echo To Feed");
 
       FourCoralStartToKilo = PathPlannerPath.fromPathFile("Start to Kilo");

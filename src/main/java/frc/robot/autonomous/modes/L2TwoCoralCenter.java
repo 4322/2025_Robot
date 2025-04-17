@@ -47,7 +47,14 @@ public class L2TwoCoralCenter extends SequentialCommandGroup {
             () -> new WaitCommand(SmartDashboard.getNumber("Two Coral Score Wait Timer", 0)),
             new HashSet<>()),
         AutoBuilder.followPath(Robot.TwoCoralAlphaToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, true, Constants.PathPlanner.L2TwoCoralStationOffsetY, false).withTimeout(3),
+        new AutoLeftFeedCoral(
+                swerve,
+                superstructure,
+                endEffector,
+                true,
+                Constants.PathPlanner.L2TwoCoralStationOffsetY,
+                false)
+            .withTimeout(3),
         AutoBuilder.followPath(Robot.TwoCoralFeedToBravo),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),
