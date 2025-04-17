@@ -193,7 +193,7 @@ public class Constants {
     public static final double motorRetractRotations = -3.0;
     public static final double motorRotationPosTolerance = 1;
 
-    public static final double autoClimbPitchDeg = 2;
+    public static final double autoClimbPitchDeg = 3;
     public static final double autoClimbDebounceSec = 0.2;
   }
 
