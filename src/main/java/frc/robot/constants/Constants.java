@@ -194,6 +194,7 @@ public class Constants {
     public static final double motorRotationPosTolerance = 1;
 
     public static final double autoClimbPitchDeg = 2;
+    public static final double autoClimbDebounceSec = 0.2;
   }
 
   public static class Scoring {

@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -21,6 +22,8 @@ public class Climb extends Command {
 
   private double setpoint;
   private boolean initialAlign = false;
+  private double initialPitch = 0;
+  private Timer autoClimbDebounce = new Timer();
 
   public Climb(Swerve swerve, Superstructure superstructure) {
     this.swerve = swerve;
@@ -40,6 +43,7 @@ public class Climb extends Command {
     }
 
     superstructure.requestPreClimb(true);
+    initialPitch = swerve.getRoll();
   }
 
   @Override
@@ -84,16 +88,26 @@ public class Climb extends Command {
     }
 
     swerve.requestPercent(new ChassisSpeeds(dx, dy, initialAlign ? rot : output), true);
+
+    if (swerve.getRoll() > (initialPitch + Constants.Climber.autoClimbPitchDeg)) {
+      autoClimbDebounce.start();
+    }
+    else if (autoClimbDebounce.isRunning()){
+      autoClimbDebounce.stop();
+      autoClimbDebounce.reset();
+    }
   }
 
   @Override
   public boolean isFinished() {
-    return swerve.getRoll() > Constants.Climber.autoClimbPitchDeg;
+    return autoClimbDebounce.hasElapsed(Constants.Climber.autoClimbDebounceSec);
   }
 
   @Override
   public void end(boolean interrupted) {
     superstructure.requestClimb();
     initialAlign = false;
+    autoClimbDebounce.stop();
+    autoClimbDebounce.reset();
   }
 }
