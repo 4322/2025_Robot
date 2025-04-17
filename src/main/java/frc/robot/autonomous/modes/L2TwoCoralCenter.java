@@ -13,6 +13,7 @@ import frc.robot.commands.auto.AutoLeftFeedCoral;
 import frc.robot.commands.auto.AutoPoseReset;
 import frc.robot.commands.auto.AutoPreScoreCoral;
 import frc.robot.commands.auto.AutoScoreCoral;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.Superstructure.Level;
 import frc.robot.subsystems.endEffector.EndEffector;
@@ -46,7 +47,7 @@ public class L2TwoCoralCenter extends SequentialCommandGroup {
             () -> new WaitCommand(SmartDashboard.getNumber("Two Coral Score Wait Timer", 0)),
             new HashSet<>()),
         AutoBuilder.followPath(Robot.TwoCoralAlphaToFeed),
-        new AutoLeftFeedCoral(swerve, superstructure, endEffector, true, false).withTimeout(3),
+        new AutoLeftFeedCoral(swerve, superstructure, endEffector, true, Constants.PathPlanner.L2TwoCoralStationOffsetY, false).withTimeout(3),
         AutoBuilder.followPath(Robot.TwoCoralFeedToBravo),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
         new AutoScoreCoral(superstructure).withTimeout(2),

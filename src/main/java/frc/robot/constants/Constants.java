@@ -284,6 +284,8 @@ public class Constants {
     public static final double wheelRadius = Units.inchesToMeters(2.0);
     public static final double wheelCOF = 1.13;
 
+    public static final double L2TwoCoralStationOffsetY = -Units.inchesToMeters(10);
+
     // Default config in case of load from GUI failure in Swerve.java
     public static RobotConfig robotConfig =
         new RobotConfig(
