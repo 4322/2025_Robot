@@ -47,6 +47,7 @@ public class AutoRightFeedCoral extends Command {
 
   private int desiredTag;
   private double autoRotateSetpoint;
+  private double horizontalOffsetMeters;
 
   private double driveVelocityScalar;
   private Translation2d driveVelocity = new Translation2d();
@@ -93,6 +94,7 @@ public class AutoRightFeedCoral extends Command {
       Superstructure superstructure,
       EndEffector endEffector,
       boolean useLeftCam,
+      double horizontalOffsetMeters,
       boolean slowMode) {
     this.swerve = swerve;
     this.superstructure = superstructure;
@@ -100,8 +102,18 @@ public class AutoRightFeedCoral extends Command {
     this.slowMode = slowMode;
     this.useLeftCam = useLeftCam;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    this.horizontalOffsetMeters = horizontalOffsetMeters;
 
     addRequirements(swerve, superstructure);
+  }
+
+  public AutoRightFeedCoral(
+      Swerve swerve,
+      Superstructure superstructure,
+      EndEffector endEffector,
+      boolean useLeftCam,
+      boolean slowMode) {
+    this(swerve, superstructure, endEffector, useLeftCam, 0, slowMode);
   }
 
   @Override
@@ -121,7 +133,8 @@ public class AutoRightFeedCoral extends Command {
             .get()
             .toPose2d()
             .transformBy(
-                GeomUtil.translationToTransform(new Translation2d(Units.inchesToMeters(4), 0)));
+                GeomUtil.translationToTransform(
+                    new Translation2d(Units.inchesToMeters(4), horizontalOffsetMeters)));
     ;
     if (Constants.tuningMode) {
       desiredPose =

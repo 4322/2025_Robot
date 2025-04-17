@@ -46,6 +46,7 @@ public class AutoLeftFeedCoral extends Command {
 
   private int desiredTag;
   private double autoRotateSetpoint;
+  private double horizontalOffsetMeters;
 
   private double driveVelocityScalar;
   private Translation2d driveVelocity = new Translation2d();
@@ -92,15 +93,26 @@ public class AutoLeftFeedCoral extends Command {
       Superstructure superstructure,
       EndEffector endEffector,
       boolean useLeftCam,
+      double horizontalOffsetMeters,
       boolean slowMode) {
     this.swerve = swerve;
     this.superstructure = superstructure;
     this.endEffector = endEffector;
     this.slowMode = slowMode;
     this.useLeftCam = useLeftCam;
+    this.horizontalOffsetMeters = horizontalOffsetMeters;
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
     addRequirements(swerve, superstructure);
+  }
+
+  public AutoLeftFeedCoral(
+      Swerve swerve,
+      Superstructure superstructure,
+      EndEffector endEffector,
+      boolean useLeftCam,
+      boolean slowMode) {
+    this(swerve, superstructure, endEffector, useLeftCam, 0, slowMode);
   }
 
   @Override
@@ -120,7 +132,8 @@ public class AutoLeftFeedCoral extends Command {
             .get()
             .toPose2d()
             .transformBy(
-                GeomUtil.translationToTransform(new Translation2d(Units.inchesToMeters(4), 0)));
+                GeomUtil.translationToTransform(
+                    new Translation2d(Units.inchesToMeters(4), horizontalOffsetMeters)));
     if (Constants.tuningMode) {
       desiredPose =
           FieldConstants.aprilTagFieldLayout

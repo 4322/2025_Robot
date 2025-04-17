@@ -102,7 +102,8 @@ public class Flipper extends SubsystemBase {
         io.setPivotPosition(Constants.Flipper.Pivot.stowedSetpointMechanismRotations);
         io.setRollerVoltage(Constants.Flipper.Roller.holdVoltage);
         // So robot won't detet as coral secured when coral is nor secured
-        if (inputs.rollerStatorCurrentAmps < Constants.Flipper.Roller.statorCurrentNoStallThreshold) {
+        if (inputs.rollerStatorCurrentAmps
+            < Constants.Flipper.Roller.statorCurrentNoStallThreshold) {
           noStallTimer.start();
         } else if (noStallTimer.isRunning()) {
           noStallTimer.stop();
@@ -125,7 +126,8 @@ public class Flipper extends SubsystemBase {
         io.setPivotPosition(Constants.Flipper.Pivot.scoreSetpointMechanismRotations);
         // Coral detection for L1 so we can tell if coral is not there anymore
         if (coralSecured) {
-          if (inputs.rollerStatorCurrentAmps < Constants.Flipper.Roller.statorCurrentNoStallThreshold) {
+          if (inputs.rollerStatorCurrentAmps
+              < Constants.Flipper.Roller.statorCurrentNoStallThreshold) {
             noStallTimer.start();
           } else if (noStallTimer.isRunning()) {
             noStallTimer.stop();

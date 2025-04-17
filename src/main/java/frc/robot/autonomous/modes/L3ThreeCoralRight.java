@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.ScoringManager.ScoringLocation;
-import frc.robot.commands.auto.AutoLeftFeedCoral;
 import frc.robot.commands.auto.AutoPoseReset;
 import frc.robot.commands.auto.AutoPreScoreCoral;
 import frc.robot.commands.auto.AutoRightFeedCoral;
