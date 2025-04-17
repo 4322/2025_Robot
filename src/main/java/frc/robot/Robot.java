@@ -91,6 +91,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath TwoCoralStartToAlpha;
   public static PathPlannerPath TwoCoralAlphaToFeed;
   public static PathPlannerPath TwoCoralFeedToBravo;
+  public static PathPlannerPath TwoCoralBravoToEnd;
 
   @Override
   public void robotInit() {
@@ -192,6 +193,7 @@ public class Robot extends LoggedRobot {
       TwoCoralStartToFoxtrot = PathPlannerPath.fromPathFile("Two Coral Start to Foxtrot");
       TwoCoralFoxtrotToFeed = PathPlannerPath.fromPathFile("Two Coral Foxtrot to Feed");
       TwoCoralFeedToEcho = PathPlannerPath.fromPathFile("Two Coral Feed to Echo");
+      TwoCoralBravoToEnd = PathPlannerPath.fromPathFile("Two Coral Bravo to End");
 
       TwoCoralStartToAlpha = PathPlannerPath.fromPathFile("Two Coral Start to Alpha");
       TwoCoralAlphaToFeed = PathPlannerPath.fromPathFile("Two Coral Alpha to Feed");

@@ -49,6 +49,7 @@ public class L2TwoCoralCenter extends SequentialCommandGroup {
         new AutoLeftFeedCoral(swerve, superstructure, endEffector, true, false).withTimeout(3),
         AutoBuilder.followPath(Robot.TwoCoralFeedToBravo),
         new AutoPreScoreCoral(swerve, superstructure, false, false),
-        new AutoScoreCoral(superstructure).withTimeout(2));
+        new AutoScoreCoral(superstructure).withTimeout(2),
+        AutoBuilder.followPath(Robot.TwoCoralBravoToEnd));
   }
 }
