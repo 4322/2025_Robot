@@ -204,6 +204,19 @@ public class RobotContainer {
                 () -> {
                   superstructure.requestIdle();
                 }));
+    new JoystickButton(operatorBoard.getLeftController(), 6)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  RobotContainer.operatorBoard.setScoringLevel(Level.L2);
+                  superstructure.requestPreScore();
+                }));
+    new JoystickButton(operatorBoard.getLeftController(), 6)
+        .onFalse(
+            new InstantCommand(
+                () -> {
+                  superstructure.requestIdle();
+                }));
 
     new JoystickButton(operatorBoard.getRightController(), 1)
         .onTrue(

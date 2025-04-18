@@ -86,12 +86,6 @@ public class LeftFeed extends Command {
       dy *= -TunerConstants.kSpeedAt12VoltsMps;
     }
 
-    if (RobotContainer.operatorBoard.getLeftController().getRawButtonPressed(6)) {
-      elevator.requestJiggle();
-    } else {
-      elevator.requestSetpoint(0);
-    }
-
     // Apply swerve Requests
     swerve.requestPercent(new ChassisSpeeds(dx, dy, output), true);
   }
