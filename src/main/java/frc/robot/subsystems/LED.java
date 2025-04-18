@@ -23,7 +23,8 @@ public class LED extends SubsystemBase {
     TAG_INIT_VISIBLE,
     CORAL_SECURED,
     AUTOMATED_SCORING,
-    CLIMBING,
+    CLIMB_DEPLOYED,
+    CLIMBED,
     COAST_MODE,
     ZERO_ROBOT,
     CAMERAS_DISCONNECTED;
@@ -57,8 +58,10 @@ public class LED extends SubsystemBase {
         setLEDState(LEDState.AUTOMATED_SCORING);
       } else if (RobotContainer.superstructure.pieceSecured()) {
         setLEDState(LEDState.CORAL_SECURED);
-      } else if (RobotContainer.climber.getState() != ClimbState.STARTING_CONFIG) {
-        setLEDState(LEDState.CLIMBING);
+      } else if (RobotContainer.climber.getState() == ClimbState.DEPLOYED) {
+        setLEDState(LEDState.CLIMB_DEPLOYED);
+      } else if (RobotContainer.climber.getState() == ClimbState.RETRACT) {
+        setLEDState(LEDState.CLIMBED);
       } else {
         setLEDState(LEDState.IDLE);
       }
@@ -92,8 +95,12 @@ public class LED extends SubsystemBase {
         case TAG_INIT_VISIBLE:
           leds.setLEDs(255, 255, 0); // yellow
           break;
-        case CLIMBING:
+        case CLIMB_DEPLOYED:
           leds.setLEDs(255, 0, 255); // purple
+          break;
+        case CLIMBED:
+          leds.animate(
+              new StrobeAnimation(255, 0, 255, 0, 0.2, Constants.LED_NUM)); // purple flashing
           break;
         case CAMERAS_DISCONNECTED:
           leds.animate(new StrobeAnimation(255, 0, 0, 0, 0.2, Constants.LED_NUM)); // red flashing
