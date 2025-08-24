@@ -15,14 +15,14 @@ public class Constants {
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 1000000000; // 1 GB
 
-  public static final boolean elevatorEnabled = true;
-  public static final boolean endEffectorEnabled = true;
-  public static final boolean flipperEnabled = true;
-  public static final boolean climberEnabled = true;
+  public static final boolean elevatorEnabled = false;
+  public static final boolean endEffectorEnabled = false;
+  public static final boolean flipperEnabled = false;
+  public static final boolean climberEnabled = false;
 
   public static final boolean pseudoAutoRotateEnabled = false;
   public static final boolean tuningMode = false;
-  public static final boolean visionEnabled = true;
+  public static final boolean visionEnabled = false;
 
   public static final double FALCON_FREE_SPEED = 6380.0;
   public static final double KRAKEN_FREE_SPEED = 6000.0;
